@@ -1,0 +1,373 @@
+# OGSM Plugin MVP 設計
+
+## 目的
+
+建立一個 Codex plugin 與一組 skills，協助使用者把 OGSM 真的落實到計劃、行程與週期回顧中。這個 plugin 不只是檢查一份計劃是否符合 OGSM，而是協助使用者建立 OGSM、轉譯成近期優先順序、審查計劃與週行程、提出修正版，並根據實際使用狀況持續調整。
+
+MVP 的核心循環是：
+
+1. 建立使用者的 OGSM profile。
+2. 將 OGSM 轉譯成近期 priorities 與時間配置原則。
+3. 審查計劃與週行程是否對齊 OGSM。
+4. 產出更可執行的 realign 版本。
+5. 透過週回顧檢查落實狀況，並調整後續建議。
+
+## 產品定位
+
+這個 plugin 的角色是「策略教練 + 嚴格稽核者」的混合體。它需要提供清楚的分數、風險與具體修正建議，同時用教練式語氣協助使用者理解問題，而不是只把計劃打回票。
+
+這不是靜態的 OGSM checklist。它是一個 adaptive operating loop：會根據使用者實際怎麼工作、接受或拒絕哪些建議、哪些策略長期沒有被時間支持，逐步調整審查重點與建議方式。所有涉及 OGSM 本身的變更都必須透明，並經使用者確認。
+
+## MVP 範圍
+
+MVP 包含：
+
+- 可散佈的 Codex plugin 結構，包含 OGSM skills 與共用 references。
+- 協助沒有 OGSM 的使用者建立最小可用 OGSM profile。
+- 審查文字計劃、OKR、roadmap、專案規格與週計劃。
+- 審查週行程是否支持 Strategies 與 Measures。
+- 支援使用者貼上粗糙 agenda、匯出行程文字或 OCR 後文字。
+- Optional Google Calendar path：若 connector 可用，能產生週行程摘要。
+- 三種輸出深度：quick review、full audit、realign/rewrite。
+- 輕量 adaptive context，用來記錄反覆模式與使用者偏好。
+
+MVP 不包含：
+
+- 自動修改 calendar。
+- 自動修改外部文件。
+- 長時間自主監控。
+- 複雜外部記憶或分析系統。
+- 完整的月度、季度自主營運系統。
+
+## Plugin 結構
+
+```text
+ogsm/
+  plugin.toml
+  skills/
+    ogsm-define/
+      SKILL.md
+    ogsm-translate/
+      SKILL.md
+    ogsm-audit-plan/
+      SKILL.md
+    ogsm-audit-schedule/
+      SKILL.md
+    ogsm-calendar-brief/
+      SKILL.md
+    ogsm-realign/
+      SKILL.md
+    ogsm-weekly-review/
+      SKILL.md
+  references/
+    ogsm-principles.md
+    ogsm-profile-format.md
+    review-rubric.md
+    schedule-normalization.md
+    output-formats.md
+    adaptive-operating-context.md
+  examples/
+    sample-ogsm-profile.md
+    sample-plan-input.md
+    sample-schedule-input.md
+    sample-quick-review.md
+    sample-full-audit.md
+    sample-realign-output.md
+```
+
+## 核心 Skills
+
+### ogsm-define
+
+建立或更新使用者的 OGSM profile。如果任何其他 skill 啟動時找不到 profile，應先引導使用者進入 `ogsm-define`。
+
+這個 skill 不假設使用者已經懂 OGSM。它會一次問一個問題，從使用者自然語言中的目標開始，逐步整理成：
+
+- Objective：方向、意義與主要意圖。
+- Goals：2-5 個具體成果。
+- Strategies：達成 Goals 的主要打法與選擇。
+- Measures：能驗證進展或成功的指標。
+
+它會檢查常見品質問題：
+
+- Objective 太像口號或太模糊。
+- Goals 不可衡量。
+- Strategies 只是待辦清單。
+- Measures 沒有數字、期限、baseline、owner 或檢查節奏。
+- Strategies 與 Measures 沒有清楚連結。
+
+Profile 只有在使用者確認後才會保存。
+
+### ogsm-translate
+
+將 OGSM profile 轉成當週或當月可執行的操作指引。輸出包含：
+
+- 當前 priority themes。
+- 各 Strategy 的建議時間配置。
+- 本期應推動或檢查的 Measures。
+- 不支持 OGSM 的「say no」清單。
+- 接受、延後、委派或刪除工作的決策規則。
+
+### ogsm-audit-plan
+
+審查文字計劃、OKR、roadmap、專案規格、週計劃或 initiative list。
+
+這個 skill 會把每個 initiative、task、commitment 或 milestone 映射到 OGSM，並找出：
+
+- 強對齊項目。
+- 弱對齊或關聯不清楚的項目。
+- 沒有 Strategy 支持的工作。
+- 沒有 Measure 的行動。
+- 沒有對應行動的 Measure。
+- 過載的 priority。
+- 看似重要但不受目前 OGSM 支持的工作。
+
+### ogsm-audit-schedule
+
+審查週行程是否對齊 OGSM。MVP 接受粗糙貼上的行程、匯出的 calendar agenda、OCR 後文字，或 `ogsm-calendar-brief` 產生的標準摘要。
+
+這個 skill 會將行程 normalize 成：
+
+- 日期。
+- 開始與結束時間，或 duration。
+- 事件名稱。
+- 事件類型。
+- 參與者，如果有。
+- 描述或脈絡，如果有。
+- 可移動性：固定、可移動、可刪、可委派或未知。
+- Strategy 與 Measure 關聯。
+
+它會分析該週是否真的把時間投入到最重要的 Strategies 與 Measures。
+
+### ogsm-calendar-brief
+
+Optional Google Calendar path。當 Google Calendar connector 可用時，這個 skill 讀取指定日期範圍，產生 `ogsm-audit-schedule` 可直接使用的標準週行程摘要。
+
+如果 connector 不可用，skill 會平順降級，請使用者貼上 agenda dump。
+
+這個 skill 不直接做 OGSM 對齊審查。它的職責是整理行程輸入，讓 schedule audit 有穩定資料介面。
+
+### ogsm-realign
+
+在審查後產生可執行的修正版。它可以建議：
+
+- 保留。
+- 刪除。
+- 委派。
+- 延後。
+- 縮短。
+- 合併。
+- 移動。
+- 新增缺少的 Strategy time block。
+- 新增 Measure check-in。
+
+對計劃，它可以把任務改寫成 Strategy-linked actions。對行程，它可以提出修正版週時間配置。MVP 不會直接修改外部 calendar 或文件。
+
+### ogsm-weekly-review
+
+在每週結束時關閉循環。它會檢查：
+
+- 哪些 Measures 有進展。
+- 哪些 Strategies 得到了實際時間。
+- 哪些 Strategies 被宣稱重要，但沒有被行程支持。
+- 哪些事件或任務反覆擠掉 OGSM 工作。
+- 是 OGSM 需要修正，還是執行方式需要修正。
+
+它會在使用者確認後更新 adaptive operating context。
+
+## 共用 Agent Loop
+
+每個 audit 類 skill 都遵守這個流程：
+
+1. 讀取 OGSM profile。
+2. 如果沒有 profile，轉到 `ogsm-define`。
+3. 如果 profile 不完整，詢問最小必要資訊。
+4. 解析計劃或行程輸入。
+5. 將輸入項目映射到 Objective、Goals、Strategies、Measures。
+6. 診斷缺口、矛盾、時間配置問題與弱 Measures。
+7. 只有在答案會實質影響審查時，才追問一個關鍵問題。
+8. 產出使用者要求的輸出深度。
+9. 若使用者想要可執行修正版，銜接 `ogsm-realign`。
+
+## Adaptive Operating Context
+
+Plugin 會維護一份輕量 operating context，讓它能隨使用狀況調整。這不是隱藏記憶，而是使用者可以檢視與修改的本地紀錄。
+
+它可以追蹤：
+
+- 使用者接受與拒絕過的建議。
+- 偏好的輸出風格。
+- 偏好的審查深度。
+- 深度工作時段。
+- 可接受的會議負載。
+- 反覆出現的行程衝突。
+- 長期沒有被時間支持的 Strategies。
+- 反覆太弱或沒有追蹤的 Measures。
+- 使用者自己的決策規則。
+
+Plugin 可以據此調整：
+
+- 對使用者常偏離的地方提高審查嚴格度。
+- 若會議反覆侵蝕策略時間，優先檢查 calendar load。
+- 根據過去週回顧調整時間配置建議。
+- 記住使用者偏好直接評分、教練式問題，或先給修正版。
+
+Plugin 不得偷偷修改 OGSM profile。任何 Objective、Goal、Strategy 或 Measure 的變更都需要使用者明確確認，並記錄簡短原因。
+
+## Profile 格式
+
+預設 profile 使用可讀的 Markdown，方便使用者直接檢視。
+
+必要欄位：
+
+- Profile name。
+- Time horizon。
+- Objective。
+- Goals。
+- Strategies。
+- Measures。
+- Review cadence。
+
+建議欄位：
+
+- Current focus period。
+- Strategy priority weights。
+- Preferred working rhythm。
+- Known constraints。
+- Decision rules。
+- Last reviewed date。
+
+## Review Rubric
+
+Rubric 至少要評分：
+
+- Objective clarity。
+- Goal measurability。
+- Strategy focus。
+- Measure quality。
+- Strategy-to-Measure linkage。
+- Plan alignment。
+- Schedule alignment。
+- Time allocation realism。
+- Execution risk。
+
+分數必須有用途，而不是裝飾。每個低分都要有理由與具體修正建議。
+
+## 輸出模式
+
+### Quick Review
+
+用於快速決策。包含：
+
+- Overall alignment score。
+- Top 3 risks。
+- Top 3 recommended changes。
+- One next action。
+
+### Full Audit
+
+用於較完整的計劃檢查。包含：
+
+- Executive summary。
+- OGSM alignment matrix。
+- Strengths。
+- Gaps。
+- Measure quality review。
+- Time allocation analysis，如果有行程輸入。
+- Risks and tradeoffs。
+- Recommended corrections。
+- Open questions。
+
+### Realign / Rewrite
+
+用於使用者想要可執行修正版時。包含：
+
+- Revised plan or schedule。
+- Change log，說明改了什麼與為什麼。
+- Strategy and Measure linkage。
+- 要刪除、延後、委派或新增的項目。
+- Suggested next review point。
+
+## Calendar 輸入策略
+
+MVP 支援兩種行程輸入：
+
+1. Manual agenda dump。
+2. Optional Google Calendar summary。
+
+Manual input 必須能容忍混亂文字。Skill 會先產生 normalized schedule summary；如果來源模糊，會先請使用者確認假設，再開始評分。
+
+Google Calendar integration 是 optional。若可用，`ogsm-calendar-brief` 讀取指定週期並產生標準行程摘要。若不可用，流程繼續使用 manual input，不阻斷審查。
+
+## 錯誤處理
+
+如果沒有 OGSM profile：
+
+- 說明需要先建立 baseline OGSM。
+- 啟動 `ogsm-define`。
+
+如果 OGSM 不完整：
+
+- 指出最小缺漏欄位。
+- 問一個問題補齊。
+- 只有在資訊足夠做有意義審查時才繼續。
+
+如果行程輸入混亂：
+
+- 先 normalize。
+- 顯示假設。
+- 若信心不足，先請使用者確認再評分。
+
+如果 Google Calendar 不可用：
+
+- 降級到 manual agenda input。
+- 不阻斷 audit workflow。
+
+如果 Measures 太弱：
+
+- 標記 review confidence limited。
+- 建議更好的 Measures 或 proxy Measures。
+- 如果使用者願意接受 rough review，仍可繼續，但需明確註記限制。
+
+## 測試策略
+
+MVP 測試以 example-driven validation 為主，不只依賴自動化測試。
+
+測試案例：
+
+- 使用者沒有 profile，卻先啟動 plan audit。
+- 使用者用自然語言建立 profile。
+- 計劃高度對齊 OGSM。
+- 計劃有大量無關 task。
+- 週行程有太多低對齊會議。
+- 週行程沒有 Measure check-in。
+- 混亂 agenda dump normalization。
+- Google Calendar 不可用時平順降級。
+- 週回顧更新 adaptive context。
+- 使用者拒絕某項建議，context 記錄偏好。
+
+每個 skill 至少要有一組 sample input 與 expected output shape。
+
+## 未來擴充
+
+後續可以加入：
+
+- Connector-first 的 Google Calendar 讀取。
+- 經使用者明確同意後寫回 Calendar。
+- 從 Google Docs 或 Notion 匯入 OGSM。
+- 月度與季度策略回顧。
+- 週回顧提醒 automation。
+- 從外部系統追蹤 Measures。
+- Team OGSM mode，支援多 owner。
+- 跨 calendar 與 project management 的對齊分析。
+
+## 驗收標準
+
+MVP 成功的標準：
+
+- 新使用者不懂 OGSM 術語，也能建立可用 profile。
+- Plugin 能用該 profile 審查文字計劃與週行程。
+- Plugin 能產生 quick review、full audit、realign 三種輸出。
+- Optional Google Calendar path 可在 connector 可用時準備行程輸入，並在不可用時平順降級。
+- Weekly review 能更新透明的 adaptive context。
+- Plugin 能持續幫使用者更清楚地決定該做什麼、不該做什麼，以及下一週時間應該放在哪裡。
