@@ -1,0 +1,33 @@
+[plugin]
+name = "ogsm"
+version = "0.1.0"
+description = "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules."
+author = "breakingmind"
+
+[[skills]]
+name = "ogsm-define"
+path = "skills/ogsm-define/SKILL.md"
+
+[[skills]]
+name = "ogsm-translate"
+path = "skills/ogsm-translate/SKILL.md"
+
+[[skills]]
+name = "ogsm-audit-plan"
+path = "skills/ogsm-audit-plan/SKILL.md"
+
+[[skills]]
+name = "ogsm-audit-schedule"
+path = "skills/ogsm-audit-schedule/SKILL.md"
+
+[[skills]]
+name = "ogsm-calendar-brief"
+path = "skills/ogsm-calendar-brief/SKILL.md"
+
+[[skills]]
+name = "ogsm-realign"
+path = "skills/ogsm-realign/SKILL.md"
+
+[[skills]]
+name = "ogsm-weekly-review"
+path = "skills/ogsm-weekly-review/SKILL.md"
