@@ -10,12 +10,13 @@ node "$script_dir/normalize-schedule.js" "$plugin_root/examples/sample-schedule-
 tmp_json="$(mktemp)"
 tmp_context="$(mktemp)"
 tmp_schedule="$(mktemp)"
+tmp_calendar_events="$(mktemp)"
 tmp_output="$(mktemp)"
 tmp_invalid_json="$(mktemp)"
 tmp_null_json="$(mktemp)"
 tmp_profile="$(mktemp)"
 tmp_storage_root="$(mktemp -d)"
-trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"; rm -rf "$tmp_storage_root"' EXIT
+trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_calendar_events" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"; rm -rf "$tmp_storage_root"' EXIT
 
 cat > "$tmp_json" <<'JSON'
 [
@@ -33,6 +34,25 @@ Monday 09:00-10:00 A | B sync
 SCHEDULE
 node "$script_dir/normalize-schedule.js" "$tmp_schedule" > "$tmp_output"
 grep -F 'A \| B sync' "$tmp_output" >/dev/null
+
+cat > "$tmp_calendar_events" <<'JSON'
+[
+  {
+    "summary": "Pipeline review | new opportunities",
+    "start": {"dateTime": "2026-05-11T09:00:00+08:00"},
+    "end": {"dateTime": "2026-05-11T10:30:00+08:00"},
+    "location": "Teams"
+  },
+  {
+    "summary": "All day market watch",
+    "start": {"date": "2026-05-12"},
+    "end": {"date": "2026-05-13"}
+  }
+]
+JSON
+node "$script_dir/normalize-calendar-events.js" "$tmp_calendar_events" > "$tmp_output"
+grep -F '| 2026-05-11 | 09:00 | 10:30 | 90m | Pipeline review \| new opportunities | Admin | Fixed | Unmapped | Unmapped | Unmapped | Location: Teams |' "$tmp_output" >/dev/null
+grep -F '| 2026-05-12 | All day | All day | All day | All day market watch | Unknown | Fixed | Unmapped | Unmapped | Unmapped | All-day event |' "$tmp_output" >/dev/null
 
 printf '{' > "$tmp_invalid_json"
 if node "$script_dir/score-alignment.js" "$tmp_invalid_json" > "$tmp_output" 2>&1; then

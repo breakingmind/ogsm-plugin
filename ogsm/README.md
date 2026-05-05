@@ -63,6 +63,18 @@ The MVP never modifies calendars, external documents, Objective, Goals, Strategi
 
 If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
 
+## Optional Google Calendar Path
+
+`ogsm-calendar-brief` may read Google Calendar events when a calendar connector is available. It is read-only and only produces normalized schedule input for `ogsm-audit-schedule`.
+
+When exported or connector-provided calendar event JSON is saved locally, normalize it with:
+
+```bash
+node ogsm/scripts/normalize-calendar-events.js /path/to/calendar-events.json
+```
+
+The output is the same schedule table schema used by manual agenda audits.
+
 ## Codex Install From GitHub
 
 Add this repository as a Git-backed Codex marketplace in `~/.codex/config.toml`:

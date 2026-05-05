@@ -31,7 +31,7 @@ for skill in $skills; do
   grep -q "path = \"skills/$skill/SKILL.md\"" "$plugin_root/plugin.toml"
 done
 
-for reference in ogsm-principles ogsm-profile-format review-rubric schedule-normalization output-formats adaptive-operating-context tool-policy progressive-disclosure storage-policy skill-pressure-tests; do
+for reference in ogsm-principles ogsm-profile-format review-rubric schedule-normalization google-calendar-brief output-formats adaptive-operating-context tool-policy progressive-disclosure storage-policy skill-pressure-tests; do
   test -f "$plugin_root/references/$reference.md"
 done
 
@@ -39,12 +39,15 @@ for asset in profile-template operating-context-template quick-review-template f
   test -f "$plugin_root/assets/$asset.md"
 done
 
-for script in validate-profile normalize-schedule score-alignment update-operating-context prepare-storage; do
+for script in validate-profile normalize-schedule normalize-calendar-events score-alignment update-operating-context prepare-storage; do
   test -x "$plugin_root/scripts/$script.js"
 done
 
 grep -q 'Must not directly use Google Calendar connector' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
 grep -q 'May use Google Calendar connector to read events' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
+grep -q 'Read `../../references/google-calendar-brief.md`' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
+grep -q 'normalize-calendar-events.js' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
+grep -q 'calendar event JSON' "$plugin_root/references/google-calendar-brief.md"
 grep -q 'scope: department' "$plugin_root/references/storage-policy.md"
 grep -q 'Scenario 1: Raw Schedule Audit' "$plugin_root/references/skill-pressure-tests.md"
 grep -q 'Scenario 2: Audit to Realign' "$plugin_root/references/skill-pressure-tests.md"
