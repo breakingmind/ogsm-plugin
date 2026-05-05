@@ -13,7 +13,7 @@ It may track:
 - Recurring schedule conflicts
 - Under-supported Strategies
 - Weak or untracked MD
-- MP missing owner, collaborator, date, or work content
+- MP missing owner, collaborating unit, date, or work content
 - User decision rules
 
 The context can influence future reviews, but it must not silently change the OGSM profile.

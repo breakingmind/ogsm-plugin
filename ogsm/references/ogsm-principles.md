@@ -30,7 +30,7 @@ Strong OGSMs are selective. They make it easier to say no.
 - Strategies are task lists instead of resources, methodology, or tools.
 - Strategies do not identify resources that are new, unique, or consumed.
 - MD items are vanity metrics or lack indicator, baseline, target or total amount, date or period, review cadence, or Strategy linkage.
-- MP items lack owner, collaborating unit, time order, or concrete work content.
+- MP items lack owner, collaborating unit when relevant, time order, date or period, or concrete work content.
 - MP cannot be traced backward to MD, Strategy, Goal, and Objective.
 - Calendar time does not support the declared Strategies.
 - Every urgent request is treated as strategy work.
