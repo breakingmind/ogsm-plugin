@@ -18,6 +18,10 @@ function classify(title) {
   return 'Unknown';
 }
 
+function escapeCell(value) {
+  return String(value).replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+}
+
 function parseLine(line) {
   const match = line.match(/^(\w+)\s+(\d{1,2}:\d{2})-(\d{1,2}:\d{2})\s+(.+)$/);
   if (!match) {
@@ -56,5 +60,18 @@ const rows = lines.map(parseLine);
 console.log('| Date | Start | End | Duration | Title | Type | Mobility | Strategy Link | MD Link | MP Link | Notes |');
 console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
 for (const row of rows) {
-  console.log(`| ${row.date} | ${row.start} | ${row.end} | ${row.duration} | ${row.title} | ${row.type} | ${row.mobility} | ${row.strategy} | ${row.md} | ${row.mp} | ${row.notes} |`);
+  const cells = [
+    row.date,
+    row.start,
+    row.end,
+    row.duration,
+    row.title,
+    row.type,
+    row.mobility,
+    row.strategy,
+    row.md,
+    row.mp,
+    row.notes,
+  ].map(escapeCell);
+  console.log(`| ${cells.join(' | ')} |`);
 }

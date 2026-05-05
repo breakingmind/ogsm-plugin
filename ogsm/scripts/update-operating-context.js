@@ -9,6 +9,12 @@ if (!file || !note) {
   process.exit(2);
 }
 
+const safeNote = note.replace(/\r?\n/g, ' ').trim();
+if (!safeNote) {
+  console.error('Note must not be empty');
+  process.exit(2);
+}
+
 let text = '';
 if (fs.existsSync(file)) {
   text = fs.readFileSync(file, 'utf8');
@@ -17,10 +23,11 @@ if (fs.existsSync(file)) {
 }
 
 const date = new Date().toISOString().slice(0, 10);
-const entry = `\n- ${date}: ${note}\n`;
+const entry = `- ${date}: ${safeNote}\n`;
+text = text.replace(/^- None recorded yet\.\n?/gm, '');
 
 if (text.includes('## Recurring Patterns')) {
-  text = text.replace(/(## Recurring Patterns\s*)/m, `$1${entry}`);
+  text = text.replace(/(## Recurring Patterns\s*\n+)/m, `$1${entry}`);
 } else {
   text += `\n## Recurring Patterns\n${entry}`;
 }

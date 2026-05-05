@@ -19,8 +19,13 @@ const required = [
   'Review Cadence',
 ];
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 const missing = required.filter((name) => {
-  const pattern = new RegExp(`^#{2,3}\\s+${name}\\s*$`, 'im');
+  const escapedName = escapeRegex(name);
+  const pattern = new RegExp(`^ {0,3}#{2,6}\\s+${escapedName}(?:\\s+#+)?\\s*$`, 'im');
   return !pattern.test(text);
 });
 

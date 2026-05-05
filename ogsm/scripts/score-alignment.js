@@ -7,9 +7,16 @@ if (!file) {
   process.exit(2);
 }
 
-const items = JSON.parse(fs.readFileSync(file, 'utf8'));
-if (!Array.isArray(items)) {
-  console.error('Input must be a JSON array');
+let items;
+try {
+  items = JSON.parse(fs.readFileSync(file, 'utf8'));
+} catch (error) {
+  console.error(`Invalid JSON: ${error.message}`);
+  process.exit(2);
+}
+
+if (!Array.isArray(items) || items.some((item) => item === null || typeof item !== 'object' || Array.isArray(item))) {
+  console.error('Input must be a JSON array of objects');
   process.exit(2);
 }
 
