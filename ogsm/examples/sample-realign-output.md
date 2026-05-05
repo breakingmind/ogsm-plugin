@@ -11,8 +11,8 @@
 
 | Change | Reason | Backward Linkage (MP -> MD -> S -> G -> O) |
 | --- | --- | --- |
-| Moved exploratory calls | Reduce dilution | Strategy 1 |
-| Added baseline capture | Improve MD quality and MP completeness | MD 2 / MP 3 |
+| Moved exploratory calls | Reduce dilution | MP 3 -> MD 2 -> Strategy 2 -> Goal 2 -> Objective |
+| Added baseline capture | Improve MD quality and MP completeness | MP 3 -> MD 2 -> Strategy 2 -> Goal 2 -> Objective |
 
 ## Decisions
 

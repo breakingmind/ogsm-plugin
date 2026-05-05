@@ -8,12 +8,12 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 
 | Item | Strategy Link | MD Link | MP Link | Score | Correction |
 | --- | --- | --- | --- | --- | --- |
-| Dashboard prototype | Strategy 1 | MD 1 | MP 1 | 5 | Keep |
+| Dashboard prototype | Strategy 1 -> Goal 1 -> Objective | MD 1 | MP 1 | 5 | Keep |
 | Exploratory calls | Unclear | None | None | 2 | Defer or reduce |
 
 ## Strengths
 
-- Metric review is scheduled.
+- MD baseline review is scheduled.
 - Deep work exists for core prototype.
 
 ## Gaps
