@@ -14,7 +14,8 @@ tmp_output="$(mktemp)"
 tmp_invalid_json="$(mktemp)"
 tmp_null_json="$(mktemp)"
 tmp_profile="$(mktemp)"
-trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"' EXIT
+tmp_storage_root="$(mktemp -d)"
+trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"; rm -rf "$tmp_storage_root"' EXIT
 
 cat > "$tmp_json" <<'JSON'
 [
@@ -58,6 +59,17 @@ cat > "$tmp_profile" <<'PROFILE'
 ## Review Cadence
 PROFILE
 node "$script_dir/validate-profile.js" "$tmp_profile"
+
+if node "$script_dir/prepare-storage.js" "$tmp_storage_root" company Double Steel > "$tmp_output" 2>&1; then
+  echo "Expected prepare-storage preview to require confirmation" >&2
+  exit 1
+fi
+grep -F '"writeRequired": true' "$tmp_output" >/dev/null
+
+node "$script_dir/prepare-storage.js" "$tmp_storage_root" department Sales --confirm-write > "$tmp_output"
+test -f "$tmp_storage_root/.ogsm/index.md"
+test -f "$tmp_storage_root/.ogsm/context/departments/sales.md"
+test -d "$tmp_storage_root/.ogsm/reviews/departments/sales"
 
 cp "$plugin_root/assets/operating-context-template.md" "$tmp_context"
 node "$script_dir/update-operating-context.js" "$tmp_context" "First line

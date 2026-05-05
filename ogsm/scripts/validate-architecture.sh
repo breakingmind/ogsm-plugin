@@ -10,8 +10,12 @@ test -f "$plugin_root/plugin.toml"
 test -f "$plugin_root/README.md"
 test -f "$plugin_root/.codex-plugin/plugin.json"
 test -f "$plugin_root/.claude-plugin/plugin.json"
-test -f "$plugin_root/../.agents/plugins/marketplace.json"
-test -f "$plugin_root/../.claude-plugin/marketplace.json"
+if [ -d "$plugin_root/../.agents" ]; then
+  test -f "$plugin_root/../.agents/plugins/marketplace.json"
+fi
+if [ -d "$plugin_root/../.claude-plugin" ]; then
+  test -f "$plugin_root/../.claude-plugin/marketplace.json"
+fi
 
 for skill in $skills; do
   test -f "$plugin_root/skills/$skill/SKILL.md"
@@ -27,20 +31,23 @@ for skill in $skills; do
   grep -q "path = \"skills/$skill/SKILL.md\"" "$plugin_root/plugin.toml"
 done
 
-for reference in ogsm-principles ogsm-profile-format review-rubric schedule-normalization output-formats adaptive-operating-context tool-policy progressive-disclosure; do
+for reference in ogsm-principles ogsm-profile-format review-rubric schedule-normalization output-formats adaptive-operating-context tool-policy progressive-disclosure storage-policy; do
   test -f "$plugin_root/references/$reference.md"
 done
 
-for asset in profile-template operating-context-template quick-review-template full-audit-template realign-template; do
+for asset in profile-template operating-context-template quick-review-template full-audit-template realign-template storage-index-template; do
   test -f "$plugin_root/assets/$asset.md"
 done
 
-for script in validate-profile normalize-schedule score-alignment update-operating-context; do
+for script in validate-profile normalize-schedule score-alignment update-operating-context prepare-storage; do
   test -x "$plugin_root/scripts/$script.js"
 done
 
 grep -q 'Must not directly use Google Calendar connector' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
 grep -q 'May use Google Calendar connector to read events' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
+grep -q 'scope: department' "$plugin_root/references/storage-policy.md"
+test -f "$plugin_root/examples/storage-layout/profiles/company/example-company.md"
+test -f "$plugin_root/examples/storage-layout/profiles/departments/sales.md"
 
 for skill in ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-realign ogsm-weekly-review; do
   if grep -q 'May use Google Calendar connector' "$plugin_root/skills/$skill/SKILL.md"; then

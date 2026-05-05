@@ -24,7 +24,7 @@ Use this skill to close the OGSM operating loop.
 ## Workflow
 
 1. Read the OGSM profile.
-2. Read `../../references/adaptive-operating-context.md`.
+2. Read `../../references/adaptive-operating-context.md` and `../../references/storage-policy.md` when reading or updating persistent context.
 3. Compare actual work against Strategies, MD, and MP.
 4. Identify recurring patterns.
 5. Propose operating context updates.
@@ -40,4 +40,5 @@ Use this skill to close the OGSM operating loop.
 
 - May read profile, review history, and operating context.
 - May update operating context after confirmation.
+- Must keep company and department context files separate.
 - Must not silently change Objective, Goals, Strategies, MD, or MP.

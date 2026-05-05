@@ -28,6 +28,35 @@ The plugin uses progressive disclosure:
 - Repeatable mechanical work lives in `scripts/`.
 - Examples live in `examples/`.
 
+## Persistent Storage
+
+Persistent OGSM data is project-local by default and stored under `.ogsm/` only after user confirmation.
+
+Default scope-aware paths:
+
+```text
+.ogsm/profiles/company/<company-slug>.md
+.ogsm/profiles/departments/<department-slug>.md
+.ogsm/context/company/<company-slug>.md
+.ogsm/context/departments/<department-slug>.md
+.ogsm/reviews/company/<company-slug>/
+.ogsm/reviews/departments/<department-slug>/
+```
+
+Use company profiles for organization-wide OGSMs and department profiles for team/function OGSMs that align to a company parent.
+
+To preview storage initialization without writing:
+
+```bash
+node ogsm/scripts/prepare-storage.js . company double-steel
+```
+
+After user confirmation, create the local storage:
+
+```bash
+node ogsm/scripts/prepare-storage.js . company double-steel --confirm-write
+```
+
 ## Safety
 
 The MVP never modifies calendars, external documents, Objective, Goals, Strategies, MD, or MP without explicit user confirmation.

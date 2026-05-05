@@ -18,6 +18,13 @@ It may track:
 
 The context can influence future reviews, but it must not silently change the OGSM profile.
 
+Project-local context should be scoped:
+
+- Company context: `.ogsm/context/company/<company-slug>.md`
+- Department context: `.ogsm/context/departments/<department-slug>.md`
+
+Department context may refer to company patterns, but it must not overwrite company context.
+
 Any Objective, Goal, Strategy, MD, or MP change requires:
 
 1. Proposed change
