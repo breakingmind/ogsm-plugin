@@ -1,5 +1,7 @@
 # Output Formats
 
+This file is the output format contract. Reusable fill-in templates live in assets/.
+
 ## Quick Review
 
 - Alignment score

@@ -2,6 +2,8 @@
 
 Each `SKILL.md` is an entrypoint, not a full manual.
 
+references/output-formats.md defines format contracts; reusable filled skeletons belong in assets/.
+
 Keep in `SKILL.md`:
 
 - Trigger conditions

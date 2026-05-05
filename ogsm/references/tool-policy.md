@@ -4,7 +4,8 @@
 
 - Read local plugin files, references, assets, examples, profiles, and operating context.
 - Write local profile, operating context, and review outputs after user confirmation.
-- Execute plugin scripts for validation, normalization, scoring, and context updates.
+- Execute plugin scripts for validation, normalization, and scoring.
+- Execute context update scripts only after user confirmation.
 - Use Google Calendar connector only from `ogsm-calendar-brief`.
 
 ## Restricted Tools
