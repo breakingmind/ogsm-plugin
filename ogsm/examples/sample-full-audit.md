@@ -23,7 +23,7 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 ## MD Quality
 
 - MVP completion is trackable.
-- Meeting reduction needs a current baseline.
+- Meeting reduction has a concrete 12 hours per week baseline and 9 hours per week target.
 
 ## MP Executability
 
@@ -49,4 +49,4 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 
 ## Open Questions
 
-- What is the current weekly low-alignment meeting baseline?
+- Which meetings make up the 12 hours per week baseline and which 3 hours should move first?

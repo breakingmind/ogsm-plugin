@@ -15,7 +15,7 @@ Provide internal teams with a focused operating rhythm that turns strategy into 
 ## Goals
 
 1. Increase validated MVP workflow completion from 0% baseline to 100% by 2026-06-30.
-2. Reduce low-alignment meeting hours from a user-confirmed weekly baseline to 75% of that baseline by 2026-06-30.
+2. Reduce low-alignment meeting hours from 12 hours per week baseline to 9 hours per week by 2026-06-30.
 
 ## Strategies
 
@@ -26,7 +26,7 @@ Provide internal teams with a focused operating rhythm that turns strategy into 
 ## MD
 
 1. 2026-06-30: MVP workflow completion reaches 100% from 0% baseline, reviewed weekly.
-2. 2026-06-30: low-alignment meeting hours reduce by 25% from user-confirmed baseline, reviewed weekly.
+2. 2026-06-30: low-alignment meeting hours reduce from 12 hours per week baseline to 9 hours per week, reviewed weekly.
 
 ## MP
 
