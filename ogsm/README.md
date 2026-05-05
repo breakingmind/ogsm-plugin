@@ -34,6 +34,36 @@ The MVP never modifies calendars, external documents, Objective, Goals, Strategi
 
 If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
 
+## Claude Code Local Install
+
+This bundle can be installed as a local Claude Code plugin from a cloned repo.
+
+From the repository root, run:
+
+```bash
+node ogsm/scripts/install-claude-code-local.js
+```
+
+Then restart Claude Code and try:
+
+```text
+請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+
+or:
+
+```text
+請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+```
+
+The installer copies `ogsm/` into:
+
+```text
+~/.claude/plugins/marketplaces/local/external_plugins/ogsm
+```
+
+It also registers and enables `ogsm@local` in Claude Code's local plugin files.
+
 ## Validation
 
 Run:

@@ -1,8 +1,11 @@
 #!/bin/sh
 set -eu
 
-node ogsm/scripts/validate-profile.js ogsm/examples/sample-ogsm-profile.md
-node ogsm/scripts/normalize-schedule.js ogsm/examples/sample-schedule-input.md
+script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+plugin_root="$(dirname "$script_dir")"
+
+node "$script_dir/validate-profile.js" "$plugin_root/examples/sample-ogsm-profile.md"
+node "$script_dir/normalize-schedule.js" "$plugin_root/examples/sample-schedule-input.md"
 
 tmp_json="$(mktemp)"
 tmp_context="$(mktemp)"
@@ -19,26 +22,26 @@ cat > "$tmp_json" <<'JSON'
   {"title":"Exploratory calls","strategyLink":"Unmapped","mdLink":"Unmapped","mpLink":"Unmapped"}
 ]
 JSON
-node ogsm/scripts/score-alignment.js "$tmp_json"
+node "$script_dir/score-alignment.js" "$tmp_json"
 
-node ogsm/scripts/update-operating-context.js "$tmp_context" "Strategy 1 was under-supported"
+node "$script_dir/update-operating-context.js" "$tmp_context" "Strategy 1 was under-supported"
 test -s "$tmp_context"
 
 cat > "$tmp_schedule" <<'SCHEDULE'
 Monday 09:00-10:00 A | B sync
 SCHEDULE
-node ogsm/scripts/normalize-schedule.js "$tmp_schedule" > "$tmp_output"
+node "$script_dir/normalize-schedule.js" "$tmp_schedule" > "$tmp_output"
 grep -F 'A \| B sync' "$tmp_output" >/dev/null
 
 printf '{' > "$tmp_invalid_json"
-if node ogsm/scripts/score-alignment.js "$tmp_invalid_json" > "$tmp_output" 2>&1; then
+if node "$script_dir/score-alignment.js" "$tmp_invalid_json" > "$tmp_output" 2>&1; then
   echo "Expected invalid JSON to fail" >&2
   exit 1
 fi
 grep -F 'Invalid JSON' "$tmp_output" >/dev/null
 
 printf '[null]' > "$tmp_null_json"
-if node ogsm/scripts/score-alignment.js "$tmp_null_json" > "$tmp_output" 2>&1; then
+if node "$script_dir/score-alignment.js" "$tmp_null_json" > "$tmp_output" 2>&1; then
   echo "Expected non-object JSON array entries to fail" >&2
   exit 1
 fi
@@ -54,10 +57,10 @@ cat > "$tmp_profile" <<'PROFILE'
 ## MP
 ## Review Cadence
 PROFILE
-node ogsm/scripts/validate-profile.js "$tmp_profile"
+node "$script_dir/validate-profile.js" "$tmp_profile"
 
-cp ogsm/assets/operating-context-template.md "$tmp_context"
-node ogsm/scripts/update-operating-context.js "$tmp_context" "First line
+cp "$plugin_root/assets/operating-context-template.md" "$tmp_context"
+node "$script_dir/update-operating-context.js" "$tmp_context" "First line
 Second line"
 if grep -F -- '- None recorded yet.' "$tmp_context" >/dev/null; then
   echo "Expected placeholder context note to be removed" >&2
@@ -65,4 +68,4 @@ if grep -F -- '- None recorded yet.' "$tmp_context" >/dev/null; then
 fi
 grep -F 'First line Second line' "$tmp_context" >/dev/null
 
-ogsm/scripts/validate-architecture.sh
+"$script_dir/validate-architecture.sh"
