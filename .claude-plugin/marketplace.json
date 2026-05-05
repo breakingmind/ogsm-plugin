@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ogsm-plugin-mvp",
+  "description": "OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
+  "owner": {
+    "name": "breakingmind"
+  },
+  "plugins": [
+    {
+      "name": "ogsm",
+      "description": "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
+      "version": "0.1.0",
+      "source": "./ogsm",
+      "author": {
+        "name": "breakingmind"
+      },
+      "category": "productivity",
+      "homepage": "https://github.com/breakingmind/ogsm-plugin-mvp"
+    }
+  ]
+}

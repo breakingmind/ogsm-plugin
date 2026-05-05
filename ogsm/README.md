@@ -34,6 +34,37 @@ The MVP never modifies calendars, external documents, Objective, Goals, Strategi
 
 If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
 
+## Codex Install From GitHub
+
+Add this repository as a Git-backed Codex marketplace in `~/.codex/config.toml`:
+
+```toml
+[marketplaces.ogsm-plugin-mvp]
+source_type = "git"
+source = "https://github.com/breakingmind/ogsm-plugin-mvp.git"
+```
+
+Then enable the plugin:
+
+```toml
+[plugins."ogsm@ogsm-plugin-mvp"]
+enabled = true
+```
+
+Restart Codex and try:
+
+```text
+請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+
+or:
+
+```text
+請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+```
+
+If the repository is private, the user must have GitHub access from the machine where Codex runs.
+
 ## Codex Local Install
 
 This repository includes a Codex marketplace manifest and plugin manifest:
@@ -74,6 +105,34 @@ If you cloned the repository to this machine's current workspace, the marketplac
 ```text
 /Users/breakingmind/Documents/Codex/2026-05-05/superpowers-brainstorming-users-breakingmind-codex-plugins
 ```
+
+## Claude Code Install From GitHub
+
+Add this repository as a Claude Code marketplace:
+
+```bash
+claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin-mvp
+```
+
+Then install the plugin:
+
+```bash
+claude plugin install ogsm@ogsm-plugin-mvp
+```
+
+Restart Claude Code and try:
+
+```text
+請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+
+or:
+
+```text
+請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+```
+
+If the repository is private, the user must have GitHub access from the machine where Claude Code runs.
 
 ## Claude Code Local Install
 
