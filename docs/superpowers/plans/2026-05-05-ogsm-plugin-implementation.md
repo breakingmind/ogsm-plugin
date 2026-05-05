@@ -145,7 +145,7 @@ This plugin helps users make OGSM operational through a repeatable loop:
 
 The plugin uses progressive disclosure. Skill entrypoints stay short; long rules live in `references/`, templates live in `assets/`, and repeatable mechanical work lives in `scripts/`.
 
-The MVP never modifies calendars, external documents, Objective, Goals, Strategies, or Measures without explicit user confirmation.
+The MVP never modifies calendars, external documents, Objective, Goals, Strategies, MD, or MP without explicit user confirmation.
 ```
 
 - [ ] **Step 5: Verify skeleton**
@@ -196,10 +196,12 @@ Write `ogsm/references/ogsm-principles.md`:
 
 OGSM connects ambition to execution:
 
-- Objective explains the direction and why it matters.
-- Goals define concrete outcomes inside the time horizon.
-- Strategies define the major choices for reaching the Goals.
-- Measures prove whether the Strategies are working.
+- Objective names the target audience, service scope, value, positioning, and vivid picture of success.
+- Goals define concrete outcomes from Objective keywords, with verb, noun, baseline, total target, and date range.
+- Strategies define the resources, methodology, and tools selected to reach the Goals.
+- M is the execution check system: MD measures whether the Strategy is working, and MP lists time-ordered action plans.
+
+The core logic check works backward: MP completion should achieve MD; MD achievement should prove Strategy effectiveness; Strategy achievement should reach Goals; Goals should support the Objective.
 
 Strong OGSMs are selective. They make it easier to say no.
 
@@ -207,9 +209,11 @@ Strong OGSMs are selective. They make it easier to say no.
 
 - Objective is a slogan without a tradeoff.
 - Goals describe effort instead of outcomes.
-- Strategies are task lists instead of choices.
-- Measures are vanity metrics.
-- Measures lack baseline, target, deadline, owner, or review cadence.
+- Strategies are task lists instead of resources, methodology, or tools.
+- Strategies do not identify resources that are new, unique, or consumed.
+- MD items are vanity metrics or lack date, target, baseline, or review cadence.
+- MP items lack owner, collaborating unit, time order, or concrete work content.
+- MP cannot be traced backward to MD, Strategy, Goal, and Objective.
 - Calendar time does not support the declared Strategies.
 - Every urgent request is treated as strategy work.
 ```
@@ -230,7 +234,8 @@ The canonical profile is Markdown.
 - Objective
 - Goals
 - Strategies
-- Measures
+- MD
+- MP
 - Review Cadence
 
 ## Recommended Sections
@@ -244,11 +249,12 @@ The canonical profile is Markdown.
 
 ## Quality Rules
 
-- Objective must name a meaningful direction and implied tradeoff.
-- Goals must be specific enough to evaluate.
-- Strategies must describe choices, not all possible work.
-- Measures must include target, deadline, and review rhythm when possible.
-- Each Strategy should connect to at least one Measure.
+- Objective must name target audience, service scope, value, positioning, and a vivid picture of success.
+- Goals must connect to Objective keywords and include verb, noun, baseline, total target, and date range where possible.
+- Strategies must describe selected resources, methodology, and tools, not all possible work.
+- MD must include indicator, date, target or total amount, and the Strategy it validates.
+- MP must include owner or unit, collaborating unit when relevant, time order, date or period, and work content.
+- Each MP should connect to an MD; each MD should validate a Strategy; each Strategy should support a Goal.
 ```
 
 - [ ] **Step 3: Create `review-rubric.md`**
@@ -268,9 +274,14 @@ Score each dimension from 1 to 5.
 
 - Objective clarity
 - Goal measurability
-- Strategy focus
-- Measure quality
-- Strategy-to-Measure linkage
+- Strategy as resource/method quality
+- MD quality
+- MP executability
+- MP-to-MD linkage
+- MD-to-Strategy linkage
+- Strategy-to-Goal linkage
+- Goal-to-Objective linkage
+- Backward logic: MP to MD to S to G to O
 - Plan alignment
 - Schedule alignment
 - Time allocation realism
@@ -294,8 +305,8 @@ Write `ogsm/references/schedule-normalization.md`:
 
 Normalize every schedule input into a Markdown table.
 
-| Date | Start | End | Duration | Title | Type | Mobility | Strategy Link | Measure Link | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Date | Start | End | Duration | Title | Type | Mobility | Strategy Link | MD Link | MP Link | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## Event Types
 
@@ -341,7 +352,9 @@ Write `ogsm/references/output-formats.md`:
 - Alignment matrix
 - Strengths
 - Gaps
-- Measure quality review
+- MD quality review
+- MP executability review
+- Backward logic review
 - Time allocation analysis when schedule input exists
 - Risks and tradeoffs
 - Recommended corrections
@@ -351,7 +364,7 @@ Write `ogsm/references/output-formats.md`:
 
 - Revised plan or schedule
 - Change log
-- Strategy and Measure linkage
+- MP, MD, Strategy, Goal, and Objective linkage
 - Delete, defer, delegate, shorten, move, or add decisions
 - Suggested next review point
 ```
@@ -375,12 +388,13 @@ It may track:
 - Meeting load tolerance
 - Recurring schedule conflicts
 - Under-supported Strategies
-- Weak or untracked Measures
+- Weak or untracked MD
+- MP missing owner, collaborator, date, or work content
 - User decision rules
 
 The context can influence future reviews, but it must not silently change the OGSM profile.
 
-Any Objective, Goal, Strategy, or Measure change requires:
+Any Objective, Goal, Strategy, MD, or MP change requires:
 
 1. Proposed change
 2. Reason
@@ -406,7 +420,7 @@ Write `ogsm/references/tool-policy.md`:
 
 - Do not modify calendar events in MVP.
 - Do not modify external documents in MVP.
-- Do not update Objective, Goals, Strategies, or Measures without explicit confirmation.
+- Do not update Objective, Goals, Strategies, MD, or MP without explicit confirmation.
 - Do not treat connector failure as workflow failure.
 
 ## Fallbacks
@@ -514,7 +528,7 @@ Example OGSM
 
 ## Objective
 
-Build a focused operating rhythm that turns strategic priorities into measurable weekly execution.
+Provide internal teams with a focused operating rhythm that turns strategy into visible weekly execution, becoming a reliable strategy-to-action management partner.
 
 ## Goals
 
@@ -523,14 +537,20 @@ Build a focused operating rhythm that turns strategic priorities into measurable
 
 ## Strategies
 
-1. Protect weekly deep work for the highest leverage project.
-2. Review strategy alignment before accepting new commitments.
-3. Measure progress weekly and adjust the next week deliberately.
+1. Through protected deep work time and weekly review rituals, complete the validated MVP workflow.
+2. Through calendar load visibility and decision rules, reduce low-alignment meeting time.
+3. Through a lightweight dashboard and owner cadence, inspect MD progress every week.
 
-## Measures
+## MD
 
-1. MVP workflow completion: 0% baseline, 100% target by 2026-06-30, reviewed weekly.
-2. Low-alignment meeting hours: current baseline entered by user, 25% reduction target by 2026-06-30, reviewed weekly.
+1. 2026-06-30: MVP workflow completion reaches 100% from 0% baseline, reviewed weekly.
+2. 2026-06-30: low-alignment meeting hours reduce by 25% from user-confirmed baseline, reviewed weekly.
+
+## MP
+
+1. Product owner, with engineering support, completes dashboard prototype deep work every Monday 10:30-12:00 through 2026-06-30.
+2. Strategy owner reviews metric baseline every Wednesday 09:00-09:30 through 2026-06-30.
+3. Calendar owner reviews and moves low-alignment exploratory calls every Friday before weekly OGSM review.
 
 ## Review Cadence
 
@@ -539,7 +559,7 @@ Weekly on Friday.
 ## Decision Rules
 
 - Say no to work that does not support a Strategy or required obligation.
-- Add a Measure check-in before adding new strategy work.
+- Add an MD check-in and MP owner before adding new strategy work.
 ```
 
 - [ ] **Step 2: Create operating context template**
@@ -616,8 +636,8 @@ Summary
 
 ## Alignment Matrix
 
-| Item | Strategy Link | Measure Link | Score | Correction |
-| --- | --- | --- | --- | --- |
+| Item | Strategy Link | MD Link | MP Link | Score | Correction |
+| --- | --- | --- | --- | --- | --- |
 
 ## Strengths
 
@@ -627,9 +647,13 @@ Summary
 
 - Gap
 
-## Measure Quality
+## MD Quality
 
-- Measure finding
+- MD finding
+
+## MP Executability
+
+- MP finding
 
 ## Time Allocation
 
@@ -659,7 +683,7 @@ Revised plan or schedule
 
 ## Change Log
 
-| Change | Reason | OGSM Link |
+| Change | Reason | MP/MD/S/G/O Link |
 | --- | --- | --- |
 
 ## Decisions
@@ -717,13 +741,13 @@ Confidence: medium
 
 1. Exploratory project calls may dilute the main Strategy.
 2. Low-alignment meetings are not capped.
-3. Measure baseline review exists but lacks owner notes.
+3. MD baseline review exists but lacks an explicit MP owner note.
 
 ## Recommended Changes
 
 1. Limit exploratory calls to one block.
 2. Protect dashboard prototype deep work.
-3. Add explicit baseline owner.
+3. Add explicit MP owner for baseline review.
 
 ## Next Action
 
@@ -741,10 +765,10 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 
 ## Alignment Matrix
 
-| Item | Strategy Link | Measure Link | Score | Correction |
-| --- | --- | --- | --- | --- |
-| Dashboard prototype | Protect deep work | MVP completion | 5 | Keep |
-| Exploratory calls | Unclear | None | 2 | Defer or reduce |
+| Item | Strategy Link | MD Link | MP Link | Score | Correction |
+| --- | --- | --- | --- | --- | --- |
+| Dashboard prototype | Strategy 1 | MD 1 | MP 1 | 5 | Keep |
+| Exploratory calls | Unclear | None | None | 2 | Defer or reduce |
 
 ## Strengths
 
@@ -755,10 +779,15 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 
 - Exploratory projects lack Strategy linkage.
 
-## Measure Quality
+## MD Quality
 
 - MVP completion is trackable.
 - Meeting reduction needs a current baseline.
+
+## MP Executability
+
+- Dashboard prototype has a time block.
+- Exploratory calls lack MP owner and Strategy linkage.
 
 ## Time Allocation
 
@@ -791,10 +820,10 @@ Write `ogsm/examples/sample-realign-output.md`:
 
 ## Change Log
 
-| Change | Reason | OGSM Link |
+| Change | Reason | MP/MD/S/G/O Link |
 | --- | --- | --- |
 | Moved exploratory calls | Reduce dilution | Strategy 1 |
-| Added baseline capture | Improve Measure quality | Measure 2 |
+| Added baseline capture | Improve MD quality and MP completeness | MD 2 / MP 3 |
 
 ## Decisions
 
@@ -871,7 +900,8 @@ const required = [
   'Objective',
   'Goals',
   'Strategies',
-  'Measures',
+  'MD',
+  'MP',
   'Review Cadence',
 ];
 
@@ -925,7 +955,8 @@ function parseLine(line) {
       type: classify(line),
       mobility: 'Unknown',
       strategy: 'Unmapped',
-      measure: 'Unmapped',
+      md: 'Unmapped',
+      mp: 'Unmapped',
       notes: 'Could not parse date or time',
     };
   }
@@ -940,16 +971,17 @@ function parseLine(line) {
     type: classify(title),
     mobility: 'Unknown',
     strategy: 'Unmapped',
-    measure: 'Unmapped',
+    md: 'Unmapped',
+    mp: 'Unmapped',
     notes: '',
   };
 }
 
 const rows = lines.map(parseLine);
-console.log('| Date | Start | End | Duration | Title | Type | Mobility | Strategy Link | Measure Link | Notes |');
-console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
+console.log('| Date | Start | End | Duration | Title | Type | Mobility | Strategy Link | MD Link | MP Link | Notes |');
+console.log('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
 for (const row of rows) {
-  console.log(`| ${row.date} | ${row.start} | ${row.end} | ${row.duration} | ${row.title} | ${row.type} | ${row.mobility} | ${row.strategy} | ${row.measure} | ${row.notes} |`);
+  console.log(`| ${row.date} | ${row.start} | ${row.end} | ${row.duration} | ${row.title} | ${row.type} | ${row.mobility} | ${row.strategy} | ${row.md} | ${row.mp} | ${row.notes} |`);
 }
 ```
 
@@ -975,12 +1007,14 @@ if (!Array.isArray(items)) {
 
 const scores = items.map((item) => {
   const strategy = item.strategyLink && item.strategyLink !== 'Unmapped';
-  const measure = item.measureLink && item.measureLink !== 'Unmapped';
-  const score = strategy && measure ? 5 : strategy || measure ? 3 : 1;
+  const md = item.mdLink && item.mdLink !== 'Unmapped';
+  const mp = item.mpLink && item.mpLink !== 'Unmapped';
+  const score = strategy && md && mp ? 5 : strategy && (md || mp) ? 3 : 1;
   return {
     item: item.title || item.name || 'Untitled',
     strategyLink: item.strategyLink || 'Unmapped',
-    measureLink: item.measureLink || 'Unmapped',
+    mdLink: item.mdLink || 'Unmapped',
+    mpLink: item.mpLink || 'Unmapped',
     score,
   };
 });
@@ -1045,8 +1079,8 @@ node ogsm/scripts/normalize-schedule.js ogsm/examples/sample-schedule-input.md
 tmp_json="$(mktemp)"
 cat > "$tmp_json" <<'JSON'
 [
-  {"title":"Dashboard prototype","strategyLink":"Strategy 1","measureLink":"Measure 1"},
-  {"title":"Exploratory calls","strategyLink":"Unmapped","measureLink":"Unmapped"}
+  {"title":"Dashboard prototype","strategyLink":"Strategy 1","mdLink":"MD 1","mpLink":"MP 1"},
+  {"title":"Exploratory calls","strategyLink":"Unmapped","mdLink":"Unmapped","mpLink":"Unmapped"}
 ]
 JSON
 node ogsm/scripts/score-alignment.js "$tmp_json"
@@ -1125,10 +1159,10 @@ Use this skill to build the user's baseline OGSM profile.
 ## Workflow
 
 1. Read `../../references/ogsm-profile-format.md` and `../../references/ogsm-principles.md`.
-2. If the user has no draft, ask one question at a time until Objective, Goals, Strategies, Measures, and Review Cadence are clear.
+2. If the user has no draft, ask one question at a time until Objective, Goals, Strategies, MD, MP, and Review Cadence are clear.
 3. Use `../../assets/profile-template.md` as the profile skeleton.
 4. Run `node ../../scripts/validate-profile.js <profile-file>` after drafting a saved profile.
-5. Ask the user to confirm before saving or changing Objective, Goals, Strategies, or Measures.
+5. Ask the user to confirm before saving or changing Objective, Goals, Strategies, MD, or MP.
 
 ## Progressive Disclosure
 
@@ -1168,7 +1202,8 @@ Use this skill to convert OGSM into operational guidance.
 
 - Priority themes.
 - Strategy time allocation guidance.
-- Measure check-ins.
+- MD check-ins.
+- MP priorities.
 - Say-no list.
 - Decision rules.
 
@@ -1221,10 +1256,11 @@ Use this skill to evaluate written plans against OGSM.
 1. Read the OGSM profile. If missing, route to `ogsm-define`.
 2. Read `../../references/review-rubric.md`.
 3. Read `../../references/output-formats.md`.
-4. Map each plan item to Strategy and Measure.
-5. Use `node ../../scripts/score-alignment.js <items.json>` when structured alignment items are available.
-6. Ask one clarifying question only if it changes the review.
-7. Offer `ogsm-realign` if the user wants a revised version.
+4. Map each plan item to Strategy, MD, and MP.
+5. Check backward logic: MP should achieve MD, MD should validate Strategy, Strategy should support Goal, and Goal should support Objective.
+6. Use `node ../../scripts/score-alignment.js <items.json>` when structured alignment items are available.
+7. Ask one clarifying question only if it changes the review.
+8. Offer `ogsm-realign` if the user wants a revised version.
 
 ## Progressive Disclosure
 
@@ -1272,8 +1308,9 @@ Use this skill to determine whether time allocation supports OGSM.
 3. Normalize input with `node ../../scripts/normalize-schedule.js <schedule-file>` when schedule text is saved.
 4. Ask the user to confirm assumptions if normalization confidence is low.
 5. Read `../../references/review-rubric.md` and `../../references/output-formats.md`.
-6. Score Strategy and Measure support.
-7. Offer `ogsm-realign` for a revised weekly allocation.
+6. Score Strategy, MD, and MP support.
+7. Check whether calendar events actually execute MP and include MD check-ins.
+8. Offer `ogsm-realign` for a revised weekly allocation.
 
 ## Progressive Disclosure
 
@@ -1365,7 +1402,7 @@ Use this skill to produce an executable corrected version.
 2. Read audit findings.
 3. Read `../../references/output-formats.md` and `../../assets/realign-template.md`.
 4. Convert findings into concrete edits.
-5. Explain each change with Strategy or Measure linkage.
+5. Explain each change with MP, MD, Strategy, Goal, or Objective linkage.
 6. Ask for confirmation before saving output.
 
 ## Progressive Disclosure
@@ -1387,7 +1424,7 @@ Write `ogsm/skills/ogsm-weekly-review/SKILL.md`:
 ```markdown
 ---
 name: ogsm-weekly-review
-description: Use at the end of a week to review OGSM execution, Measure progress, strategy time allocation, and adaptive operating context updates.
+description: Use at the end of a week to review OGSM execution, MD progress, MP completion, strategy time allocation, and adaptive operating context updates.
 ---
 
 # OGSM Weekly Review
@@ -1403,7 +1440,8 @@ Use this skill to close the OGSM operating loop.
 ## Outputs
 
 - Weekly execution review.
-- Measure movement summary.
+- MD movement summary.
+- MP completion summary.
 - Under-supported Strategy findings.
 - Proposed operating context updates.
 
@@ -1411,7 +1449,7 @@ Use this skill to close the OGSM operating loop.
 
 1. Read the OGSM profile.
 2. Read `../../references/adaptive-operating-context.md`.
-3. Compare actual work against Strategies and Measures.
+3. Compare actual work against Strategies, MD, and MP.
 4. Identify recurring patterns.
 5. Propose operating context updates.
 6. Use `node ../../scripts/update-operating-context.js <context-file> <note>` only after user confirmation.
@@ -1426,7 +1464,7 @@ Use this skill to close the OGSM operating loop.
 
 - May read profile, review history, and operating context.
 - May update operating context after confirmation.
-- Must not silently change Objective, Goals, Strategies, or Measures.
+- Must not silently change Objective, Goals, Strategies, MD, or MP.
 ```
 
 - [ ] **Step 8: Verify skill metadata**
@@ -1530,8 +1568,8 @@ node ogsm/scripts/normalize-schedule.js ogsm/examples/sample-schedule-input.md
 tmp_json="$(mktemp)"
 cat > "$tmp_json" <<'JSON'
 [
-  {"title":"Dashboard prototype","strategyLink":"Strategy 1","measureLink":"Measure 1"},
-  {"title":"Exploratory calls","strategyLink":"Unmapped","measureLink":"Unmapped"}
+  {"title":"Dashboard prototype","strategyLink":"Strategy 1","mdLink":"MD 1","mpLink":"MP 1"},
+  {"title":"Exploratory calls","strategyLink":"Unmapped","mdLink":"Unmapped","mpLink":"Unmapped"}
 ]
 JSON
 node ogsm/scripts/score-alignment.js "$tmp_json"
@@ -1618,7 +1656,7 @@ The plugin uses progressive disclosure:
 
 ## Safety
 
-The MVP never modifies calendars, external documents, Objective, Goals, Strategies, or Measures without explicit user confirmation.
+The MVP never modifies calendars, external documents, Objective, Goals, Strategies, MD, or MP without explicit user confirmation.
 
 If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
 
