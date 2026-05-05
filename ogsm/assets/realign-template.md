@@ -6,7 +6,7 @@ Revised plan or schedule
 
 ## Change Log
 
-| Change | Reason | MP/MD/S/G/O Link |
+| Change | Reason | Backward Linkage (MP -> MD -> S -> G -> O) |
 | --- | --- | --- |
 
 ## Decisions

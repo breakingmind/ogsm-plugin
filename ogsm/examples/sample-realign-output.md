@@ -9,7 +9,7 @@
 
 ## Change Log
 
-| Change | Reason | MP/MD/S/G/O Link |
+| Change | Reason | Backward Linkage (MP -> MD -> S -> G -> O) |
 | --- | --- | --- |
 | Moved exploratory calls | Reduce dilution | Strategy 1 |
 | Added baseline capture | Improve MD quality and MP completeness | MD 2 / MP 3 |

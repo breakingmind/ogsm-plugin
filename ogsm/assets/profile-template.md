@@ -1,44 +1,42 @@
-# OGSM Profile: Example
+# OGSM Profile: <profile name>
 
 ## Profile Name
 
-Example OGSM
+<profile name>
 
 ## Time Horizon
 
-2026 Q2
+<date range or planning period>
 
 ## Objective
 
-Provide internal teams with a focused operating rhythm that turns strategy into visible weekly execution, becoming a reliable strategy-to-action management partner.
+<target audience + service scope + value + positioning + vivid picture of success>
 
 ## Goals
 
-1. Ship one validated MVP workflow by 2026-06-30.
-2. Reduce low-alignment meeting time by 25% by 2026-06-30.
+1. <verb + noun + baseline + target or total amount + date range>
+2. <verb + noun + baseline + target or total amount + date range>
 
 ## Strategies
 
-1. Through protected deep work time and weekly review rituals, complete the validated MVP workflow.
-2. Through calendar load visibility and decision rules, reduce low-alignment meeting time.
-3. Through a lightweight dashboard and owner cadence, inspect MD progress every week.
+1. Through <resource/method/tool>, <how this supports the Goal>.
+2. Through <resource/method/tool>, <how this supports the Goal>.
 
 ## MD
 
-1. 2026-06-30: MVP workflow completion reaches 100% from 0% baseline, reviewed weekly.
-2. 2026-06-30: low-alignment meeting hours reduce by 25% from user-confirmed baseline, reviewed weekly.
+1. <date or period>: <indicator> moves from <baseline> to <target or total amount>, reviewed <cadence>, validating <Strategy>.
+2. <date or period>: <indicator> moves from <baseline> to <target or total amount>, reviewed <cadence>, validating <Strategy>.
 
 ## MP
 
-1. Product owner, with engineering support, completes dashboard prototype deep work every Monday 10:30-12:00 through 2026-06-30.
-2. Strategy owner reviews metric baseline every Wednesday 09:00-09:30 through 2026-06-30.
-3. Calendar owner reviews and moves low-alignment exploratory calls every Friday before weekly OGSM review.
+1. <owner/unit>, with <collaborating unit when relevant>, completes <work content> by <date or period> to move <MD>.
+2. <owner/unit>, with <collaborating unit when relevant>, completes <work content> by <date or period> to move <MD>.
 
 ## Review Cadence
 
-Weekly on Friday.
+<weekly/monthly cadence and day>
 
 ## Decision Rules
 
-- Say no to work that does not support a Strategy or required obligation.
+- Say no to work that does not support a Strategy, MD, MP, or required obligation.
 - Add an MD check-in and MP owner before adding new strategy work.

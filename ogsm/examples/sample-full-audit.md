@@ -30,6 +30,11 @@ The week supports the MVP workflow but risks diluting focus through exploratory 
 - Dashboard prototype has a time block.
 - Exploratory calls lack MP owner and Strategy linkage.
 
+## Backward Logic Review
+
+- Dashboard prototype time block supports MP 1, which moves MD 1 and supports Strategy 1.
+- Exploratory calls do not trace clearly to MP, MD, Strategy, Goal, or Objective.
+
 ## Time Allocation
 
 - Strategy work exists but can be displaced by calls.

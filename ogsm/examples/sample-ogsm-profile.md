@@ -14,8 +14,8 @@ Provide internal teams with a focused operating rhythm that turns strategy into 
 
 ## Goals
 
-1. Ship one validated MVP workflow by 2026-06-30.
-2. Reduce low-alignment meeting time by 25% by 2026-06-30.
+1. Increase validated MVP workflow completion from 0% baseline to 100% by 2026-06-30.
+2. Reduce low-alignment meeting hours from a user-confirmed weekly baseline to 75% of that baseline by 2026-06-30.
 
 ## Strategies
 
@@ -31,7 +31,7 @@ Provide internal teams with a focused operating rhythm that turns strategy into 
 ## MP
 
 1. Product owner, with engineering support, completes dashboard prototype deep work every Monday 10:30-12:00 through 2026-06-30.
-2. Strategy owner reviews metric baseline every Wednesday 09:00-09:30 through 2026-06-30.
+2. Strategy owner reviews MD baseline every Wednesday 09:00-09:30 through 2026-06-30.
 3. Calendar owner reviews and moves low-alignment exploratory calls every Friday before weekly OGSM review.
 
 ## Review Cadence

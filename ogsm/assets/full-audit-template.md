@@ -25,6 +25,10 @@ Summary
 
 - MP finding
 
+## Backward Logic Review
+
+- MP -> MD -> S -> G -> O finding
+
 ## Time Allocation
 
 - Time finding

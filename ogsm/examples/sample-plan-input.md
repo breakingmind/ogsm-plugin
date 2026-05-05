@@ -3,5 +3,5 @@
 - Build onboarding guide.
 - Attend weekly partner sync.
 - Create dashboard prototype.
-- Review metric baseline every Friday.
+- Review MD baseline every Friday.
 - Accept three new exploratory projects.
