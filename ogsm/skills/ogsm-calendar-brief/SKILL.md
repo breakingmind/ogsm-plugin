@@ -14,7 +14,7 @@ Use this skill to prepare schedule input for `ogsm-audit-schedule`.
 
 ## Outputs
 
-- Normalized schedule summary.
+- Normalized schedule summary using the schedule normalization table schema.
 
 ## Workflow
 
@@ -22,8 +22,9 @@ Use this skill to prepare schedule input for `ogsm-audit-schedule`.
 2. If Google Calendar connector is available, read events for the date range.
 3. If connector is unavailable, ask the user to paste an agenda dump.
 4. Read `../../references/schedule-normalization.md`.
-5. Produce the normalized schedule table.
-6. Hand off to `ogsm-audit-schedule` when the user wants alignment review; do not score alignment in this skill.
+5. Produce the normalized schedule table using the exact schema before handoff.
+6. If the user asks to audit Google Calendar directly, first produce the normalized brief here, then hand off to `ogsm-audit-schedule` to score alignment.
+7. Hand off to `ogsm-audit-schedule` when the user wants alignment review; do not score alignment in this skill.
 
 ## Progressive Disclosure
 
@@ -34,6 +35,6 @@ Use this skill to prepare schedule input for `ogsm-audit-schedule`.
 ## Tools
 
 - May use Google Calendar connector to read events.
-- May save the normalized brief only after storage policy, target path, summary or diff, and confirmation.
+- May save the normalized brief only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation. If metadata is missing, ask for scope and slug before saving.
 - Must not modify calendar events.
 - Must fall back to manual agenda input when connector is unavailable.

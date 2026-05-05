@@ -26,7 +26,8 @@ Use this skill to produce an executable corrected version.
 3. Read `../../references/output-formats.md` and `../../assets/realign-template.md`.
 4. Convert findings into concrete edits.
 5. Explain each change with MP, MD, Strategy, Goal, or Objective linkage.
-6. If saving output, read `../../references/storage-policy.md`, show target path and summary or diff, then ask for confirmation before writing.
+6. When realigning a schedule, use the normalized schedule table as the source of truth and output the revised schedule in the same normalized table schema before prose summary.
+7. If saving output, read `../../references/storage-policy.md`, derive scope and slug from profile metadata, show target path, summary or diff, and recorded date, then ask for confirmation before writing.
 
 ## Progressive Disclosure
 
@@ -37,5 +38,5 @@ Use this skill to produce an executable corrected version.
 ## Tools
 
 - May read profile, audit output, decision rules, and templates.
-- May write revised output only after storage policy, target path, summary or diff, and confirmation.
+- May write revised output only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must not modify calendar or external documents directly.

@@ -26,7 +26,7 @@ Use this skill to evaluate written plans against OGSM.
 5. Check backward logic: MP should achieve MD, MD should validate Strategy, Strategy should support Goal, and Goal should support Objective.
 6. Use `node ../../scripts/score-alignment.js <items.json>` when structured alignment items are available.
 7. Ask one clarifying question only if it changes the review.
-8. If the user wants a revised version, load and follow `ogsm-realign` before rewriting the plan.
+8. If the user wants a revised version, state that `ogsm-realign` has been loaded, then load and follow `ogsm-realign` before rewriting the plan.
 
 ## Progressive Disclosure
 
@@ -38,5 +38,5 @@ Use this skill to evaluate written plans against OGSM.
 
 - May read profile, rubric, output format, and adaptive context.
 - May run alignment scoring script.
-- May save review output only after storage policy, target path, summary or diff, and confirmation.
+- May save review output only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must not use Google Calendar.

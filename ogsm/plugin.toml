@@ -1,7 +1,7 @@
 [plugin]
 name = "ogsm"
 version = "0.1.0"
-description = "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules."
+description = "Use when users need to create, review, realign, or weekly-review OGSM profiles, plans, schedules, or operating context."
 author = "breakingmind"
 
 [[skills]]

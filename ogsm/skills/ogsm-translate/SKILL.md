@@ -28,7 +28,7 @@ Use this skill to convert OGSM into operational guidance.
 2. Read `../../references/adaptive-operating-context.md` only if context exists or the user asks for adaptive guidance.
 3. Read `../../references/review-rubric.md` when prioritization requires tradeoff scoring.
 4. Produce operational guidance for the requested period.
-5. If writing operating context updates, read `../../references/storage-policy.md`, show target path and summary or diff, then ask for confirmation.
+5. If writing operating context updates, read `../../references/storage-policy.md`, derive scope and slug from profile metadata, show target path, summary or diff, and recorded date, then ask for confirmation.
 
 ## Progressive Disclosure
 
@@ -39,5 +39,6 @@ Use this skill to convert OGSM into operational guidance.
 ## Tools
 
 - May read profile and operating context.
-- May write operating context only after storage policy, target path, summary or diff, and confirmation.
+- May write operating context only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
+- Must keep company and department context files separate.
 - Must not use Google Calendar.

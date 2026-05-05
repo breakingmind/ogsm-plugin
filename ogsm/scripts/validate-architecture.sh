@@ -48,15 +48,23 @@ grep -q 'May use Google Calendar connector to read events' "$plugin_root/skills/
 grep -q 'scope: department' "$plugin_root/references/storage-policy.md"
 grep -q 'Scenario 1: Raw Schedule Audit' "$plugin_root/references/skill-pressure-tests.md"
 grep -q 'Scenario 2: Audit to Realign' "$plugin_root/references/skill-pressure-tests.md"
+grep -q 'Fail criteria' "$plugin_root/references/skill-pressure-tests.md"
 test -f "$plugin_root/examples/storage-layout/profiles/company/example-company.md"
 test -f "$plugin_root/examples/storage-layout/profiles/departments/sales.md"
 
 grep -q 'Produce or consume a normalized schedule table before scoring' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
-grep -q 'load and follow `ogsm-realign` before rewriting the schedule' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
-grep -q 'load and follow `ogsm-realign` before rewriting the plan' "$plugin_root/skills/ogsm-audit-plan/SKILL.md"
-grep -q 'show target path and summary or diff' "$plugin_root/skills/ogsm-realign/SKILL.md"
-grep -q 'show target path and new-file notice or diff' "$plugin_root/skills/ogsm-define/SKILL.md"
-grep -q 'only after storage policy, target path, summary or diff, and user confirmation' "$plugin_root/skills/ogsm-weekly-review/SKILL.md"
+grep -q 'Even in quick mode' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
+grep -q 'state that `ogsm-realign` has been loaded' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
+grep -q 'state that `ogsm-realign` has been loaded' "$plugin_root/skills/ogsm-audit-plan/SKILL.md"
+grep -q 'same normalized table schema' "$plugin_root/skills/ogsm-realign/SKILL.md"
+grep -q 'profile metadata scope and slug' "$plugin_root/skills/ogsm-realign/SKILL.md"
+grep -q 'parent company profile first' "$plugin_root/skills/ogsm-define/SKILL.md"
+grep -q 'recorded date' "$plugin_root/skills/ogsm-define/SKILL.md"
+grep -q 'Identify profile scope and target context path' "$plugin_root/skills/ogsm-weekly-review/SKILL.md"
+grep -q 'Must keep company and department context files separate' "$plugin_root/skills/ogsm-translate/SKILL.md"
+grep -q 'first use `ogsm-calendar-brief` to produce a normalized brief' "$plugin_root/skills/ogsm-audit-schedule/SKILL.md"
+grep -q 'If metadata is missing, ask for scope and slug before saving' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
+grep -q 'produce normalized schedule input' "$plugin_root/references/progressive-disclosure.md"
 
 for skill in ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-realign ogsm-weekly-review; do
   if grep -q 'May use Google Calendar connector' "$plugin_root/skills/$skill/SKILL.md"; then
