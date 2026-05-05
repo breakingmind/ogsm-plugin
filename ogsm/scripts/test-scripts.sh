@@ -64,3 +64,5 @@ if grep -F -- '- None recorded yet.' "$tmp_context" >/dev/null; then
   exit 1
 fi
 grep -F 'First line Second line' "$tmp_context" >/dev/null
+
+ogsm/scripts/validate-architecture.sh
