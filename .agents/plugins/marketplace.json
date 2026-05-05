@@ -1,7 +1,7 @@
 {
-  "name": "ogsm-plugin-mvp",
+  "name": "ogsm-plugin",
   "interface": {
-    "displayName": "OGSM Plugin MVP"
+    "displayName": "OGSM Plugin"
   },
   "plugins": [
     {

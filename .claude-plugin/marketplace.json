@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "ogsm-plugin-mvp",
+  "name": "ogsm-plugin",
   "description": "OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
   "owner": {
     "name": "breakingmind"
@@ -15,7 +15,7 @@
         "name": "breakingmind"
       },
       "category": "productivity",
-      "homepage": "https://github.com/breakingmind/ogsm-plugin-mvp"
+      "homepage": "https://github.com/breakingmind/ogsm-plugin"
     }
   ]
 }

@@ -39,15 +39,15 @@ If Google Calendar is unavailable, the calendar workflow falls back to manual ag
 Add this repository as a Git-backed Codex marketplace in `~/.codex/config.toml`:
 
 ```toml
-[marketplaces.ogsm-plugin-mvp]
+[marketplaces.ogsm-plugin]
 source_type = "git"
-source = "https://github.com/breakingmind/ogsm-plugin-mvp.git"
+source = "https://github.com/breakingmind/ogsm-plugin.git"
 ```
 
 Then enable the plugin:
 
 ```toml
-[plugins."ogsm@ogsm-plugin-mvp"]
+[plugins."ogsm@ogsm-plugin"]
 enabled = true
 ```
 
@@ -76,15 +76,15 @@ This repository includes a Codex marketplace manifest and plugin manifest:
 To install from a cloned repo, add the repository as a local Codex marketplace in `~/.codex/config.toml`:
 
 ```toml
-[marketplaces.ogsm-plugin-mvp]
+[marketplaces.ogsm-plugin]
 source_type = "local"
-source = "/absolute/path/to/ogsm-plugin-mvp"
+source = "/absolute/path/to/ogsm-plugin"
 ```
 
 Then enable the plugin:
 
 ```toml
-[plugins."ogsm@ogsm-plugin-mvp"]
+[plugins."ogsm@ogsm-plugin"]
 enabled = true
 ```
 
@@ -111,13 +111,13 @@ If you cloned the repository to this machine's current workspace, the marketplac
 Add this repository as a Claude Code marketplace:
 
 ```bash
-claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin-mvp
+claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin
 ```
 
 Then install the plugin:
 
 ```bash
-claude plugin install ogsm@ogsm-plugin-mvp
+claude plugin install ogsm@ogsm-plugin
 ```
 
 Restart Claude Code and try:
@@ -159,7 +159,7 @@ or:
 The installer copies `ogsm/` into:
 
 ```text
-~/.claude/plugins/marketplaces/local/external_plugins/ogsm
+~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin
 ```
 
 It also registers and enables `ogsm@local` in Claude Code's local plugin files.

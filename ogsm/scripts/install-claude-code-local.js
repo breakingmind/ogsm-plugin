@@ -5,6 +5,7 @@ const path = require("path");
 
 const pluginRoot = path.resolve(__dirname, "..");
 const pluginName = "ogsm";
+const installSlug = "ogsm-plugin";
 const marketplaceName = "local";
 const version = "0.1.0";
 const home = os.homedir();
@@ -18,7 +19,7 @@ const localMarketplaceRoot = path.join(
 const installDir = path.join(
   localMarketplaceRoot,
   "external_plugins",
-  pluginName
+  installSlug
 );
 const marketplacePath = path.join(
   localMarketplaceRoot,
@@ -66,7 +67,7 @@ upsertPluginEntry(marketplace.plugins, {
   name: pluginName,
   description:
     "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
-  source: `./external_plugins/${pluginName}`,
+  source: `./external_plugins/${installSlug}`,
   category: "productivity",
 });
 writeJson(marketplacePath, marketplace);

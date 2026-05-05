@@ -1,4 +1,4 @@
-# OGSM Plugin MVP 設計
+# OGSM Plugin 設計
 
 ## 目的
 
