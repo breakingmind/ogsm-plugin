@@ -28,7 +28,7 @@ Use this skill to close the OGSM operating loop.
 3. Compare actual work against Strategies, MD, and MP.
 4. Identify recurring patterns.
 5. Propose operating context updates.
-6. Use `node ../../scripts/update-operating-context.js <context-file> <note>` only after user confirmation.
+6. Use `node ../../scripts/update-operating-context.js <context-file> <note>` only after storage policy, target path, summary or diff, and user confirmation.
 7. If OGSM changes are needed, propose a diff and ask for confirmation.
 
 ## Progressive Disclosure

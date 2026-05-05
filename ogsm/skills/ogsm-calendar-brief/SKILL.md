@@ -23,15 +23,17 @@ Use this skill to prepare schedule input for `ogsm-audit-schedule`.
 3. If connector is unavailable, ask the user to paste an agenda dump.
 4. Read `../../references/schedule-normalization.md`.
 5. Produce the normalized schedule table.
-6. Hand off to `ogsm-audit-schedule` when the user wants alignment review.
+6. Hand off to `ogsm-audit-schedule` when the user wants alignment review; do not score alignment in this skill.
 
 ## Progressive Disclosure
 
 - Do not read OGSM rubric because this skill does not score alignment.
 - Do not load realign templates.
+- Do not read storage policy unless the user asks to save the calendar brief.
 
 ## Tools
 
 - May use Google Calendar connector to read events.
+- May save the normalized brief only after storage policy, target path, summary or diff, and confirmation.
 - Must not modify calendar events.
 - Must fall back to manual agenda input when connector is unavailable.
