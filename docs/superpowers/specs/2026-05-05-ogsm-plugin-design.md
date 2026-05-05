@@ -47,18 +47,39 @@ ogsm/
   skills/
     ogsm-define/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-translate/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-audit-plan/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-audit-schedule/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-calendar-brief/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-realign/
       SKILL.md
+      references/
+      scripts/
+      assets/
     ogsm-weekly-review/
       SKILL.md
+      references/
+      scripts/
+      assets/
   references/
     ogsm-principles.md
     ogsm-profile-format.md
@@ -66,6 +87,19 @@ ogsm/
     schedule-normalization.md
     output-formats.md
     adaptive-operating-context.md
+    tool-policy.md
+    progressive-disclosure.md
+  scripts/
+    validate-profile.*
+    normalize-schedule.*
+    score-alignment.*
+    update-operating-context.*
+  assets/
+    profile-template.md
+    operating-context-template.md
+    quick-review-template.md
+    full-audit-template.md
+    realign-template.md
   examples/
     sample-ogsm-profile.md
     sample-plan-input.md
@@ -74,6 +108,112 @@ ogsm/
     sample-full-audit.md
     sample-realign-output.md
 ```
+
+## Skill 架構與漸進式揭露
+
+每個 skill 必須符合 Codex skill 的漸進式揭露原則。`SKILL.md` 只放觸發條件、最小流程、必要工具政策與需要時才讀取的 reference 清單；不可把所有 rubric、範例、模板與長篇說明全部塞進 `SKILL.md`。
+
+每個 skill directory 可以包含：
+
+- `SKILL.md`：入口文件，包含 metadata、使用時機、最小工作流、輸入輸出契約、工具使用規則。
+- `references/`：只屬於該 skill 的補充文件，例如特定 rubric、反模式、判斷規則。
+- `scripts/`：可重複使用的機械化處理，例如 profile validation、schedule normalization、alignment scoring。
+- `assets/`：模板、範例表格、輸出骨架、可複製的 Markdown snippets。
+
+Plugin root 的 `references/`、`scripts/`、`assets/` 放共用資源。Skill 內的 `SKILL.md` 必須明確說明何時讀取共用資源。例如：
+
+- 只有在建立或更新 profile 時讀取 `references/ogsm-profile-format.md`。
+- 只有在審查輸出需要評分時讀取 `references/review-rubric.md`。
+- 只有在處理行程輸入時讀取 `references/schedule-normalization.md`。
+- 只有在使用者要求 quick/full/realign 模式時讀取對應 output template。
+
+若 `scripts/` 已提供可用工具，skill 應優先執行 script，而不是在 `SKILL.md` 中重寫大量規則或用一次性文字處理硬做。若 script 不可用，skill 才降級成純文字推理流程，並在輸出中註明降級原因。
+
+## SKILL.md 內容契約
+
+每個 `SKILL.md` 至少包含：
+
+- `name`：skill 名稱。
+- `description`：明確觸發條件，包含使用者可能的自然語言說法。
+- `when_to_use`：何時使用，以及何時不要使用。
+- `inputs`：接受哪些輸入，例如 OGSM profile、計劃文字、行程摘要、calendar range。
+- `outputs`：輸出模式與最小必要欄位。
+- `workflow`：3-8 步的最小流程。
+- `progressive_disclosure`：該 skill 在什麼情況下讀取哪些 references、scripts、assets。
+- `tools`：允許使用的工具、需要使用者授權的工具、不可使用的工具。
+- `fallbacks`：外部工具或 connector 不可用時的降級方式。
+- `safety`：不得自動修改 OGSM、calendar 或外部文件；需要使用者確認的動作。
+
+`SKILL.md` 應保持短而可掃描。長規則放到 references，格式模板放到 assets，機械化處理放到 scripts。
+
+## Tools 定義
+
+Plugin 需要在共用 `references/tool-policy.md` 中定義工具政策，並在每個 skill 的 `SKILL.md` 中引用自己的子集。
+
+### 共用可用工具
+
+- 檔案讀取：讀取 profile、operating context、references、examples。
+- 檔案寫入：只在使用者確認後寫入或更新 profile、operating context、review output。
+- Shell/script execution：執行 plugin 內建 scripts，例如 validate profile、normalize schedule、score alignment。
+- Google Calendar connector：只供 `ogsm-calendar-brief` 或未來 calendar sync 類 skill 使用；不可由 audit skill 直接假設可用。
+- Automations：MVP 不主動使用；未來可用於週回顧提醒，但必須由使用者明確要求。
+
+### 禁止或受限工具行為
+
+- 不得未經使用者確認自動修改 Google Calendar 事件。
+- 不得未經使用者確認自動修改外部文件。
+- 不得將 connector 不可用視為流程失敗；必須降級為 manual input。
+- 不得在未讀取 profile 或未確認 profile 缺漏時產生高信心審查。
+- 不得偷偷更新 Objective、Goals、Strategies 或 Measures。
+
+### Skill 專屬工具範圍
+
+`ogsm-define`：
+
+- 可讀寫 profile。
+- 可使用 profile template asset。
+- 可執行 profile validation script。
+- 不使用 Google Calendar。
+
+`ogsm-translate`：
+
+- 可讀取 profile 與 adaptive context。
+- 可使用 output templates。
+- 可更新 operating context，但需使用者確認。
+- 不使用 Google Calendar。
+
+`ogsm-audit-plan`：
+
+- 可讀取 profile、rubric、output formats、adaptive context。
+- 可執行 alignment scoring script。
+- 可寫入 review output，如果使用者要求保存。
+- 不使用 Google Calendar。
+
+`ogsm-audit-schedule`：
+
+- 可讀取 profile、schedule normalization reference、rubric、adaptive context。
+- 可執行 schedule normalization 與 alignment scoring scripts。
+- 可接收 `ogsm-calendar-brief` 的輸出。
+- 不直接呼叫 Google Calendar connector。
+
+`ogsm-calendar-brief`：
+
+- 可使用 Google Calendar connector 讀取指定日期範圍。
+- 可產生 normalized schedule summary。
+- 不做 OGSM alignment scoring。
+- 不修改 calendar。
+
+`ogsm-realign`：
+
+- 可讀取 audit output、profile、decision rules、output templates。
+- 可產生修正版計劃或行程建議。
+- 不直接修改 calendar 或文件。
+
+`ogsm-weekly-review`：
+
+- 可讀取 profile、review history、adaptive context。
+- 可更新 adaptive context。
+- 若建議修改 OGSM profile，必須先提出 diff 與理由，取得使用者確認後才寫入。
 
 ## 核心 Skills
 
@@ -345,6 +485,10 @@ MVP 測試以 example-driven validation 為主，不只依賴自動化測試。
 - Google Calendar 不可用時平順降級。
 - 週回顧更新 adaptive context。
 - 使用者拒絕某項建議，context 記錄偏好。
+- 每個 skill 的 `SKILL.md` 都只包含入口流程，長規則放在 references。
+- 每個 skill 都列出允許工具、受限工具與 fallback。
+- 每個 references、scripts、assets 項目都有至少一個 skill 會在明確情境下使用。
+- `ogsm-audit-schedule` 不直接呼叫 Google Calendar；只接收 manual input 或 `ogsm-calendar-brief` 的 normalized summary。
 
 每個 skill 至少要有一組 sample input 與 expected output shape。
 
@@ -370,4 +514,6 @@ MVP 成功的標準：
 - Plugin 能產生 quick review、full audit、realign 三種輸出。
 - Optional Google Calendar path 可在 connector 可用時準備行程輸入，並在不可用時平順降級。
 - Weekly review 能更新透明的 adaptive context。
+- 每個 skill 符合漸進式揭露：入口短、長規則分離、模板放 assets、機械化處理放 scripts。
+- 每個 skill 明確定義可用工具、不可用工具、需要使用者確認的工具行為與 connector fallback。
 - Plugin 能持續幫使用者更清楚地決定該做什麼、不該做什麼，以及下一週時間應該放在哪裡。
