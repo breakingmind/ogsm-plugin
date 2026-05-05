@@ -34,6 +34,47 @@ The MVP never modifies calendars, external documents, Objective, Goals, Strategi
 
 If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
 
+## Codex Local Install
+
+This repository includes a Codex marketplace manifest and plugin manifest:
+
+- Repository marketplace: `./.agents/plugins/marketplace.json`
+- Codex plugin manifest: `./ogsm/.codex-plugin/plugin.json`
+- Legacy MVP manifest: `./ogsm/plugin.toml`
+
+To install from a cloned repo, add the repository as a local Codex marketplace in `~/.codex/config.toml`:
+
+```toml
+[marketplaces.ogsm-plugin-mvp]
+source_type = "local"
+source = "/absolute/path/to/ogsm-plugin-mvp"
+```
+
+Then enable the plugin:
+
+```toml
+[plugins."ogsm@ogsm-plugin-mvp"]
+enabled = true
+```
+
+Restart Codex and try:
+
+```text
+請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+
+or:
+
+```text
+請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+```
+
+If you cloned the repository to this machine's current workspace, the marketplace path is:
+
+```text
+/Users/breakingmind/Documents/Codex/2026-05-05/superpowers-brainstorming-users-breakingmind-codex-plugins
+```
+
 ## Claude Code Local Install
 
 This bundle can be installed as a local Claude Code plugin from a cloned repo.

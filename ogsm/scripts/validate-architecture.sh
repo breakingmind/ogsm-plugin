@@ -8,6 +8,9 @@ skills="ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-cale
 
 test -f "$plugin_root/plugin.toml"
 test -f "$plugin_root/README.md"
+test -f "$plugin_root/.codex-plugin/plugin.json"
+test -f "$plugin_root/.claude-plugin/plugin.json"
+test -f "$plugin_root/../.agents/plugins/marketplace.json"
 
 for skill in $skills; do
   test -f "$plugin_root/skills/$skill/SKILL.md"

@@ -1,0 +1,20 @@
+{
+  "name": "ogsm-plugin-mvp",
+  "interface": {
+    "displayName": "OGSM Plugin MVP"
+  },
+  "plugins": [
+    {
+      "name": "ogsm",
+      "source": {
+        "source": "local",
+        "path": "./ogsm"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

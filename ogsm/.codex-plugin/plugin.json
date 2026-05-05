@@ -1,0 +1,33 @@
+{
+  "name": "ogsm",
+  "version": "0.1.0",
+  "description": "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
+  "author": {
+    "name": "breakingmind"
+  },
+  "repository": "https://github.com/breakingmind/ogsm-plugin-mvp",
+  "keywords": [
+    "ogsm",
+    "strategy",
+    "planning",
+    "alignment",
+    "weekly-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "OGSM",
+    "shortDescription": "Define and audit OGSM-aligned plans and schedules",
+    "longDescription": "OGSM helps users create, translate, audit, realign, and review OGSM profiles, plans, weekly schedules, and adaptive operating context.",
+    "developerName": "breakingmind",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "請使用 ogsm-define 幫我建立一份 OGSM profile",
+      "請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM"
+    ],
+    "brandColor": "#1F6F5B"
+  }
+}
