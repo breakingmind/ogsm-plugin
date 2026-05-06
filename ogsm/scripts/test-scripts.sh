@@ -16,7 +16,9 @@ tmp_invalid_json="$(mktemp)"
 tmp_null_json="$(mktemp)"
 tmp_profile="$(mktemp)"
 tmp_storage_root="$(mktemp -d)"
-trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_calendar_events" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"; rm -rf "$tmp_storage_root"' EXIT
+tmp_h4=""
+tmp_h4d=""
+trap 'rm -f "$tmp_json" "$tmp_context" "$tmp_schedule" "$tmp_calendar_events" "$tmp_output" "$tmp_invalid_json" "$tmp_null_json" "$tmp_profile"; rm -rf "$tmp_storage_root"; [ -n "$tmp_h4" ] && rm -rf "$tmp_h4"; [ -n "$tmp_h4d" ] && rm -rf "$tmp_h4d"' EXIT
 
 cat > "$tmp_json" <<'JSON'
 [
