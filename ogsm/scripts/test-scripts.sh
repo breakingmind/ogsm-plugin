@@ -100,4 +100,48 @@ if grep -F -- '- None recorded yet.' "$tmp_context" >/dev/null; then
 fi
 grep -F 'First line Second line' "$tmp_context" >/dev/null
 
+# H1: non-.ogsm/profiles/ path → pass silently
+echo '{"tool_input":{"file_path":"README.md","content":"anything"}}' | \
+  node "$script_dir/hooks/pre-write-validate-profile.js"
+
+# H1: invalid profile → exit non-zero
+if echo '{"tool_input":{"file_path":".ogsm/profiles/company/test.md","content":"# bad"}}' | \
+  node "$script_dir/hooks/pre-write-validate-profile.js" 2>/dev/null; then
+  echo "Expected H1 to block invalid profile" >&2
+  exit 1
+fi
+
+# H1: valid profile → exit 0
+valid_content="$(node -e "process.stdout.write(JSON.stringify(require('fs').readFileSync('$plugin_root/examples/sample-ogsm-profile.md','utf8')))")"
+printf '{"tool_input":{"file_path":".ogsm/profiles/company/test.md","content":%s}}' "$valid_content" | \
+  node "$script_dir/hooks/pre-write-validate-profile.js"
+
+# H2: non-.ogsm/ path → silent
+out=$(echo '{"tool_input":{"file_path":"README.md"}}' | node "$script_dir/hooks/post-write-confirm.js")
+test -z "$out"
+
+# H3: unrelated Bash command → silent
+out=$(echo '{"tool_input":{"command":"ls -la"}}' | node "$script_dir/hooks/post-context-check.js")
+test -z "$out"
+
+# H4: no .ogsm in /tmp → silent
+out=$(cd /tmp && node "$script_dir/hooks/stop-reminder.js")
+test -z "$out"
+
+# H4: .ogsm/profiles/company/ with a .md file → reminder printed
+tmp_h4="$(mktemp -d)"
+mkdir -p "$tmp_h4/.ogsm/profiles/company"
+echo "# profile" > "$tmp_h4/.ogsm/profiles/company/test.md"
+out=$(cd "$tmp_h4" && node "$script_dir/hooks/stop-reminder.js")
+rm -rf "$tmp_h4"
+echo "$out" | grep -q 'OGSM: session ending'
+
+# H4: .ogsm/profiles/departments/ with a .md file → reminder printed
+tmp_h4d="$(mktemp -d)"
+mkdir -p "$tmp_h4d/.ogsm/profiles/departments"
+echo "# dept profile" > "$tmp_h4d/.ogsm/profiles/departments/sales.md"
+out=$(cd "$tmp_h4d" && node "$script_dir/hooks/stop-reminder.js")
+rm -rf "$tmp_h4d"
+echo "$out" | grep -q 'OGSM: session ending'
+
 "$script_dir/validate-architecture.sh"
