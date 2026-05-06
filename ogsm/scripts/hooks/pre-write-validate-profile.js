@@ -21,14 +21,17 @@ process.stdin.on('end', () => {
   }
 
   const content = input?.tool_input?.content ?? '';
+  if (!content) { process.exit(0); }
+
   const tmp = path.join(os.tmpdir(), `ogsm-pre-validate-${Date.now()}.md`);
 
+  let exitCode = 0;
   try {
     fs.writeFileSync(tmp, content);
     const validateScript = path.resolve(__dirname, '..', 'validate-profile.js');
     execFileSync('node', [validateScript, tmp], { stdio: ['ignore', 'pipe', 'pipe'] });
-    process.exit(0);
   } catch (err) {
+    exitCode = 2;
     let message = 'OGSM pre-write validation failed';
     try {
       const result = JSON.parse(err.stdout?.toString() ?? '{}');
@@ -37,8 +40,8 @@ process.stdin.on('end', () => {
       }
     } catch {}
     process.stderr.write(message + '\n');
-    process.exit(2);
   } finally {
     try { fs.unlinkSync(tmp); } catch {}
   }
+  process.exit(exitCode);
 });
