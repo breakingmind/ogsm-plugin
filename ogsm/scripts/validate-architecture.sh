@@ -75,3 +75,10 @@ for skill in ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm
     exit 1
   fi
 done
+
+for hook in pre-write-validate-profile post-write-confirm post-context-check stop-reminder; do
+  test -x "$plugin_root/scripts/hooks/$hook.js"
+done
+
+test -f "$plugin_root/../.claude/settings.json"
+grep -q '"PreToolUse"' "$plugin_root/../.claude/settings.json"
