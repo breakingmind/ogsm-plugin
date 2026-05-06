@@ -25,8 +25,14 @@ process.stdin.on('end', () => {
       execFileSync('node', [validateScript, filePath], { stdio: ['ignore', 'pipe', 'pipe'] });
       process.stdout.write('OGSM: profile validation passed for ' + filePath + '\n');
     } catch (err) {
-      process.stderr.write('OGSM: profile validation failed after write: ' + filePath + '\n');
-      process.stderr.write((err.stdout?.toString() ?? '') + '\n');
+      let message = 'OGSM: profile validation failed after write: ' + filePath;
+      try {
+        const result = JSON.parse(err.stdout?.toString() ?? '{}');
+        if (Array.isArray(result.missing) && result.missing.length > 0) {
+          message += ': missing sections: ' + result.missing.join(', ');
+        }
+      } catch {}
+      process.stderr.write(message + '\n');
     }
   } else {
     try {
