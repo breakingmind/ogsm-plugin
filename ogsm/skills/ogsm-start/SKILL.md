@@ -1,6 +1,6 @@
 ---
 name: ogsm-start
-description: Use when starting any conversation — detects OGSM profile state and routes the user to the right skill. Also triggers on: 「我要開始」「從哪裡開始」「OGSM 怎麼用」「幫我開始」, or when the user's first message has no clear task.
+description: Use when starting any conversation — detects OGSM profile state and routes the user to the right skill. Also triggers on: 「我要開始」「從哪裡開始」「OGSM 怎麼用」「幫我開始」, or when the user's message has no clear OGSM task.
 ---
 
 # OGSM Start
@@ -23,7 +23,7 @@ Entry point for the OGSM plugin. Detects the user's current OGSM state and guide
    b. Ask: "你要建立公司 profile，還是部門 profile？"
    c. Invoke `ogsm-define`.
 3. **Company profile exists, no department profiles:**
-   a. Read the company profile. Show: Objective (full text) + first two Goals.
+   a. Read the company profile. Show: Objective (full text) + up to two Goals.
    b. Ask: "你接下來想做什麼？" with numbered menu:
       - ① 建立部門 profile
       - ② 審查計畫（OKR / 路線圖 / 季度計畫）
@@ -50,9 +50,9 @@ Entry point for the OGSM plugin. Detects the user's current OGSM state and guide
 - May read `.ogsm/profiles/` directory listing and profile `.md` files (summary only).
 - Must not write any files.
 - Must not read Google Calendar.
-- Must not invoke more than one skill per session start.
+- Must invoke exactly one skill per workflow completion — do not chain multiple skills in sequence.
 
 ## Handoff
 
 完成後根據情況推薦或執行下一步：
-- 使用者選擇選單項目後 → 自動 invoke 對應 skill（無需等待確認）
+- 使用者選擇選單項目後 → 自動 invoke 對應 skill（無需等待確認），但選項 ③ 須先完成 A/B 行程來源詢問後再 invoke
