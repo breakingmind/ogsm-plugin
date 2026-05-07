@@ -19,9 +19,9 @@ process.stdin.on('end', () => {
 
   // Command form: node <script> <context-file> <note...>
   // context-file is the first argument after the script name
-  const parts = command.trim().split(/\s+/);
-  const scriptIdx = parts.findIndex((p) => p.includes('update-operating-context.js'));
-  const contextFile = scriptIdx >= 0 ? parts[scriptIdx + 1] : null;
+  // Use regex to handle paths with spaces (quoted or unquoted)
+  const match = command.match(/update-operating-context\.js\s+("([^"]+)"|(\S+))/);
+  const contextFile = match ? (match[2] ?? match[3]) : null;
 
   if (!contextFile) {
     process.stderr.write('OGSM: could not parse context file path from command\n');
