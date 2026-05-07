@@ -1,214 +1,425 @@
 # OGSM Plugin
 
-This plugin helps users make OGSM operational through a repeatable loop:
+> **Language / 語言:** [English](#english) · [繁體中文](#繁體中文)
 
-1. Define an OGSM profile.
-2. Translate it into priorities and time allocation guidance.
-3. Audit plans and schedules.
-4. Realign work into a more executable version.
-5. Review weekly execution and update adaptive context.
+---
 
-## Skills
+<a name="english"></a>
+## English
 
-- `ogsm-define`: create or repair the baseline OGSM profile.
-- `ogsm-translate`: convert OGSM into priorities, time allocation, and decision rules.
-- `ogsm-audit-plan`: review plans, OKRs, roadmaps, specs, and initiatives.
-- `ogsm-audit-schedule`: review weekly schedules or agenda dumps.
-- `ogsm-calendar-brief`: optionally prepare a Google Calendar summary for schedule audit.
-- `ogsm-realign`: produce a revised plan or schedule after audit.
-- `ogsm-weekly-review`: close the loop and update adaptive operating context.
+### What Is OGSM?
 
-## Architecture
+OGSM connects ambition to daily execution through four layers:
 
-The plugin uses progressive disclosure:
+| Layer | Meaning | Key question |
+|-------|---------|-------------|
+| **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
+| **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
+| **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
+| **MD** 衡量指標 | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP** 行動計畫 | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
-- `SKILL.md` files are short entrypoints.
-- Long rules live in `references/`.
-- Templates live in `assets/`.
-- Repeatable mechanical work lives in `scripts/`.
-- Examples live in `examples/`.
+The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
 
-## Persistent Storage
+---
 
-Persistent OGSM data is project-local by default and stored under `.ogsm/` only after user confirmation.
+### Plugin Overview
 
-Default scope-aware paths:
+This plugin makes OGSM operational through a repeatable loop:
 
-```text
-.ogsm/profiles/company/<company-slug>.md
-.ogsm/profiles/departments/<department-slug>.md
-.ogsm/context/company/<company-slug>.md
-.ogsm/context/departments/<department-slug>.md
-.ogsm/reviews/company/<company-slug>/
-.ogsm/reviews/departments/<department-slug>/
+```
+ogsm-define
+    ↓
+ogsm-translate
+    ↓
+ogsm-audit-plan  ──  ogsm-calendar-brief (optional)
+ogsm-audit-schedule ──────────────────────────────┘
+    ↓
+ogsm-realign
+    ↓
+ogsm-weekly-review
 ```
 
-Use company profiles for organization-wide OGSMs and department profiles for team/function OGSMs that align to a company parent.
+Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is written without your explicit confirmation.
 
-To preview storage initialization without writing:
+---
+
+### Skills
+
+#### `ogsm-define` — Create or repair an OGSM profile
+
+Build the baseline profile from scratch or fix an existing one. The skill asks one question at a time until all required fields are complete. Department profiles must reference a parent company profile.
+
+**Trigger:** "Help me create an OGSM" / "Review and fix my OGSM"
+
+---
+
+#### `ogsm-translate` — Turn OGSM into operational guidance
+
+Converts the confirmed profile into weekly or monthly priorities, time allocation guidance, MD check-in schedule, and decision rules for saying no.
+
+**Trigger:** "What should I focus on this week based on my OGSM?"
+
+---
+
+#### `ogsm-audit-plan` — Review a plan against OGSM
+
+Maps each item in a plan, OKR, roadmap, or initiative list to a Strategy, MD, and MP. Scores alignment and identifies gaps.
+
+**Trigger:** "Audit this quarterly plan against our OGSM"
+
+---
+
+#### `ogsm-audit-schedule` — Review a weekly schedule against OGSM
+
+Normalizes agenda input into a structured table, then checks whether time allocation supports Strategies and includes MD check-ins and MP execution blocks.
+
+**Trigger:** "Does my schedule this week support our OGSM?"
+
+---
+
+#### `ogsm-calendar-brief` — Prepare a Google Calendar summary
+
+Reads Google Calendar events (if the connector is available) or accepts a pasted agenda dump and produces the normalized schedule table used by `ogsm-audit-schedule`. This is the only skill that may access Google Calendar.
+
+**Trigger:** "Prepare a calendar brief for this week before auditing my schedule"
+
+---
+
+#### `ogsm-realign` — Produce a revised plan or schedule
+
+Takes audit findings and rewrites the plan or schedule with concrete changes. Each change is explained with its MP → MD → S → G → O linkage.
+
+**Trigger:** "Rewrite the schedule based on the audit findings"
+
+---
+
+#### `ogsm-weekly-review` — Close the loop and update context
+
+Compares actual work against Strategies, MD, and MP. Identifies recurring patterns, proposes operating context updates, and surfaces any OGSM profile changes needed.
+
+**Trigger:** "Let's do the weekly OGSM review"
+
+---
+
+### Storage Layout
+
+```
+.ogsm/
+  index.md
+  profiles/
+    company/<company-slug>.md
+    departments/<department-slug>.md
+  context/
+    company/<company-slug>.md
+    departments/<department-slug>.md
+  reviews/
+    company/<company-slug>/<YYYY-MM-DD>-<review-type>.md
+    departments/<department-slug>/<YYYY-MM-DD>-<review-type>.md
+  archive/
+```
+
+Initialize storage (preview only, no write):
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company double-steel
+node ogsm/scripts/prepare-storage.js . company <company-slug>
 ```
 
-After user confirmation, create the local storage:
+Initialize with write:
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company double-steel --confirm-write
+node ogsm/scripts/prepare-storage.js . company <company-slug> --confirm-write
 ```
 
-## Safety
+---
 
-The MVP never modifies calendars, external documents, Objective, Goals, Strategies, MD, or MP without explicit user confirmation.
+### Installation
 
-If Google Calendar is unavailable, the calendar workflow falls back to manual agenda input.
-
-## Optional Google Calendar Path
-
-`ogsm-calendar-brief` may read Google Calendar events when a calendar connector is available. It is read-only and only produces normalized schedule input for `ogsm-audit-schedule`.
-
-When exported or connector-provided calendar event JSON is saved locally, normalize it with:
-
-```bash
-node ogsm/scripts/normalize-calendar-events.js /path/to/calendar-events.json
-```
-
-The output is the same schedule table schema used by manual agenda audits.
-
-## Codex Install From GitHub
-
-Add this repository as a Git-backed Codex marketplace in `~/.codex/config.toml`:
-
-```toml
-[marketplaces.ogsm-plugin]
-source_type = "git"
-source = "https://github.com/breakingmind/ogsm-plugin.git"
-```
-
-Then enable the plugin:
-
-```toml
-[plugins."ogsm@ogsm-plugin"]
-enabled = true
-```
-
-Restart Codex and try:
-
-```text
-請使用 ogsm-define 幫我建立一份 OGSM profile
-```
-
-or:
-
-```text
-請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
-```
-
-If the repository is private, the user must have GitHub access from the machine where Codex runs.
-
-## Codex Local Install
-
-This repository includes a Codex marketplace manifest and plugin manifest:
-
-- Repository marketplace: `./.agents/plugins/marketplace.json`
-- Codex plugin manifest: `./ogsm/.codex-plugin/plugin.json`
-- Legacy MVP manifest: `./ogsm/plugin.toml`
-
-To install from a cloned repo, add the repository as a local Codex marketplace in `~/.codex/config.toml`:
-
-```toml
-[marketplaces.ogsm-plugin]
-source_type = "local"
-source = "/absolute/path/to/ogsm-plugin"
-```
-
-Then enable the plugin:
-
-```toml
-[plugins."ogsm@ogsm-plugin"]
-enabled = true
-```
-
-Restart Codex and try:
-
-```text
-請使用 ogsm-define 幫我建立一份 OGSM profile
-```
-
-or:
-
-```text
-請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
-```
-
-If you cloned the repository to this machine's current workspace, the marketplace path is:
-
-```text
-/Users/breakingmind/Documents/Codex/2026-05-05/superpowers-brainstorming-users-breakingmind-codex-plugins
-```
-
-## Claude Code Install From GitHub
-
-Add this repository as a Claude Code marketplace:
-
-```bash
-claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin
-```
-
-Then install the plugin:
-
-```bash
-claude plugin install ogsm@ogsm-plugin
-```
-
-Restart Claude Code and try:
-
-```text
-請使用 ogsm-define 幫我建立一份 OGSM profile
-```
-
-or:
-
-```text
-請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
-```
-
-If the repository is private, the user must have GitHub access from the machine where Claude Code runs.
-
-## Claude Code Local Install
-
-This bundle can be installed as a local Claude Code plugin from a cloned repo.
-
-From the repository root, run:
+#### Claude Code — Local (from cloned repo)
 
 ```bash
 node ogsm/scripts/install-claude-code-local.js
 ```
 
-Then restart Claude Code and try:
+Restart Claude Code. Then try:
 
-```text
-請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+Use ogsm-define to help me create an OGSM profile
 ```
 
-or:
+The installer copies `ogsm/` to `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin` and registers the plugin.
 
-```text
-請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+#### Claude Code — From GitHub
+
+```bash
+claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin
+claude plugin install ogsm@ogsm-plugin
 ```
 
-The installer copies `ogsm/` into:
+Restart Claude Code.
 
-```text
-~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin
+#### Codex — Local (from cloned repo)
+
+Add to `~/.codex/config.toml`:
+
+```toml
+[marketplaces.ogsm-plugin]
+source_type = "local"
+source = "/absolute/path/to/superpowers-brainstorming-users-breakingmind-codex-plugins"
+
+[plugins."ogsm@ogsm-plugin"]
+enabled = true
 ```
 
-It also registers and enables `ogsm@local` in Claude Code's local plugin files.
+Restart Codex.
 
-## Validation
+#### Codex — From GitHub
 
-Run:
+```toml
+[marketplaces.ogsm-plugin]
+source_type = "git"
+source = "https://github.com/breakingmind/ogsm-plugin.git"
+
+[plugins."ogsm@ogsm-plugin"]
+enabled = true
+```
+
+Restart Codex.
+
+---
+
+### Validation
+
+Run all tests:
 
 ```bash
 ogsm/scripts/test-scripts.sh
 ```
+
+Run architecture checks only:
+
+```bash
+ogsm/scripts/validate-architecture.sh
+```
+
+---
+
+### Safety
+
+- **No silent writes.** Every write to `.ogsm/` requires showing the target path, a content summary or diff, and receiving confirmation.
+- **No OGSM field changes without confirmation.** Objective, Goals, Strategies, MD, and MP are never changed silently.
+- **No calendar modifications.** The plugin only reads Google Calendar (via `ogsm-calendar-brief`). No events are created, modified, or deleted.
+- **Claude Code hooks** (H1–H4) enforce these rules mechanically on top of skill instructions. Codex relies on SKILL.md text instructions only.
+
+---
+
+<a name="繁體中文"></a>
+## 繁體中文
+
+### 什麼是 OGSM？
+
+OGSM 把組織的抱負連結到每日執行，分為四個層次：
+
+| 層次 | 意義 | 核心問題 |
+|------|------|---------|
+| **O** Objective 目標 | 服務對象、創造的價值、成功的具體圖像 | 我們瞄準的方向對嗎？ |
+| **G** Goals 目標值 | 可量化的成果 — 動詞＋名詞＋基準＋目標量＋日期 | 我們怎麼知道到達了？ |
+| **S** Strategies 策略 | 選定的資源、方法與工具 | 我們實際要投入什麼？ |
+| **MD** 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
+| **MP** 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
+
+核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
+
+---
+
+### Plugin 概覽
+
+這個 plugin 透過一個可重複的迴圈讓 OGSM 真正落地：
+
+```
+ogsm-define（建立 profile）
+    ↓
+ogsm-translate（轉化為優先事項）
+    ↓
+ogsm-audit-plan（審查計劃）  ──  ogsm-calendar-brief（選用）
+ogsm-audit-schedule（審查行程）────────────────────────┘
+    ↓
+ogsm-realign（重新對標）
+    ↓
+ogsm-weekly-review（週檢查 · 更新執行脈絡）
+```
+
+OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確確認。
+
+---
+
+### 各項技能說明
+
+#### `ogsm-define` — 建立或修復 OGSM profile
+
+從零開始建立基準 profile，或修復現有的 profile。技能每次只問一個問題，直到所有必要欄位填齊。部門 profile 必須參照上層的公司 profile。
+
+**觸發時機：** 「幫我建立一份 OGSM」 / 「審查並修正我的 OGSM」
+
+---
+
+#### `ogsm-translate` — 將 OGSM 轉化為執行指引
+
+把已確認的 profile 轉化為每週或每月的優先主題、時間分配建議、MD 檢核時程，以及說不的決策規則。
+
+**觸發時機：** 「根據我們的 OGSM，這週我應該專注在哪裡？」
+
+---
+
+#### `ogsm-audit-plan` — 審查計劃是否對齊 OGSM
+
+把計劃、OKR、路線圖或行動清單中的每一項，對應到策略、MD 與 MP，評分並找出缺口。
+
+**觸發時機：** 「審查這份季度計劃是否對齊我們的 OGSM」
+
+---
+
+#### `ogsm-audit-schedule` — 審查週行程是否支持 OGSM
+
+將議程輸入正規化為結構化表格，再檢查時間分配是否支持策略，以及是否包含 MD 檢核與 MP 執行的時段。
+
+**觸發時機：** 「這週的行程是否支持我們的 OGSM？」
+
+---
+
+#### `ogsm-calendar-brief` — 準備 Google Calendar 摘要
+
+在 connector 可用時讀取 Google Calendar 活動（或接受手動貼上的議程），產出 `ogsm-audit-schedule` 所需的正規化行程表。這是唯一可存取 Google Calendar 的技能。
+
+**觸發時機：** 「在審查行程前，先幫我準備這週的 calendar 摘要」
+
+---
+
+#### `ogsm-realign` — 產出修訂後的計劃或行程
+
+把審查發現轉化為具體修改，重寫計劃或行程。每項變更都會附上 MP → MD → S → G → O 的連結說明。
+
+**觸發時機：** 「根據審查結果重寫行程」
+
+---
+
+#### `ogsm-weekly-review` — 關閉迴圈，更新執行脈絡
+
+比較實際工作與策略、MD、MP 的落差。找出週期性模式，提出執行脈絡更新建議，以及 OGSM profile 可能需要調整的地方。
+
+**觸發時機：** 「我們來做週 OGSM 檢查」
+
+---
+
+### 儲存結構
+
+```
+.ogsm/
+  index.md
+  profiles/
+    company/<公司代號>.md
+    departments/<部門代號>.md
+  context/
+    company/<公司代號>.md
+    departments/<部門代號>.md
+  reviews/
+    company/<公司代號>/<YYYY-MM-DD>-<review-type>.md
+    departments/<部門代號>/<YYYY-MM-DD>-<review-type>.md
+  archive/
+```
+
+預覽儲存初始化（不寫入）：
+
+```bash
+node ogsm/scripts/prepare-storage.js . company <公司代號>
+```
+
+確認後建立：
+
+```bash
+node ogsm/scripts/prepare-storage.js . company <公司代號> --confirm-write
+```
+
+---
+
+### 安裝方式
+
+#### Claude Code — 本機安裝（從 clone 的 repo）
+
+```bash
+node ogsm/scripts/install-claude-code-local.js
+```
+
+重啟 Claude Code，然後試試：
+
+```
+請使用 ogsm-define 幫我建立一份 OGSM profile
+```
+
+安裝程式會把 `ogsm/` 複製到 `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin`，並自動註冊 plugin。
+
+#### Claude Code — 從 GitHub 安裝
+
+```bash
+claude plugin marketplace add https://github.com/breakingmind/ogsm-plugin
+claude plugin install ogsm@ogsm-plugin
+```
+
+重啟 Claude Code。
+
+#### Codex — 本機安裝（從 clone 的 repo）
+
+在 `~/.codex/config.toml` 加入：
+
+```toml
+[marketplaces.ogsm-plugin]
+source_type = "local"
+source = "/絕對路徑/superpowers-brainstorming-users-breakingmind-codex-plugins"
+
+[plugins."ogsm@ogsm-plugin"]
+enabled = true
+```
+
+重啟 Codex，然後試試：
+
+```
+請使用 ogsm-audit-plan 審查這份計劃是否對齊組織 OGSM
+```
+
+#### Codex — 從 GitHub 安裝
+
+```toml
+[marketplaces.ogsm-plugin]
+source_type = "git"
+source = "https://github.com/breakingmind/ogsm-plugin.git"
+
+[plugins."ogsm@ogsm-plugin"]
+enabled = true
+```
+
+重啟 Codex。
+
+---
+
+### 驗證
+
+執行所有測試：
+
+```bash
+ogsm/scripts/test-scripts.sh
+```
+
+僅執行架構檢查：
+
+```bash
+ogsm/scripts/validate-architecture.sh
+```
+
+---
+
+### 安全原則
+
+- **不靜默寫入。** 寫入任何 `.ogsm/` 檔案前，必須顯示目標路徑、內容摘要或差異，並取得確認。
+- **不在未確認下修改 OGSM 欄位。** Objective、Goals、Strategies、MD、MP 不會被靜默變更。
+- **不修改 Calendar。** Plugin 只透過 `ogsm-calendar-brief` 讀取 Google Calendar，不建立、修改或刪除任何活動。
+- **Claude Code hooks**（H1–H4）在技能指令之上，以腳本層機械化執行上述規則。Codex 環境則只靠 SKILL.md 文字指令驅動。
