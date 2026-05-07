@@ -16,10 +16,10 @@ OGSM connects ambition to daily execution through four layers:
 | **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
 | **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
 | **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
-| **MD** 衡量指標 | Indicators that validate each Strategy is working | Is the investment producing results? |
-| **MP** 行動計畫 | Time-ordered action plans that drive MD movement | What are we doing this week? |
+| **MD**  | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP**  | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
-The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
+The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. 
 
 ---
 
@@ -228,7 +228,7 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 | **MD** 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
 | **MP** 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
 
-核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
+核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。
 
 ---
 
