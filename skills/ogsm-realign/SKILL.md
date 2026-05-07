@@ -1,6 +1,6 @@
 ---
 name: ogsm-realign
-description: Use after an OGSM audit when the user wants a revised plan, weekly schedule, or action list that better supports their OGSM. Also triggers on: 「幫我調整計畫」「根據審查結果改行程」「我要重新對標」「這份計畫要怎麼修」「修正行程」
+description: "Use after an OGSM audit when the user wants a revised plan, weekly schedule, or action list that better supports their OGSM. Also triggers on: 「幫我調整計畫」「根據審查結果改行程」「我要重新對標」「這份計畫要怎麼修」「修正行程」"
 ---
 
 # OGSM Realign

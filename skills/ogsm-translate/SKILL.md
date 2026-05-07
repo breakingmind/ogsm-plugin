@@ -1,6 +1,6 @@
 ---
 name: ogsm-translate
-description: Use when the user wants to turn an OGSM profile into weekly or monthly priorities, time allocation guidance, or decision rules. Also triggers on: 「這週我要做什麼」「幫我排優先順序」「根據 OGSM 給我方向」「這個月重點是什麼」「OGSM 轉行動」
+description: "Use when the user wants to turn an OGSM profile into weekly or monthly priorities, time allocation guidance, or decision rules. Also triggers on: 「這週我要做什麼」「幫我排優先順序」「根據 OGSM 給我方向」「這個月重點是什麼」「OGSM 轉行動」"
 ---
 
 # OGSM Translate

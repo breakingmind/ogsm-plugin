@@ -1,6 +1,6 @@
 ---
 name: ogsm-start
-description: Use when starting any conversation — detects OGSM profile state and routes the user to the right skill. Also triggers on: 「我要開始」「從哪裡開始」「OGSM 怎麼用」「幫我開始」, or when the user's message has no clear OGSM task.
+description: "Use when starting any conversation — detects OGSM profile state and routes the user to the right skill. Also triggers on: 「我要開始」「從哪裡開始」「OGSM 怎麼用」「幫我開始」, or when the user's message has no clear OGSM task."
 ---
 
 # OGSM Start

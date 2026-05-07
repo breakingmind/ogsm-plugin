@@ -10,7 +10,7 @@
       "name": "ogsm",
       "description": "Adaptive OGSM operating loop skills for defining, auditing, realigning, and reviewing plans and schedules.",
       "version": "0.1.0",
-      "source": "./ogsm",
+      "source": "./",
       "author": {
         "name": "breakingmind"
       },

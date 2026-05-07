@@ -1,6 +1,6 @@
 ---
 name: ogsm-audit-schedule
-description: Use when the user wants to review a weekly schedule, agenda dump, or normalized calendar brief against their OGSM. Also triggers on: 「這週行程支持策略嗎」「幫我看行程」「我的時間花得對嗎」「行事曆對嗎」「行程有沒有支持 OGSM」
+description: "Use when the user wants to review a weekly schedule, agenda dump, or normalized calendar brief against their OGSM. Also triggers on: 「這週行程支持策略嗎」「幫我看行程」「我的時間花得對嗎」「行事曆對嗎」「行程有沒有支持 OGSM」"
 ---
 
 # OGSM Audit Schedule

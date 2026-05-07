@@ -16,10 +16,10 @@ OGSM connects ambition to daily execution through four layers:
 | **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
 | **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
 | **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
-| **MD**  | Indicators that validate each Strategy is working | Is the investment producing results? |
-| **MP**  | Time-ordered action plans that drive MD movement | What are we doing this week? |
+| **MD** 衡量指標 | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP** 行動計畫 | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
-The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. 
+The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
 
 ---
 
@@ -122,13 +122,13 @@ Compares actual work against Strategies, MD, and MP. Identifies recurring patter
 Initialize storage (preview only, no write):
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company <company-slug>
+node scripts/prepare-storage.js . company <company-slug>
 ```
 
 Initialize with write:
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company <company-slug> --confirm-write
+node scripts/prepare-storage.js . company <company-slug> --confirm-write
 ```
 
 ---
@@ -138,7 +138,7 @@ node ogsm/scripts/prepare-storage.js . company <company-slug> --confirm-write
 #### Claude Code — Local (from cloned repo)
 
 ```bash
-node ogsm/scripts/install-claude-code-local.js
+node scripts/install-claude-code-local.js
 ```
 
 Restart Claude Code. Then try:
@@ -147,7 +147,7 @@ Restart Claude Code. Then try:
 Use ogsm-define to help me create an OGSM profile
 ```
 
-The installer copies `ogsm/` to `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin` and registers the plugin.
+The installer copies this plugin root to `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin` and registers the plugin.
 
 #### Claude Code — From GitHub
 
@@ -165,7 +165,7 @@ Add to `~/.codex/config.toml`:
 ```toml
 [marketplaces.ogsm-plugin]
 source_type = "local"
-source = "/absolute/path/to/superpowers-brainstorming-users-breakingmind-codex-plugins"
+source = "/absolute/path/to/ogsm-plugin"
 
 [plugins."ogsm@ogsm-plugin"]
 enabled = true
@@ -174,6 +174,14 @@ enabled = true
 Restart Codex.
 
 #### Codex — From GitHub
+
+Ask Codex to fetch and follow:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/breakingmind/ogsm-plugin/refs/heads/master/.codex/INSTALL.md
+```
+
+Or add the marketplace manually:
 
 ```toml
 [marketplaces.ogsm-plugin]
@@ -193,13 +201,13 @@ Restart Codex.
 Run all tests:
 
 ```bash
-ogsm/scripts/test-scripts.sh
+scripts/test-scripts.sh
 ```
 
 Run architecture checks only:
 
 ```bash
-ogsm/scripts/validate-architecture.sh
+scripts/validate-architecture.sh
 ```
 
 ---
@@ -228,7 +236,7 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 | **MD** 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
 | **MP** 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
 
-核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。
+核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
 
 ---
 
@@ -331,13 +339,13 @@ OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確�
 預覽儲存初始化（不寫入）：
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company <公司代號>
+node scripts/prepare-storage.js . company <公司代號>
 ```
 
 確認後建立：
 
 ```bash
-node ogsm/scripts/prepare-storage.js . company <公司代號> --confirm-write
+node scripts/prepare-storage.js . company <公司代號> --confirm-write
 ```
 
 ---
@@ -347,7 +355,7 @@ node ogsm/scripts/prepare-storage.js . company <公司代號> --confirm-write
 #### Claude Code — 本機安裝（從 clone 的 repo）
 
 ```bash
-node ogsm/scripts/install-claude-code-local.js
+node scripts/install-claude-code-local.js
 ```
 
 重啟 Claude Code，然後試試：
@@ -356,7 +364,7 @@ node ogsm/scripts/install-claude-code-local.js
 請使用 ogsm-define 幫我建立一份 OGSM profile
 ```
 
-安裝程式會把 `ogsm/` 複製到 `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin`，並自動註冊 plugin。
+安裝程式會把這個 plugin 根目錄複製到 `~/.claude/plugins/marketplaces/local/external_plugins/ogsm-plugin`，並自動註冊 plugin。
 
 #### Claude Code — 從 GitHub 安裝
 
@@ -374,7 +382,7 @@ claude plugin install ogsm@ogsm-plugin
 ```toml
 [marketplaces.ogsm-plugin]
 source_type = "local"
-source = "/絕對路徑/superpowers-brainstorming-users-breakingmind-codex-plugins"
+source = "/絕對路徑/ogsm-plugin"
 
 [plugins."ogsm@ogsm-plugin"]
 enabled = true
@@ -387,6 +395,14 @@ enabled = true
 ```
 
 #### Codex — 從 GitHub 安裝
+
+請 Codex 讀取並依照這份說明安裝：
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/breakingmind/ogsm-plugin/refs/heads/master/.codex/INSTALL.md
+```
+
+或手動加入 marketplace：
 
 ```toml
 [marketplaces.ogsm-plugin]
@@ -406,13 +422,13 @@ enabled = true
 執行所有測試：
 
 ```bash
-ogsm/scripts/test-scripts.sh
+scripts/test-scripts.sh
 ```
 
 僅執行架構檢查：
 
 ```bash
-ogsm/scripts/validate-architecture.sh
+scripts/validate-architecture.sh
 ```
 
 ---

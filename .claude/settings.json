@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ogsm/scripts/hooks/pre-write-validate-profile.js"
+            "command": "node scripts/hooks/pre-write-validate-profile.js"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ogsm/scripts/hooks/post-write-confirm.js"
+            "command": "node scripts/hooks/post-write-confirm.js"
           }
         ]
       },
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ogsm/scripts/hooks/post-context-check.js"
+            "command": "node scripts/hooks/post-context-check.js"
           }
         ]
       }
@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node ogsm/scripts/hooks/stop-reminder.js"
+            "command": "node scripts/hooks/stop-reminder.js"
           }
         ]
       }

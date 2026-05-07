@@ -1,6 +1,6 @@
 ---
 name: ogsm-calendar-brief
-description: Use when the user wants to prepare a Google Calendar week summary for OGSM schedule audit. Also triggers on: 「幫我整理這週 calendar」「Google 行事曆摘要」「先整理行程再審查」「讀取 Google Calendar」
+description: "Use when the user wants to prepare a Google Calendar week summary for OGSM schedule audit. Also triggers on: 「幫我整理這週 calendar」「Google 行事曆摘要」「先整理行程再審查」「讀取 Google Calendar」"
 ---
 
 # OGSM Calendar Brief

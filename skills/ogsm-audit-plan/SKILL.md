@@ -1,6 +1,6 @@
 ---
 name: ogsm-audit-plan
-description: Use when the user wants to review a written plan, OKR, roadmap, project spec, weekly plan, or initiative list against their OGSM. Also triggers on: 「這個計畫對嗎」「審查季度計畫」「OKR 跟 OGSM 有對齊嗎」「幫我看這份路線圖」「計畫有沒有偏離 OGSM」
+description: "Use when the user wants to review a written plan, OKR, roadmap, project spec, weekly plan, or initiative list against their OGSM. Also triggers on: 「這個計畫對嗎」「審查季度計畫」「OKR 跟 OGSM 有對齊嗎」「幫我看這份路線圖」「計畫有沒有偏離 OGSM」"
 ---
 
 # OGSM Audit Plan

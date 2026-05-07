@@ -1,6 +1,6 @@
 ---
 name: ogsm-weekly-review
-description: Use at the end of a week when the user wants to review OGSM execution or update operating context. Also triggers on: 「做週檢查」「這週回顧」「OGSM 週回顧」「更新執行脈絡」「這週表現怎麼樣」「關閉這週迴圈」
+description: "Use at the end of a week when the user wants to review OGSM execution or update operating context. Also triggers on: 「做週檢查」「這週回顧」「OGSM 週回顧」「更新執行脈絡」「這週表現怎麼樣」「關閉這週迴圈」"
 ---
 
 # OGSM Weekly Review

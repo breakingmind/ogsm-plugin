@@ -8,7 +8,7 @@
       "name": "ogsm",
       "source": {
         "source": "local",
-        "path": "./ogsm"
+        "path": "."
       },
       "policy": {
         "installation": "AVAILABLE",

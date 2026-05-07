@@ -11,7 +11,7 @@ A Codex/Claude Code plugin that operationalizes the OGSM framework (Objective â†
 Run all validation at once:
 
 ```bash
-ogsm/scripts/test-scripts.sh
+scripts/test-scripts.sh
 ```
 
 This runs:
@@ -27,32 +27,32 @@ This runs:
 Run architecture checks independently:
 
 ```bash
-ogsm/scripts/validate-architecture.sh
+scripts/validate-architecture.sh
 ```
 
 Individual script usage:
 
 ```bash
 # Preview storage initialization (no write)
-node ogsm/scripts/prepare-storage.js . company <company-slug>
+node scripts/prepare-storage.js . company <company-slug>
 
 # Create storage after confirmation
-node ogsm/scripts/prepare-storage.js . company <company-slug> --confirm-write
+node scripts/prepare-storage.js . company <company-slug> --confirm-write
 
 # Validate a saved profile
-node ogsm/scripts/validate-profile.js .ogsm/profiles/company/<slug>.md
+node scripts/validate-profile.js .ogsm/profiles/company/<slug>.md
 
 # Normalize a manual schedule
-node ogsm/scripts/normalize-schedule.js examples/sample-schedule-input.md
+node scripts/normalize-schedule.js examples/sample-schedule-input.md
 
 # Normalize exported calendar JSON â†’ schedule table
-node ogsm/scripts/normalize-calendar-events.js /path/to/calendar-events.json
+node scripts/normalize-calendar-events.js /path/to/calendar-events.json
 
 # Score plan/schedule alignment
-node ogsm/scripts/score-alignment.js /path/to/alignment-items.json
+node scripts/score-alignment.js /path/to/alignment-items.json
 
 # Append an observation to operating context
-node ogsm/scripts/update-operating-context.js .ogsm/context/company/<slug>.md "observation text"
+node scripts/update-operating-context.js .ogsm/context/company/<slug>.md "observation text"
 ```
 
 ## Architecture
@@ -122,7 +122,7 @@ Four shell hooks enforce `.ogsm/` storage safety in Claude Code. Codex is unaffe
 | H3 | PostToolUse Bash | `command` contains `update-operating-context.js` | `scripts/hooks/post-context-check.js` | Checks context file for empty content or unreplaced placeholder |
 | H4 | Stop | Always | `scripts/hooks/stop-reminder.js` | Prints reminder if `.ogsm/profiles/` has `.md` files |
 
-Hooks are wired in `.claude/settings.json` at the repository root (one level above `ogsm/`). H1 is the only blocking hook (exit 2); H2/H3/H4 always exit 0.
+Hooks are wired in `.claude/settings.json` at the repository root. H1 is the only blocking hook (exit 2); H2/H3/H4 always exit 0.
 
 ## Safety Constraints
 
@@ -156,4 +156,4 @@ Hooks are wired in `.claude/settings.json` at the repository root (one level abo
 1. Create `skills/<skill-name>/SKILL.md` with required frontmatter (`name:`, `description:`), and sections `## Workflow`, `## Progressive Disclosure`, `## Tools`.
 2. Create the three required subdirectories: `references/`, `scripts/`, `assets/` (add `.gitkeep` if empty).
 3. Register the skill in `plugin.toml` with `name` and `path`.
-4. Run `ogsm/scripts/validate-architecture.sh` to verify structural integrity.
+4. Run `scripts/validate-architecture.sh` to verify structural integrity.

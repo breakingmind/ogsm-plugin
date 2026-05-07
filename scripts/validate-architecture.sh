@@ -10,11 +10,11 @@ test -f "$plugin_root/plugin.toml"
 test -f "$plugin_root/README.md"
 test -f "$plugin_root/.codex-plugin/plugin.json"
 test -f "$plugin_root/.claude-plugin/plugin.json"
-if [ -d "$plugin_root/../.agents" ]; then
-  test -f "$plugin_root/../.agents/plugins/marketplace.json"
+if [ -d "$plugin_root/.agents" ]; then
+  test -f "$plugin_root/.agents/plugins/marketplace.json"
 fi
-if [ -d "$plugin_root/../.claude-plugin" ]; then
-  test -f "$plugin_root/../.claude-plugin/marketplace.json"
+if [ -d "$plugin_root/.claude-plugin" ]; then
+  test -f "$plugin_root/.claude-plugin/marketplace.json"
 fi
 
 for skill in $skills; do
@@ -80,5 +80,5 @@ for hook in pre-write-validate-profile post-write-confirm post-context-check sto
   test -x "$plugin_root/scripts/hooks/$hook.js"
 done
 
-test -f "$plugin_root/../.claude/settings.json"
-grep -q '"PreToolUse"' "$plugin_root/../.claude/settings.json"
+test -f "$plugin_root/.claude/settings.json"
+grep -q '"PreToolUse"' "$plugin_root/.claude/settings.json"

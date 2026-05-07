@@ -1,6 +1,6 @@
 ---
 name: ogsm-define
-description: Use when the user wants to create, repair, or update an OGSM profile, or when another OGSM skill cannot find a usable profile. Also triggers on: 「幫我建立 OGSM」「我的 OGSM 要怎麼寫」「修改目標」「修改策略」「profile 不見了」「從頭建立」
+description: "Use when the user wants to create, repair, or update an OGSM profile, or when another OGSM skill cannot find a usable profile. Also triggers on: 「幫我建立 OGSM」「我的 OGSM 要怎麼寫」「修改目標」「修改策略」「profile 不見了」「從頭建立」"
 ---
 
 # OGSM Define
