@@ -48,12 +48,22 @@ the user to the right skill. Also triggers on: "我要開始", "從哪裡開始"
    - Invoke `ogsm-define`.
 3. **Company profile exists, no department profiles:**
    - Show company profile summary (Objective + first two Goals).
-   - Offer menu: ① Build department profile → `ogsm-define` ② Audit plan → `ogsm-audit-plan` ③ Audit schedule → `ogsm-audit-schedule` ④ Weekly review → `ogsm-weekly-review`
+   - Offer menu: ① Build department profile → `ogsm-define` ② Audit plan → `ogsm-audit-plan` ③ Audit schedule → see schedule source branch below ④ Weekly review → `ogsm-weekly-review`
 4. **Multiple profiles (company + one or more departments):**
    - Ask which profile to work with.
    - Show same menu after selection.
 
-**Constraints:** Read-only. No Google Calendar. No file writes.
+**Schedule source branch (triggered when user picks "Audit schedule"):**
+
+```
+ogsm-start asks: 「你的行程來源是？」
+  A) 手動貼上文字議程 → invoke ogsm-audit-schedule directly
+  B) 從 Google Calendar 讀取 → invoke ogsm-calendar-brief → auto-invoke ogsm-audit-schedule
+```
+
+This branch is the only point where Google Calendar access is offered. `ogsm-start` itself does not read the calendar — it only routes to `ogsm-calendar-brief` which handles the read.
+
+**Constraints:** Read-only. No Google Calendar reads (routing only). No file writes.
 
 ---
 
