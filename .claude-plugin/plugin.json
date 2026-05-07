@@ -12,14 +12,5 @@
     "alignment",
     "weekly-review"
   ],
-  "skills": [
-    "ogsm-start",
-    "ogsm-define",
-    "ogsm-translate",
-    "ogsm-audit-plan",
-    "ogsm-audit-schedule",
-    "ogsm-calendar-brief",
-    "ogsm-realign",
-    "ogsm-weekly-review"
-  ]
+  "skills": "./skills"
 }
