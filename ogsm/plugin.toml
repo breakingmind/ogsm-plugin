@@ -31,3 +31,7 @@ path = "skills/ogsm-realign/SKILL.md"
 [[skills]]
 name = "ogsm-weekly-review"
 path = "skills/ogsm-weekly-review/SKILL.md"
+
+[[skills]]
+name = "ogsm-start"
+path = "skills/ogsm-start/SKILL.md"
