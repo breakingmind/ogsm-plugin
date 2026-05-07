@@ -7,7 +7,7 @@ plugin_root="$(dirname "$script_dir")"
 skills="ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-calendar-brief ogsm-realign ogsm-weekly-review"
 
 test -f "$plugin_root/plugin.toml"
-test -f "$plugin_root/README.md"
+test -f "$plugin_root/../README.md"
 test -f "$plugin_root/.codex-plugin/plugin.json"
 test -f "$plugin_root/.claude-plugin/plugin.json"
 if [ -d "$plugin_root/../.agents" ]; then
