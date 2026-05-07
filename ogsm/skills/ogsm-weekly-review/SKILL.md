@@ -1,6 +1,6 @@
 ---
 name: ogsm-weekly-review
-description: Use at the end of a week when the user wants to review OGSM execution or update operating context.
+description: Use at the end of a week when the user wants to review OGSM execution or update operating context. Also triggers on: 「做週檢查」「這週回顧」「OGSM 週回顧」「更新執行脈絡」「這週表現怎麼樣」「關閉這週迴圈」
 ---
 
 # OGSM Weekly Review
@@ -43,3 +43,8 @@ Use this skill to close the OGSM operating loop.
 - May update operating context after confirmation.
 - Must keep company and department context files separate.
 - Must not silently change Objective, Goals, Strategies, MD, or MP.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 週檢查完成 → 推薦 `ogsm-translate`：「這週迴圈完成。下週一可以再跑 ogsm-translate 把下週優先事項排好。」

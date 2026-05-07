@@ -1,6 +1,6 @@
 ---
 name: ogsm-realign
-description: Use after an OGSM audit when the user wants a revised plan, weekly schedule, or action list that better supports their OGSM.
+description: Use after an OGSM audit when the user wants a revised plan, weekly schedule, or action list that better supports their OGSM. Also triggers on: 「幫我調整計畫」「根據審查結果改行程」「我要重新對標」「這份計畫要怎麼修」「修正行程」
 ---
 
 # OGSM Realign
@@ -40,3 +40,8 @@ Use this skill to produce an executable corrected version.
 - May read profile, audit output, decision rules, and templates.
 - May write revised output only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must not modify calendar or external documents directly.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 修訂完成後 → 推薦 `ogsm-weekly-review`：「調整完成，要進行週檢查來確認這個迴圈嗎？」

@@ -1,6 +1,6 @@
 ---
 name: ogsm-audit-plan
-description: Use when the user wants to review a written plan, OKR, roadmap, project spec, weekly plan, or initiative list against their OGSM.
+description: Use when the user wants to review a written plan, OKR, roadmap, project spec, weekly plan, or initiative list against their OGSM. Also triggers on: 「這個計畫對嗎」「審查季度計畫」「OKR 跟 OGSM 有對齊嗎」「幫我看這份路線圖」「計畫有沒有偏離 OGSM」
 ---
 
 # OGSM Audit Plan
@@ -40,3 +40,9 @@ Use this skill to evaluate written plans against OGSM.
 - May run alignment scoring script.
 - May save review output only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must not use Google Calendar.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 發現缺口或低對齊項目 → 自動 invoke `ogsm-realign`：直接進入修訂模式，無需使用者再說
+- 無缺口，完全對齊 → 結束，不推薦後續（使用者自行決定下一步）

@@ -1,6 +1,6 @@
 ---
 name: ogsm-define
-description: Use when the user wants to create, repair, or update an OGSM profile, or when another OGSM skill cannot find a usable profile.
+description: Use when the user wants to create, repair, or update an OGSM profile, or when another OGSM skill cannot find a usable profile. Also triggers on: 「幫我建立 OGSM」「我的 OGSM 要怎麼寫」「修改目標」「修改策略」「profile 不見了」「從頭建立」
 ---
 
 # OGSM Define
@@ -40,3 +40,9 @@ Use this skill to build the user's baseline OGSM profile.
 - May run profile validation script.
 - Must not use Google Calendar.
 - Must not silently update existing OGSM fields.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 新 profile 剛建立完成 → 推薦 `ogsm-translate`：「profile 已確認，要把它轉成這週的執行優先事項嗎？」
+- 修改現有 profile → 推薦 `ogsm-translate`：「profile 已更新，要重新產出執行指引嗎？」

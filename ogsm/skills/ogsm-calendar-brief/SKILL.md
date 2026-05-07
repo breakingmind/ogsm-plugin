@@ -1,6 +1,6 @@
 ---
 name: ogsm-calendar-brief
-description: Use when the user wants to prepare a Google Calendar week summary for OGSM schedule audit.
+description: Use when the user wants to prepare a Google Calendar week summary for OGSM schedule audit. Also triggers on: 「幫我整理這週 calendar」「Google 行事曆摘要」「先整理行程再審查」「讀取 Google Calendar」
 ---
 
 # OGSM Calendar Brief
@@ -42,3 +42,8 @@ Use this skill to prepare schedule input for `ogsm-audit-schedule`.
 - May save the normalized brief only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation. If metadata is missing, ask for scope and slug before saving.
 - Must not modify calendar events.
 - Must fall back to manual agenda input when connector is unavailable.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 正規化行程表產出後 → 自動 invoke `ogsm-audit-schedule`：直接帶入行程表進行審查（無需使用者再說）

@@ -1,6 +1,6 @@
 ---
 name: ogsm-audit-schedule
-description: Use when the user wants to review a weekly schedule, agenda dump, or normalized calendar brief against their OGSM.
+description: Use when the user wants to review a weekly schedule, agenda dump, or normalized calendar brief against their OGSM. Also triggers on: 「這週行程支持策略嗎」「幫我看行程」「我的時間花得對嗎」「行事曆對嗎」「行程有沒有支持 OGSM」
 ---
 
 # OGSM Audit Schedule
@@ -47,3 +47,9 @@ Use this skill to determine whether time allocation supports OGSM.
 - May save review output only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must not directly use Google Calendar connector.
 - Must not modify calendar events.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 發現缺口或低對齊時段 → 自動 invoke `ogsm-realign`：直接進入行程修訂模式
+- 無缺口，完全對齊 → 推薦 `ogsm-weekly-review`：「行程對齊良好，週五可以做週檢查來關閉這個迴圈。」

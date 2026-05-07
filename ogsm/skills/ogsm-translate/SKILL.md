@@ -1,6 +1,6 @@
 ---
 name: ogsm-translate
-description: Use when the user wants to turn an OGSM profile into weekly or monthly priorities, time allocation guidance, or decision rules.
+description: Use when the user wants to turn an OGSM profile into weekly or monthly priorities, time allocation guidance, or decision rules. Also triggers on: 「這週我要做什麼」「幫我排優先順序」「根據 OGSM 給我方向」「這個月重點是什麼」「OGSM 轉行動」
 ---
 
 # OGSM Translate
@@ -42,3 +42,8 @@ Use this skill to convert OGSM into operational guidance.
 - May write operating context only after storage policy, profile metadata scope and slug, target path, summary or diff, recorded date, and confirmation.
 - Must keep company and department context files separate.
 - Must not use Google Calendar.
+
+## Handoff
+
+完成後根據情況推薦或執行下一步：
+- 優先事項輸出後 → 推薦二選一：「要審查本週行程是否支持這些優先事項（`ogsm-audit-schedule`），還是審查現有計畫文件（`ogsm-audit-plan`）？」
