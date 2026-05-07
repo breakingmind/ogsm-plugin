@@ -69,7 +69,7 @@ grep -q 'first use `ogsm-calendar-brief` to produce a normalized brief' "$plugin
 grep -q 'If metadata is missing, ask for scope and slug before saving' "$plugin_root/skills/ogsm-calendar-brief/SKILL.md"
 grep -q 'produce normalized schedule input' "$plugin_root/references/progressive-disclosure.md"
 
-for skill in ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-realign ogsm-weekly-review; do
+for skill in ogsm-start ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-realign ogsm-weekly-review; do
   if grep -q 'May use Google Calendar connector' "$plugin_root/skills/$skill/SKILL.md"; then
     echo "Unexpected Google Calendar connector permission in $skill" >&2
     exit 1
