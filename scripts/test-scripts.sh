@@ -146,4 +146,40 @@ out=$(cd "$tmp_h4d" && node "$script_dir/hooks/stop-reminder.js")
 rm -rf "$tmp_h4d"
 echo "$out" | grep -q 'OGSM: session ending'
 
+# validate-profile-logic: sample profile (mostly passing) → exit 0
+node "$script_dir/validate-profile-logic.js" "$plugin_root/examples/sample-ogsm-profile.md"
+
+# validate-profile-logic: gap profile → exit non-zero + gaps in JSON
+cat > "$tmp_profile" <<'GAPPROFILE'
+## Profile Name
+Gap Test
+## Time Horizon
+2026
+## Objective
+Short.
+## Goals
+1. Do things.
+## Strategies
+1. Execute tasks.
+## MD
+1. Track progress.
+## MP
+1. Someone does work.
+## Review Cadence
+Weekly.
+GAPPROFILE
+if node "$script_dir/validate-profile-logic.js" "$tmp_profile" > "$tmp_output" 2>&1; then
+  echo "Expected gap profile to exit non-zero" >&2
+  exit 1
+fi
+grep -F '"valid": false' "$tmp_output" >/dev/null
+
+# validate-profile-logic: --section M flag → only MD/MP/backwardLogic in output
+node "$script_dir/validate-profile-logic.js" "$plugin_root/examples/sample-ogsm-profile.md" --section M > "$tmp_output"
+grep -F '"MD"' "$tmp_output" >/dev/null
+if grep -F '"O"' "$tmp_output" >/dev/null 2>&1; then
+  echo "Expected --section M to omit O layer" >&2
+  exit 1
+fi
+
 "$script_dir/validate-architecture.sh"

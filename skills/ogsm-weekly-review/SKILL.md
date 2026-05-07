@@ -24,6 +24,8 @@ Use this skill to close the OGSM operating loop.
 ## Workflow
 
 1. Read the OGSM profile.
+1a. Run `node ../../scripts/validate-profile-logic.js <profile-file> --section M` to get MD/MP gap status.
+    Include the M-layer score and any gaps in the weekly report under "M 檢核狀態".
 2. Read `../../references/adaptive-operating-context.md` and `../../references/storage-policy.md` when reading or updating persistent context.
 3. Compare actual work against Strategies, MD, and MP.
 4. Identify recurring patterns.

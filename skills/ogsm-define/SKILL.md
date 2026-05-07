@@ -24,6 +24,11 @@ Use this skill to build the user's baseline OGSM profile.
 5. If saving a department profile, read or confirm the parent company profile first. If the parent is missing, stop and ask the user to provide or create it.
 6. Before saving, show target path, recorded date, and new-file notice or diff.
 7. Run `node ../../scripts/validate-profile.js <profile-file>` after drafting a saved profile.
+7a. Run `node ../../scripts/validate-profile-logic.js <profile-file>` to check content logic:
+    - If gaps exist, display the layered result (O/G/S/MD/MP scores + gap list).
+    - For structural gaps (no number, no date, no owner): directly prompt the user to fill them before saving.
+    - For semantic gaps (O5 vivid picture, S17–S19 resource uniqueness, O6 keywords): ask the user one question at a time to clarify.
+    - Re-run the script after each round of edits until `"valid": true` or the user explicitly accepts the remaining gaps.
 8. Ask the user to confirm before saving or changing Objective, Goals, Strategies, MD, or MP.
 
 ## Progressive Disclosure

@@ -22,14 +22,20 @@ Use this skill to evaluate written plans against OGSM.
 1. Read the OGSM profile. If missing, route to `ogsm-define`.
 2. Read `../../references/review-rubric.md`.
 3. Read `../../references/output-formats.md`.
-4. Map each plan item to Strategy, MD, and MP.
-5. Check backward logic: MP should achieve MD, MD should validate Strategy, Strategy should support Goal, and Goal should support Objective.
-6. Use `node ../../scripts/score-alignment.js <items.json>` when structured alignment items are available.
-7. Ask one clarifying question only if it changes the review.
-8. If the user wants a revised version, state that `ogsm-realign` has been loaded, then load and follow `ogsm-realign` before rewriting the plan.
+4. Run `node ../../scripts/validate-profile-logic.js <profile-file>` to get the JSON gap report.
+   Then read `../../references/ogsm-profile-audit-questions.md` and apply the 30 audit questions:
+   - Use the script's structural gaps (O/G/S/MD/MP scores + gap list) as the base finding for each layer.
+   - Supplement with AI semantic judgement for gaps the script cannot detect: O5 (vivid picture), O6 (keyword identification), S17–S19 (resource uniqueness/consumability), B30 (open-ended).
+   - Only ask the user for clarification when a gap cannot be resolved from the profile text alone.
+5. Map each plan item to Strategy, MD, and MP.
+6. Check backward logic: MP should achieve MD, MD should validate Strategy, Strategy should support Goal, and Goal should support Objective.
+7. Use `node ../../scripts/score-alignment.js <items.json>` when structured alignment items are available.
+8. Ask one clarifying question only if it changes the review.
+9. If the user wants a revised version, state that `ogsm-realign` has been loaded, then load and follow `ogsm-realign` before rewriting the plan.
 
 ## Progressive Disclosure
 
+- Always read `../../references/ogsm-profile-audit-questions.md` at the start of every audit.
 - Read examples only if the user asks for examples or output calibration.
 - Do not read schedule normalization unless calendar or agenda content appears.
 - Read `../../references/storage-policy.md` only when saving review output.

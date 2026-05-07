@@ -30,3 +30,12 @@ Every score below 4 needs a reason and a concrete correction.
 Use high confidence only when the OGSM profile and input are both clear.
 Use medium confidence when assumptions are minor.
 Use low confidence when profile, plan, or schedule data is incomplete.
+
+## Script-Driven Layer Scoring
+
+O/G/S/MD/MP layer scores (1–5) are driven by `validate-profile-logic.js` output.
+
+- Structural gaps (missing numbers, dates, owners, keywords) are detected automatically by the script.
+- Semantic gaps (O5 vivid picture, O6 keyword identification, S17–S19 resource uniqueness) require AI judgement.
+- Each gap is tagged with its audit question number (O1–B30) from `ogsm-profile-audit-questions.md`.
+- Use these question numbers as the traceability reference when reporting rubric findings.

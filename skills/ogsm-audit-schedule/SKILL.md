@@ -22,19 +22,25 @@ Use this skill to determine whether time allocation supports OGSM.
 ## Workflow
 
 1. Read the OGSM profile. If missing, route to `ogsm-define`.
-2. Read `../../references/schedule-normalization.md`.
-3. Produce or consume a normalized schedule table before scoring. If raw agenda text is available only in conversation, manually normalize it into the table schema before review.
-4. Even in quick mode, include the normalized schedule table or explicitly state the consumed normalized table before any score, findings, or recommendations.
-5. Normalize input with `node ../../scripts/normalize-schedule.js <schedule-file>` when schedule text is saved.
-6. Ask the user to confirm assumptions if normalization confidence is low.
-7. Read `../../references/review-rubric.md` and `../../references/output-formats.md`.
-8. Score Strategy, MD, and MP support.
-9. Check whether calendar events actually execute MP and include MD check-ins.
-10. If the user asks to audit Google Calendar directly, first use `ogsm-calendar-brief` to produce a normalized brief, then continue here to score alignment.
-11. If the user wants revised output, state that `ogsm-realign` has been loaded, then load and follow `ogsm-realign` before rewriting the schedule.
+2. Run `node ../../scripts/validate-profile-logic.js <profile-file>` to get the JSON gap report.
+   Then read `../../references/ogsm-profile-audit-questions.md` and apply the 30 audit questions:
+   - Use the script's structural gaps (O/G/S/MD/MP scores + gap list) as the base finding for each layer.
+   - Supplement with AI semantic judgement for gaps the script cannot detect: O5 (vivid picture), O6 (keyword identification), S17–S19 (resource uniqueness/consumability), B30 (open-ended).
+   - Only ask the user for clarification when a gap cannot be resolved from the profile text alone.
+3. Read `../../references/schedule-normalization.md`.
+4. Produce or consume a normalized schedule table before scoring. If raw agenda text is available only in conversation, manually normalize it into the table schema before review.
+5. Even in quick mode, include the normalized schedule table or explicitly state the consumed normalized table before any score, findings, or recommendations.
+6. Normalize input with `node ../../scripts/normalize-schedule.js <schedule-file>` when schedule text is saved.
+7. Ask the user to confirm assumptions if normalization confidence is low.
+8. Read `../../references/review-rubric.md` and `../../references/output-formats.md`.
+9. Score Strategy, MD, and MP support.
+10. Check whether calendar events actually execute MP and include MD check-ins.
+11. If the user asks to audit Google Calendar directly, first use `ogsm-calendar-brief` to produce a normalized brief, then continue here to score alignment.
+12. If the user wants revised output, state that `ogsm-realign` has been loaded, then load and follow `ogsm-realign` before rewriting the schedule.
 
 ## Progressive Disclosure
 
+- Always read `../../references/ogsm-profile-audit-questions.md` at the start of every audit.
 - Do not call Google Calendar directly.
 - Only read calendar connector guidance when invoked through `ogsm-calendar-brief`.
 - Read `../../references/storage-policy.md` only when saving review output.
