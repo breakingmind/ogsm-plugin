@@ -158,6 +158,24 @@ claude plugin install ogsm@ogsm-plugin
 
 Restart Claude Code.
 
+#### Auto-update (Claude Code)
+
+After installing via either method above, run this once to enable daily automatic updates from GitHub:
+
+```bash
+bash scripts/setup-auto-update.sh
+```
+
+What it does:
+- Converts the plugin install path to a live git clone of this repo
+- **macOS** — registers a LaunchAgent that runs `git pull` every day at 09:00
+- **Linux** — adds a crontab entry for 09:00 daily
+- Logs to `~/.claude/ogsm-plugin-update.log`
+
+To uninstall the auto-updater, remove `~/Library/LaunchAgents/com.ogsm-plugin.update.plist` (macOS) or delete the cron entry (`crontab -e`).
+
+---
+
 #### Codex — Local (from cloned repo)
 
 Add to `~/.codex/config.toml`:
@@ -374,6 +392,24 @@ claude plugin install ogsm@ogsm-plugin
 ```
 
 重啟 Claude Code。
+
+#### 自動更新（Claude Code）
+
+安裝完成後，執行一次下列指令即可啟用每日自動從 GitHub 更新：
+
+```bash
+bash scripts/setup-auto-update.sh
+```
+
+功能說明：
+- 將 plugin 安裝路徑轉換為本 repo 的 git clone
+- **macOS** — 建立 LaunchAgent，每天 09:00 自動執行 `git pull`
+- **Linux** — 寫入 crontab，每天 09:00 執行
+- 更新記錄寫入 `~/.claude/ogsm-plugin-update.log`
+
+如需移除自動更新：刪除 `~/Library/LaunchAgents/com.ogsm-plugin.update.plist`（macOS），或用 `crontab -e` 刪除對應行（Linux）。
+
+---
 
 #### Codex — 本機安裝（從 clone 的 repo）
 
