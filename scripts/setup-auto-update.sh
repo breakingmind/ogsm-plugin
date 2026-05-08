@@ -18,8 +18,9 @@ INSTALL_PATH=$(python3 - <<'PY'
 import json, sys, os
 path = os.path.expanduser("~/.claude/plugins/installed_plugins.json")
 data = json.load(open(path))
+plugins = data.get("plugins", data)  # support both flat and nested format
 for key in ("ogsm@ogsm-plugin", "ogsm@local"):
-    entries = data.get(key, [])
+    entries = plugins.get(key, [])
     if entries:
         print(entries[0]["installPath"])
         sys.exit(0)
