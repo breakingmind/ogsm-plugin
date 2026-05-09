@@ -16,8 +16,8 @@ OGSM connects ambition to daily execution through four layers:
 | **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
 | **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
 | **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
-| **MD** 衡量指標 | Indicators that validate each Strategy is working | Is the investment producing results? |
-| **MP** 行動計畫 | Time-ordered action plans that drive MD movement | What are we doing this week? |
+| **MD** | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP** | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
 The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
 
@@ -31,7 +31,7 @@ The core logic runs backward: **MP → MD → S → G → O**. Every action shou
 
 1. Install the plugin (see [Installation](#installation))
 2. Restart Claude Code or Codex
-3. Say **"幫我建立 OGSM"** to create a new profile, or **"匯入我的 OGSM"** to import an existing one
+3. Say **"help me develop an OGSM"** to create a new profile, or **"import an OGSM"** to import an existing one
 4. Follow the skill prompts — one question at a time
 5. Run **`ogsm-translate`** to turn your profile into this week's priorities
 
