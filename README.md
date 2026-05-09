@@ -60,7 +60,7 @@ Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is writte
 
 #### Company vs Department profiles
 
-The plugin supports a two-tier profile structure. A **company profile** sets the top-level Objective, Goals, and Strategies for the whole organization. **Department profiles** inherit from it — each one must reference a parent company profile and align its own Strategies to the company's Goals.
+The plugin supports a two-tier profile structure. A **company profile** sets the top-level Objective, Goals, and Strategies for the whole organization. **Department profiles** inherit from it — each one must reference a parent company profile.
 
 ```
 profiles/
@@ -70,6 +70,19 @@ profiles/
 ```
 
 `ogsm-define` enforces this: it will ask for scope (company or department) before saving, and block saving a department profile without a confirmed parent.
+
+**Goal alignment annotations** — each department Goal must declare one of two types via an inline HTML comment:
+
+| Type | Meaning | Example |
+|------|---------|---------|
+| `aligned` | Traces to a specific company layer (G or S) | `<!-- goal_type: aligned \| parent_ref: company-G1 -->` |
+| `enabling` | Supports other departments' ability to execute | `<!-- goal_type: enabling \| supports: [sales, ops] -->` |
+
+A company Strategy can become a department Goal (`parent_ref: company-S2`). This is valid — the relationship is energy transformation, not one-way cascade.
+
+MP entries can optionally declare cross-department dependencies: `<!-- depends_on: sales/MP2 -->`.
+
+`validate-alignment.js` checks these annotations before saving. Invalid `parent_ref` values (pointing to non-existent company layers) block the save; missing annotations produce warnings only.
 
 #### Profile format
 
@@ -115,7 +128,7 @@ Accepts an existing OGSM from a file path or pasted text. Auto-maps non-standard
 
 #### `ogsm-define` — Create or repair an OGSM profile
 
-Build the baseline profile from scratch or fix an existing one. The skill asks one question at a time until all required fields are complete. Department profiles must reference a parent company profile.
+Build the baseline profile from scratch or fix an existing one. The skill asks one question at a time until all required fields are complete. Department profiles must reference a parent company profile. When defining a department profile, the skill walks through each Goal and asks whether it is `aligned` (traces to a specific company layer) or `enabling` (supports other departments), then adds the appropriate annotation. `validate-alignment.js` is run before saving — errors block the save, warnings do not.
 
 **Trigger:** "Help me create an OGSM" / "Review and fix my OGSM"
 
@@ -131,7 +144,7 @@ Converts the confirmed profile into weekly or monthly priorities, time allocatio
 
 #### `ogsm-audit-plan` — Review a plan against OGSM
 
-Maps each item in a plan, OKR, roadmap, or initiative list to a Strategy, MD, and MP. Scores alignment and identifies gaps.
+Maps each item in a plan, OKR, roadmap, or initiative list to a Strategy, MD, and MP. Scores alignment and identifies gaps. For department profiles, also checks that each `aligned` Goal's `parent_ref` still matches an existing layer in the current company profile, flags missing `goal_type` annotations, and surfaces any `depends_on` dependency chains.
 
 **Trigger:** "Audit this quarterly plan against our OGSM"
 
@@ -295,6 +308,12 @@ Run architecture checks only:
 scripts/validate-architecture.sh
 ```
 
+Validate department profile alignment against its parent company profile:
+
+```bash
+node scripts/validate-alignment.js .ogsm/profiles/departments/<slug>.md .ogsm/profiles/company/<slug>.md
+```
+
 ---
 
 ### Safety
@@ -362,7 +381,7 @@ OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確�
 
 #### 公司 vs 部門 profile 兩層架構
 
-Plugin 支援兩層 profile 結構。**公司 profile** 設定整個組織的頂層 Objective、Goals 與 Strategies。**部門 profile** 從公司 profile 繼承 — 每個部門 profile 必須參照上層的公司 profile，並將自己的 Strategies 對齊公司的 Goals。
+Plugin 支援兩層 profile 結構。**公司 profile** 設定整個組織的頂層 Objective、Goals 與 Strategies。**部門 profile** 從公司 profile 繼承 — 每個部門 profile 必須參照上層的公司 profile。
 
 ```
 profiles/
@@ -372,6 +391,19 @@ profiles/
 ```
 
 `ogsm-define` 強制執行此規則：儲存前會詢問 scope（公司或部門），且不允許在沒有確認父層 profile 的情況下儲存部門 profile。
+
+**Goal 對齊標註** — 每個部門 Goal 須透過內嵌 HTML comment 宣告類型：
+
+| 類型 | 意義 | 範例 |
+|------|------|------|
+| `aligned` | 追溯至公司特定層次（G 或 S） | `<!-- goal_type: aligned \| parent_ref: company-G1 -->` |
+| `enabling` | 支援其他部門的執行能力 | `<!-- goal_type: enabling \| supports: [sales, ops] -->` |
+
+公司的 Strategy 可以成為部門的 Goal（`parent_ref: company-S2`），這是合理的能量轉化，不是層級違規。
+
+MP 可選擇性宣告跨部門依賴：`<!-- depends_on: sales/MP2 -->`。
+
+`validate-alignment.js` 在儲存前驗證這些標註。`parent_ref` 指向不存在的公司層次會阻擋儲存；缺少標註只產生 warning。
 
 #### Profile 格式
 
@@ -417,7 +449,7 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 
 #### `ogsm-define` — 建立或修復 OGSM profile
 
-從零開始建立基準 profile，或修復現有的 profile。技能每次只問一個問題，直到所有必要欄位填齊。部門 profile 必須參照上層的公司 profile。
+從零開始建立基準 profile，或修復現有的 profile。技能每次只問一個問題，直到所有必要欄位填齊。部門 profile 必須參照上層的公司 profile。建立部門 profile 時，技能會逐一詢問每個 Goal 是 `aligned`（對齊公司某個 G 或 S）或 `enabling`（支援其他部門），並加入對應標註。儲存前會執行 `validate-alignment.js`，有 error 則阻擋儲存，warning 不阻擋。
 
 **觸發時機：** 「幫我建立一份 OGSM」 / 「審查並修正我的 OGSM」
 
@@ -433,7 +465,7 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 
 #### `ogsm-audit-plan` — 審查計劃是否對齊 OGSM
 
-把計劃、OKR、路線圖或行動清單中的每一項，對應到策略、MD 與 MP，評分並找出缺口。
+把計劃、OKR、路線圖或行動清單中的每一項，對應到策略、MD 與 MP，評分並找出缺口。對於部門 profile，還會核查每個 `aligned` Goal 的 `parent_ref` 是否仍對應公司 profile 的現有層次（公司 profile 可能已更新）、標記缺少 `goal_type` 標註的 Goal，並顯示 `depends_on` 跨部門依賴鏈。
 
 **觸發時機：** 「審查這份季度計劃是否對齊我們的 OGSM」
 
@@ -599,6 +631,12 @@ scripts/test-scripts.sh
 
 ```bash
 scripts/validate-architecture.sh
+```
+
+驗證部門 profile 與父層公司 profile 的對齊：
+
+```bash
+node scripts/validate-alignment.js .ogsm/profiles/departments/<部門代號>.md .ogsm/profiles/company/<公司代號>.md
 ```
 
 ---
