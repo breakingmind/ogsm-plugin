@@ -23,6 +23,20 @@ The core logic runs backward: **MP → MD → S → G → O**. Every action shou
 
 ---
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+---
+
+### Quick Start
+
+1. Install the plugin (see [Installation](#installation))
+2. Restart Claude Code or Codex
+3. Say **"幫我建立 OGSM"** to create a new profile, or **"匯入我的 OGSM"** to import an existing one
+4. Follow the skill prompts — one question at a time
+5. Run **`ogsm-translate`** to turn your profile into this week's priorities
+
+---
+
 ### Plugin Overview
 
 This plugin makes OGSM operational through a repeatable loop:
@@ -265,6 +279,20 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 | **MP** 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
 
 核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
+
+---
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+---
+
+### 快速開始
+
+1. 安裝 plugin（見[安裝方式](#安裝方式)）
+2. 重啟 Claude Code 或 Codex
+3. 說 **「幫我建立 OGSM」** 建立新 profile，或 **「匯入我的 OGSM」** 匯入既有內容
+4. 依照技能提示逐步完成 — 每次只回答一個問題
+5. 執行 **`ogsm-translate`** 把 profile 轉化為本週執行優先事項
 
 ---
 
