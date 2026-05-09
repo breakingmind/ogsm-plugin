@@ -64,9 +64,9 @@ The plugin supports a two-tier profile structure. A **company profile** sets the
 
 ```
 profiles/
-  company/double-steel.md        ← top-level O, G, S, MD, MP
-  departments/sales.md           ← must reference company/double-steel
-  departments/operations.md      ← must reference company/double-steel
+  company/xxx-company.md         ← top-level O, G, S, MD, MP
+  departments/sales.md           ← must reference company/xxx-company
+  departments/operations.md      ← must reference company/xxx-company
 ```
 
 `ogsm-define` enforces this: it will ask for scope (company or department) before saving, and block saving a department profile without a confirmed parent.
@@ -78,7 +78,7 @@ A saved profile is a Markdown file with these required sections:
 ```markdown
 ---
 scope: company
-slug: double-steel
+slug: xxx-company
 parent: null
 last_confirmed: 2026-05-09
 ---
@@ -366,9 +366,9 @@ Plugin 支援兩層 profile 結構。**公司 profile** 設定整個組織的頂
 
 ```
 profiles/
-  company/double-steel.md        ← 頂層 O、G、S、MD、MP
-  departments/sales.md           ← 必須參照 company/double-steel
-  departments/operations.md      ← 必須參照 company/double-steel
+  company/xxx-company.md         ← 頂層 O、G、S、MD、MP
+  departments/sales.md           ← 必須參照 company/xxx-company
+  departments/operations.md      ← 必須參照 company/xxx-company
 ```
 
 `ogsm-define` 強制執行此規則：儲存前會詢問 scope（公司或部門），且不允許在沒有確認父層 profile 的情況下儲存部門 profile。
@@ -380,7 +380,7 @@ profiles/
 ```markdown
 ---
 scope: company
-slug: double-steel
+slug: xxx-company
 parent: null
 last_confirmed: 2026-05-09
 ---
