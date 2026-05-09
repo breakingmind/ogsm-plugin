@@ -28,6 +28,8 @@ The core logic runs backward: **MP → MD → S → G → O**. Every action shou
 This plugin makes OGSM operational through a repeatable loop:
 
 ```
+ogsm-import (existing OGSM)
+    ↓
 ogsm-define
     ↓
 ogsm-translate
@@ -45,6 +47,14 @@ Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is writte
 ---
 
 ### Skills
+
+#### `ogsm-import` — Import an existing OGSM
+
+Accepts an existing OGSM from a file path or pasted text. Auto-maps non-standard headings (e.g. "KPI" → MD, "OKR" → Goals) and confirms the mapping with you. Then hands off to `ogsm-define` to validate OGSM principles, fill any gaps, and save the profile.
+
+**Trigger:** "Import my existing OGSM" / "I already have an OGSM, help me bring it in"
+
+---
 
 #### `ogsm-define` — Create or repair an OGSM profile
 
@@ -263,6 +273,8 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 這個 plugin 透過一個可重複的迴圈讓 OGSM 真正落地：
 
 ```
+ogsm-import（匯入既有 OGSM）
+    ↓
 ogsm-define（建立 profile）
     ↓
 ogsm-translate（轉化為優先事項）
@@ -280,6 +292,14 @@ OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確�
 ---
 
 ### 各項技能說明
+
+#### `ogsm-import` — 匯入既有 OGSM
+
+接受以檔案路徑或直接貼上的方式提供既有 OGSM 內容。自動對映非標準標題（例如「KPI」→ MD、「OKR」→ Goals），並請您確認對映結果。確認後交由 `ogsm-define` 驗證 OGSM 原則、補齊缺漏欄位，並儲存 profile。
+
+**觸發時機：** 「匯入我的 OGSM」 / 「我有既有的 OGSM，幫我帶進來」
+
+---
 
 #### `ogsm-define` — 建立或修復 OGSM profile
 
