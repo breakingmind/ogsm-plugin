@@ -20,8 +20,9 @@ Entry point for the OGSM plugin. Detects the user's current OGSM state and guide
 1. Check whether `.ogsm/profiles/` exists in the current directory and contains `.md` files.
 2. **No profiles found (new user):**
    a. Say: "OGSM 把組織目標連結到每日執行，分為五層：O（目標）→ G（目標值）→ S（策略）→ MD（衡量指標）→ MP（行動計畫）。"
-   b. Ask: "你要建立公司 profile，還是部門 profile？"
-   c. Invoke `ogsm-define`.
+   b. Ask: "你要建立新的 profile，還是匯入既有 OGSM？"
+      - 建立新的 → ask "公司 profile 還是部門 profile？" → invoke `ogsm-define`
+      - 匯入既有 → invoke `ogsm-import`
 3. **Company profile exists, no department profiles:**
    a. Read the company profile. Show: Objective (full text) + up to two Goals.
    b. Ask: "你接下來想做什麼？" with numbered menu:
@@ -29,12 +30,14 @@ Entry point for the OGSM plugin. Detects the user's current OGSM state and guide
       - ② 審查計畫（OKR / 路線圖 / 季度計畫）
       - ③ 審查行程（本週時間安排）
       - ④ 週檢查
+      - ⑤ 匯入既有 OGSM
 4. **Multiple profiles (company + one or more departments):**
    a. List available profiles by name and scope. Ask: "你要操作哪一個 profile？"
    b. After selection, show same menu as step 3b.
 5. **Menu routing:**
    - ① → invoke `ogsm-define`
    - ② → invoke `ogsm-audit-plan`
+   - ⑤ → invoke `ogsm-import`
    - ③ → ask: "行程來源：A) 手動貼上文字議程  B) 從 Google Calendar 讀取"
      - A → invoke `ogsm-audit-schedule`
      - B → invoke `ogsm-calendar-brief`
