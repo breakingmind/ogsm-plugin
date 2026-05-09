@@ -16,8 +16,8 @@ OGSM connects ambition to daily execution through four layers:
 | **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
 | **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
 | **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
-| **MD** | Indicators that validate each Strategy is working | Is the investment producing results? |
-| **MP** | Time-ordered action plans that drive MD movement | What are we doing this week? |
+| **MD** Measurable Definition | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP** Measurable Process | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
 The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
 
@@ -58,9 +58,52 @@ ogsm-weekly-review
 
 Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is written without your explicit confirmation.
 
+#### Company vs Department profiles
+
+The plugin supports a two-tier profile structure. A **company profile** sets the top-level Objective, Goals, and Strategies for the whole organization. **Department profiles** inherit from it — each one must reference a parent company profile and align its own Strategies to the company's Goals.
+
+```
+profiles/
+  company/double-steel.md        ← top-level O, G, S, MD, MP
+  departments/sales.md           ← must reference company/double-steel
+  departments/operations.md      ← must reference company/double-steel
+```
+
+`ogsm-define` enforces this: it will ask for scope (company or department) before saving, and block saving a department profile without a confirmed parent.
+
+#### Profile format
+
+A saved profile is a Markdown file with these required sections:
+
+```markdown
+---
+scope: company
+slug: double-steel
+parent: null
+last_confirmed: 2026-05-09
+---
+
+## Objective
+## Goals
+## Strategies
+## MD
+## MP
+## Review Cadence
+```
+
+See `examples/sample-ogsm-profile.md` for a complete example.
+
 ---
 
 ### Skills
+
+#### `ogsm-start` — Find your starting point
+
+Entry point for the plugin. Detects whether you already have a profile and routes you to the right skill — no need to know skill names. New users are guided to create or import a profile; returning users see a menu to audit, review, or realign.
+
+**Trigger:** "Where do I start?" / "How do I use OGSM?" / any message with no clear OGSM task
+
+---
 
 #### `ogsm-import` — Import an existing OGSM
 
@@ -275,8 +318,8 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 | **O** Objective 目標 | 服務對象、創造的價值、成功的具體圖像 | 我們瞄準的方向對嗎？ |
 | **G** Goals 目標值 | 可量化的成果 — 動詞＋名詞＋基準＋目標量＋日期 | 我們怎麼知道到達了？ |
 | **S** Strategies 策略 | 選定的資源、方法與工具 | 我們實際要投入什麼？ |
-| **MD** 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
-| **MP** 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
+| **MD** Measurable Definition 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
+| **MP** Measurable Process 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
 
 核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
 
@@ -317,9 +360,52 @@ ogsm-weekly-review（週檢查 · 更新執行脈絡）
 
 OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確確認。
 
+#### 公司 vs 部門 profile 兩層架構
+
+Plugin 支援兩層 profile 結構。**公司 profile** 設定整個組織的頂層 Objective、Goals 與 Strategies。**部門 profile** 從公司 profile 繼承 — 每個部門 profile 必須參照上層的公司 profile，並將自己的 Strategies 對齊公司的 Goals。
+
+```
+profiles/
+  company/double-steel.md        ← 頂層 O、G、S、MD、MP
+  departments/sales.md           ← 必須參照 company/double-steel
+  departments/operations.md      ← 必須參照 company/double-steel
+```
+
+`ogsm-define` 強制執行此規則：儲存前會詢問 scope（公司或部門），且不允許在沒有確認父層 profile 的情況下儲存部門 profile。
+
+#### Profile 格式
+
+儲存的 profile 是一個 Markdown 檔案，包含以下必要段落：
+
+```markdown
+---
+scope: company
+slug: double-steel
+parent: null
+last_confirmed: 2026-05-09
+---
+
+## Objective
+## Goals
+## Strategies
+## MD
+## MP
+## Review Cadence
+```
+
+完整範例請見 `examples/sample-ogsm-profile.md`。
+
 ---
 
 ### 各項技能說明
+
+#### `ogsm-start` — 找到起點
+
+Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正確的技能 — 不需要記住技能名稱。新用戶會被引導建立或匯入 profile；回頭的用戶會看到選單，選擇審查、複盤或重新對標。
+
+**觸發時機：** 「從哪裡開始？」 / 「OGSM 怎麼用？」 / 任何沒有明確 OGSM 任務的訊息
+
+---
 
 #### `ogsm-import` — 匯入既有 OGSM
 
