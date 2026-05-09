@@ -22,6 +22,12 @@ Use this skill to build the user's baseline OGSM profile.
 3. Use `../../assets/profile-template.md` as the profile skeleton.
 4. Ask whether the profile is company-level or department-level before saving. Department profiles must name their parent company profile.
 5. If saving a department profile, read or confirm the parent company profile first. If the parent is missing, stop and ask the user to provide or create it.
+5a. After drafting each department Goal, ask: "這個 Goal 是對齊公司某個 G 或 S，還是支援其他部門的職能型 Goal？"
+    - If aligned: show numbered list of company Goals and Strategies; ask which one it traces to; add annotation `<!-- goal_type: aligned | parent_ref: company-G{N} -->` (or S{N} / O) below the Goal line.
+    - If enabling: ask which departments it serves (show available dept slugs); add annotation `<!-- goal_type: enabling | supports: [{slug}, ...] -->` below the Goal line.
+5b. After drafting MPs, optionally ask: "這個行動計畫是否依賴其他部門先完成某件事？" If yes, add `<!-- depends_on: {dept-slug}/MP{N} -->` below the MP line.
+5c. Ask once for O alignment: "這個部門 O 的方向是否支持公司 O？請確認後繼續。" (conversational only — no annotation required)
+5d. Run `node ../../scripts/validate-alignment.js <dept-profile-file> <company-profile-file>` before saving. Display errors and block save until resolved. Warnings are shown but do not block save.
 6. Before saving, show target path, recorded date, and new-file notice or diff.
 7. Run `node ../../scripts/validate-profile.js <profile-file>` after drafting a saved profile.
 7a. Run `node ../../scripts/validate-profile-logic.js <profile-file>` to check content logic:

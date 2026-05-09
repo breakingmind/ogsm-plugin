@@ -20,6 +20,11 @@ Use this skill to evaluate written plans against OGSM.
 ## Workflow
 
 1. Read the OGSM profile. If missing, route to `ogsm-define`.
+1a. If the profile has `scope: department` and a `parent:` field:
+    - Read the parent company profile.
+    - For each department Goal with `goal_type: aligned`, confirm the `parent_ref` layer still exists in the current company profile (company may have updated since the dept profile was last saved). Flag any that no longer match.
+    - Flag any Goals missing `goal_type` annotations.
+    - Surface any `depends_on` chains and note whether the depended-on department MP is tracked.
 2. Read `../../references/review-rubric.md`.
 3. Read `../../references/output-formats.md`.
 4. Run `node ../../scripts/validate-profile-logic.js <profile-file>` to get the JSON gap report.

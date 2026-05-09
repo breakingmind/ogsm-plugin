@@ -182,4 +182,66 @@ if grep -F '"O"' "$tmp_output" >/dev/null 2>&1; then
   exit 1
 fi
 
+# validate-alignment: aligned goal with valid parent_ref → exit 0, valid: true
+tmp_dept_valid="$(mktemp)"
+tmp_company_valid="$(mktemp)"
+cat > "$tmp_company_valid" <<'COMPANY'
+## Goals
+1. Increase revenue by 30%, 2026-12-31.
+## Strategies
+1. Through digital tools, accelerate pipeline.
+COMPANY
+cat > "$tmp_dept_valid" <<'DEPT'
+## Goals
+1. Grow new-client close rate from 20% to 35%, 2026-12-31.
+   <!-- goal_type: aligned | parent_ref: company-G1 -->
+2. Complete CRM training by 2026-08-31.
+   <!-- goal_type: enabling | supports: [operations] -->
+DEPT
+node "$script_dir/validate-alignment.js" "$tmp_dept_valid" "$tmp_company_valid" > "$tmp_output"
+grep -F '"valid": true' "$tmp_output" >/dev/null
+rm -f "$tmp_dept_valid" "$tmp_company_valid"
+
+# validate-alignment: aligned goal with invalid parent_ref → exit 1, error in output
+tmp_dept_bad="$(mktemp)"
+tmp_company_bad="$(mktemp)"
+cat > "$tmp_company_bad" <<'COMPANY'
+## Goals
+1. Increase revenue by 30%, 2026-12-31.
+COMPANY
+cat > "$tmp_dept_bad" <<'DEPT'
+## Goals
+1. Grow close rate.
+   <!-- goal_type: aligned | parent_ref: company-G5 -->
+DEPT
+if node "$script_dir/validate-alignment.js" "$tmp_dept_bad" "$tmp_company_bad" > "$tmp_output" 2>&1; then
+  echo "Expected invalid parent_ref to fail" >&2
+  exit 1
+fi
+grep -F '"valid": false' "$tmp_output" >/dev/null
+grep -F 'company-G5' "$tmp_output" >/dev/null
+rm -f "$tmp_dept_bad" "$tmp_company_bad"
+
+# validate-alignment: missing goal_type → exit 0 (warning only, still valid)
+tmp_dept_warn="$(mktemp)"
+tmp_company_warn="$(mktemp)"
+cat > "$tmp_company_warn" <<'COMPANY'
+## Goals
+1. Example goal.
+COMPANY
+cat > "$tmp_dept_warn" <<'DEPT'
+## Goals
+1. Some goal with no annotation.
+DEPT
+node "$script_dir/validate-alignment.js" "$tmp_dept_warn" "$tmp_company_warn" > "$tmp_output"
+grep -F '"valid": true' "$tmp_output" >/dev/null
+grep -F 'missing goal_type' "$tmp_output" >/dev/null
+rm -f "$tmp_dept_warn" "$tmp_company_warn"
+
+# validate-alignment: no args → exit 2
+if node "$script_dir/validate-alignment.js" > "$tmp_output" 2>&1; then
+  echo "Expected no-args to exit 2" >&2
+  exit 1
+fi
+
 "$script_dir/validate-architecture.sh"

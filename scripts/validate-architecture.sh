@@ -39,7 +39,7 @@ for asset in profile-template operating-context-template quick-review-template f
   test -f "$plugin_root/assets/$asset.md"
 done
 
-for script in validate-profile normalize-schedule normalize-calendar-events score-alignment update-operating-context prepare-storage; do
+for script in validate-profile normalize-schedule normalize-calendar-events score-alignment update-operating-context prepare-storage validate-alignment; do
   test -x "$plugin_root/scripts/$script.js"
 done
 

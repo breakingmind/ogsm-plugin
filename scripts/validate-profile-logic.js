@@ -135,6 +135,12 @@ function checkBackward(sections) {
   return { complete: broken.length === 0, broken };
 }
 
+const frontmatterMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+const frontmatter = frontmatterMatch ? frontmatterMatch[1] : '';
+const isDeptWithParent =
+  /^\s*scope:\s*department\s*$/im.test(frontmatter) &&
+  /^\s*parent:\s*\S/im.test(frontmatter);
+
 const sections = parseSections(text);
 const oResult  = checkO(sections['Objective']);
 const gResult  = checkG(sections['Goals']);
@@ -142,6 +148,11 @@ const sResult  = checkS(sections['Strategies']);
 const mdResult = checkMD(sections['MD']);
 const mpResult = checkMP(sections['MP']);
 const backward = checkBackward(sections);
+
+const warnings = [];
+if (isDeptWithParent && sections['Goals'] && !/goal_type:/i.test(sections['Goals'])) {
+  warnings.push('department profile with parent set has no goal_type annotations — alignment layer may have been skipped');
+}
 
 const allValid = [oResult, gResult, sResult, mdResult, mpResult].every(r => r.gaps.length === 0) && backward.complete;
 
@@ -155,6 +166,7 @@ if (targetSection === 'M') {
 } else {
   output = {
     valid: allValid,
+    warnings,
     layers: { O: oResult, G: gResult, S: sResult, MD: mdResult, MP: mpResult },
     backwardLogic: backward,
   };
