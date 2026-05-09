@@ -108,12 +108,27 @@ last_confirmed: 2026-05-05
 
 ## Parent Alignment
 
-When a department profile exists, audits should check:
+Department profiles must declare how each Goal relates to the company OGSM using inline annotations. See `references/ogsm-profile-format.md` for the full annotation syntax.
 
-- Department Objective supports the company Objective.
-- Department Goals support at least one company Goal.
-- Department Strategies map to company Strategies or explain why they are local-only.
-- Department MD and MP can be traced to department Strategies and, when applicable, to company Goals.
+### Rules
+
+- Every department Goal must have a `goal_type` annotation. Missing annotations produce a warning during validation.
+- `aligned` Goals must declare a `parent_ref` pointing to an existing company layer (`company-G1`, `company-S2`, etc.). Invalid `parent_ref` is an error that blocks saving.
+- `enabling` Goals must list `supports` departments. Missing `supports` is a warning.
+- Company Objective alignment is confirmed conversationally during `ogsm-define` — no annotation required.
+- MP `depends_on` references are advisory and surfaced during audit, not validated structurally.
+
+### Validation
+
+Run alignment validation for a department profile:
+
+```bash
+node scripts/validate-alignment.js .ogsm/profiles/departments/<slug>.md .ogsm/profiles/company/<slug>.md
+```
+
+Output: `{ "valid": bool, "warnings": [], "errors": [] }`
+- Errors: block save in `ogsm-define`
+- Warnings: surfaced to user but do not block save
 
 ## Update Diff Format
 
