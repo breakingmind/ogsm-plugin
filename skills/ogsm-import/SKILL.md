@@ -39,7 +39,6 @@ Use this skill to bring an existing OGSM (from a file or pasted text) into `.ogs
    - If input was pasted, write mapped content to `/tmp/ogsm-import-<YYYYMMDD-HHMMSS>.md`.
    - Run: `node ../../scripts/validate-profile.js <file-path>`
    - Display which required fields are present and which are missing.
-   - Keep the file (temp or original) available; its path will be passed to `ogsm-define` in the handoff.
 
 5. **Hand off to `ogsm-define`** by presenting the fully mapped OGSM text in the conversation, then invoking `ogsm-define`. State: "結構對映完成，以下是對映後的草稿，現在交由 ogsm-define 確認 OGSM 原則並補齊缺漏：\n\n{mapped-content}" — `ogsm-define` treats this as the user's existing draft input.
 
