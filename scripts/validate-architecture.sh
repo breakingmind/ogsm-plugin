@@ -4,7 +4,7 @@ set -eu
 script_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 plugin_root="$(dirname "$script_dir")"
 
-skills="ogsm-start ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-calendar-brief ogsm-realign ogsm-weekly-review ogsm-import"
+skills="ogsm-start ogsm-define ogsm-translate ogsm-audit-plan ogsm-audit-schedule ogsm-calendar-brief ogsm-realign ogsm-weekly-review ogsm-import ogsm-plan-annual"
 
 test -f "$plugin_root/plugin.toml"
 test -f "$plugin_root/README.md"
@@ -39,7 +39,7 @@ for asset in profile-template operating-context-template quick-review-template f
   test -f "$plugin_root/assets/$asset.md"
 done
 
-for script in validate-profile normalize-schedule normalize-calendar-events score-alignment update-operating-context prepare-storage validate-alignment; do
+for script in validate-profile normalize-schedule normalize-calendar-events score-alignment update-operating-context prepare-storage validate-alignment extract-md-actuals generate-annual-plan; do
   test -x "$plugin_root/scripts/$script.js"
 done
 

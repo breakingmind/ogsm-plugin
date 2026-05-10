@@ -26,6 +26,9 @@ Use `.ogsm/` at the user's current project root.
   reviews/
     company/
     departments/
+  plans/
+    company/
+    departments/
   archive/
     company/
     departments/
@@ -158,3 +161,14 @@ Profiles and context may contain company-sensitive information. The plugin shoul
 - Avoid writing real customer names unless the user confirms.
 - Avoid writing profile or context data to GitHub, Linear, calendars, or external documents unless the user explicitly requests it.
 - Suggest placeholder names such as `Customer A` when examples are enough.
+
+## Annual Plan Paths
+
+Annual plan tables are stored under `.ogsm/plans/`:
+
+```text
+.ogsm/plans/company/<company-slug>/<year>-annual.md
+.ogsm/plans/departments/<dept-slug>/<year>-annual.md
+```
+
+These follow the same safety constraints as all other `.ogsm/` writes: target path, content summary, and explicit user confirmation are required before any write.
