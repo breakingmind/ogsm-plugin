@@ -9,7 +9,7 @@ if (!target) {
   process.exit(2);
 }
 
-const MD_ACTUAL_RE = /<!--\s*md-actual:\s*([^-]+?)\s*-->/g;
+const MD_ACTUAL_RE = /<!--\s*md-actual:\s*(.+?)\s*-->/g;
 
 function extractFromText(text) {
   const results = {};
