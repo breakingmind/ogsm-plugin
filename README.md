@@ -16,8 +16,8 @@ OGSM connects ambition to daily execution through four layers:
 | **O** Objective | Who you serve, what value you create, vivid picture of success | Are we aiming at the right target? |
 | **G** Goals | Measurable outcomes — verb + noun + baseline + target + date range | How do we know we've arrived? |
 | **S** Strategies | Selected resources, methods, and tools that reach the Goals | What will we actually invest in? |
-| **MD** Measurable Definition | Indicators that validate each Strategy is working | Is the investment producing results? |
-| **MP** Measurable Process | Time-ordered action plans that drive MD movement | What are we doing this week? |
+| **MD** Measure Dashboard | Indicators that validate each Strategy is working | Is the investment producing results? |
+| **MP** Measure Plans | Time-ordered action plans that drive MD movement | What are we doing this week? |
 
 The core logic runs backward: **MP → MD → S → G → O**. Every action should trace to a Goal through a Strategy. Strong OGSMs make it easier to say no.
 
@@ -46,14 +46,14 @@ ogsm-import (existing OGSM)
     ↓
 ogsm-define
     ↓
-ogsm-translate
+ogsm-translate ── ogsm-plan-annual (optional, year-start)
     ↓
 ogsm-audit-plan  ──  ogsm-calendar-brief (optional)
 ogsm-audit-schedule ──────────────────────────────┘
     ↓
 ogsm-realign
     ↓
-ogsm-weekly-review
+ogsm-weekly-review ── ogsm-plan-annual update (month-end)
 ```
 
 Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is written without your explicit confirmation.
@@ -176,9 +176,20 @@ Takes audit findings and rewrites the plan or schedule with concrete changes. Ea
 
 #### `ogsm-weekly-review` — Close the loop and update context
 
-Compares actual work against Strategies, MD, and MP. Identifies recurring patterns, proposes operating context updates, and surfaces any OGSM profile changes needed.
+Compares actual work against Strategies, MD, and MP. Identifies recurring patterns, proposes operating context updates, and surfaces any OGSM profile changes needed. Also writes a `<!-- md-actual: MD1=..., MD2=... -->` marker into the MD movement summary so monthly actuals can be extracted later by `ogsm-plan-annual`.
 
 **Trigger:** "Let's do the weekly OGSM review"
+
+---
+
+#### `ogsm-plan-annual` — Generate and track the annual MD/MP plan
+
+Expands a confirmed OGSM into a full-year tracking table at `.ogsm/plans/<scope>/<slug>/<year>-annual.md`. Each Strategy gets two rows (plan + actual) with 12 month columns containing MD milestones and MP execution slots.
+
+- **Generate mode** (year-start): proposes linear monthly MD milestones from baseline → target, lets you adjust each value, assigns MP items to specific months, and writes the table after confirmation.
+- **Update mode** (month-end): runs `extract-md-actuals.js` against this month's weekly reviews to read the structured `md-actual` markers, asks you to confirm extracted values, and fills in the actual cells.
+
+**Trigger:** "Generate annual plan table" / "Update this month's MD actuals" / "ogsm-plan-annual"
 
 ---
 
@@ -196,6 +207,9 @@ Compares actual work against Strategies, MD, and MP. Identifies recurring patter
   reviews/
     company/<company-slug>/<YYYY-MM-DD>-<review-type>.md
     departments/<department-slug>/<YYYY-MM-DD>-<review-type>.md
+  plans/
+    company/<company-slug>/<year>-annual.md
+    departments/<department-slug>/<year>-annual.md
   archive/
 ```
 
@@ -337,8 +351,8 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 | **O** Objective 目標 | 服務對象、創造的價值、成功的具體圖像 | 我們瞄準的方向對嗎？ |
 | **G** Goals 目標值 | 可量化的成果 — 動詞＋名詞＋基準＋目標量＋日期 | 我們怎麼知道到達了？ |
 | **S** Strategies 策略 | 選定的資源、方法與工具 | 我們實際要投入什麼？ |
-| **MD** Measurable Definition 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
-| **MP** Measurable Process 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
+| **MD** Measure Dashboard 衡量指標 | 驗證每項策略是否奏效的指標 | 投入是否正在產生結果？ |
+| **MP** Measure Plans 行動計畫 | 推動 MD 移動的時序行動計畫 | 這週我們在做什麼？ |
 
 核心邏輯從後往前驗證：**MP → MD → S → G → O**。每項行動都應該能透過策略追溯到一個目標值。好的 OGSM 讓「說不」變得更容易。
 
@@ -367,14 +381,14 @@ ogsm-import（匯入既有 OGSM）
     ↓
 ogsm-define（建立 profile）
     ↓
-ogsm-translate（轉化為優先事項）
+ogsm-translate（轉化為優先事項）── ogsm-plan-annual（年初建立年度計畫表，選用）
     ↓
 ogsm-audit-plan（審查計劃）  ──  ogsm-calendar-brief（選用）
 ogsm-audit-schedule（審查行程）────────────────────────┘
     ↓
 ogsm-realign（重新對標）
     ↓
-ogsm-weekly-review（週檢查 · 更新執行脈絡）
+ogsm-weekly-review（週檢查 · 更新執行脈絡）── ogsm-plan-annual update（月底更新實際值）
 ```
 
 OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確確認。
@@ -497,9 +511,20 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 
 #### `ogsm-weekly-review` — 關閉迴圈，更新執行脈絡
 
-比較實際工作與策略、MD、MP 的落差。找出週期性模式，提出執行脈絡更新建議，以及 OGSM profile 可能需要調整的地方。
+比較實際工作與策略、MD、MP 的落差。找出週期性模式，提出執行脈絡更新建議，以及 OGSM profile 可能需要調整的地方。輸出時會在 MD 移動摘要段落寫入結構化標記 `<!-- md-actual: MD1=..., MD2=... -->`，供 `ogsm-plan-annual` 月底萃取使用。
 
 **觸發時機：** 「我們來做週 OGSM 檢查」
+
+---
+
+#### `ogsm-plan-annual` — 產生並追蹤年度 MD/MP 計畫
+
+把已確認的 OGSM 展開成全年追蹤表，儲存於 `.ogsm/plans/<scope>/<slug>/<year>-annual.md`。每個策略佔兩列（計畫 + 實際），12 個月份欄分別記錄 MD 里程碑與 MP 執行項目。
+
+- **Generate 模式**（年初）：依 baseline → target 提出線性月度里程碑，逐項由你確認或調整，分配 MP 到具體月份，確認後寫入年度計畫表。
+- **Update 模式**（月底）：執行 `extract-md-actuals.js` 掃描當月 weekly review 的結構化標記，請你確認萃取數值後填入實際值欄。
+
+**觸發時機：** 「產生年度計畫表」/「更新本月實際值」/「ogsm-plan-annual」
 
 ---
 
@@ -517,6 +542,9 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
   reviews/
     company/<公司代號>/<YYYY-MM-DD>-<review-type>.md
     departments/<部門代號>/<YYYY-MM-DD>-<review-type>.md
+  plans/
+    company/<公司代號>/<年份>-annual.md
+    departments/<部門代號>/<年份>-annual.md
   archive/
 ```
 
