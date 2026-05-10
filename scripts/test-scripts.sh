@@ -259,4 +259,30 @@ if node "$script_dir/extract-md-actuals.js" > "$tmp_output" 2>&1; then
   exit 1
 fi
 
+# generate-annual-plan: sample input → produces markdown table with headers
+node "$script_dir/generate-annual-plan.js" "$plugin_root/examples/sample-annual-plan-input.json" > "$tmp_output"
+grep -F '# 年度計畫表 · xxx-company · 2026' "$tmp_output" >/dev/null
+grep -F '> O: 成為台灣鋼材市場首選供應商' "$tmp_output" >/dev/null
+grep -F '1月 MD' "$tmp_output" >/dev/null
+grep -F '12月 MP' "$tmp_output" >/dev/null
+grep -F 'G1: 市佔率提升' "$tmp_output" >/dev/null
+grep -F '計畫: 22%' "$tmp_output" >/dev/null
+grep -F '實際: 23%' "$tmp_output" >/dev/null
+grep -F 'MP1-1-1 ✓' "$tmp_output" >/dev/null
+grep -F 'MP1-1-2 ✗' "$tmp_output" >/dev/null
+
+# generate-annual-plan: no args → exit 2
+if node "$script_dir/generate-annual-plan.js" > "$tmp_output" 2>&1; then
+  echo "Expected no-args to exit 2" >&2
+  exit 1
+fi
+
+# generate-annual-plan: invalid JSON → exit 2
+printf '{' > "$tmp_invalid_json"
+if node "$script_dir/generate-annual-plan.js" "$tmp_invalid_json" > "$tmp_output" 2>&1; then
+  echo "Expected invalid JSON to fail" >&2
+  exit 1
+fi
+grep -F 'Invalid JSON' "$tmp_output" >/dev/null
+
 "$script_dir/validate-architecture.sh"

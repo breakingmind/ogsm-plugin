@@ -1,0 +1,49 @@
+{
+  "slug": "xxx-company",
+  "scope": "company",
+  "year": 2026,
+  "objective": "成為台灣鋼材市場首選供應商",
+  "parentGoalRef": null,
+  "goals": [
+    {
+      "id": "G1",
+      "name": "市佔率提升",
+      "strategies": [
+        {
+          "id": "S1-1",
+          "mds": [
+            {
+              "id": "MD1-1",
+              "months": [
+                {"planned": "22%", "actual": "23%"},
+                {"planned": "25%", "actual": null},
+                {"planned": "28%", "actual": null},
+                {"planned": "31%", "actual": null},
+                {"planned": "34%", "actual": null},
+                {"planned": "37%", "actual": null},
+                {"planned": "40%", "actual": null},
+                {"planned": "43%", "actual": null},
+                {"planned": "46%", "actual": null},
+                {"planned": "49%", "actual": null},
+                {"planned": "52%", "actual": null},
+                {"planned": "55%", "actual": null}
+              ]
+            }
+          ],
+          "mps": [
+            {
+              "id": "MP1-1-1",
+              "months": [true, false, false, false, false, false, false, false, false, false, false, false],
+              "completed": [true, null, null, null, null, null, null, null, null, null, null, null]
+            },
+            {
+              "id": "MP1-1-2",
+              "months": [false, true, false, false, false, false, false, false, false, false, false, false],
+              "completed": [null, false, null, null, null, null, null, null, null, null, null, null]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
