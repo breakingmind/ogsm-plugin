@@ -47,3 +47,4 @@ Use this skill to convert OGSM into operational guidance.
 
 完成後根據情況推薦或執行下一步：
 - 優先事項輸出後 → 推薦二選一：「要審查本週行程是否支持這些優先事項（`ogsm-audit-schedule`），還是審查現有計畫文件（`ogsm-audit-plan`）？」
+- 優先事項輸出後（若尚未有年度計畫表）→ 也可推薦 `ogsm-plan-annual`：「要用 ogsm-plan-annual 把這份 OGSM 展開成全年 MD/MP 追蹤表嗎？」
