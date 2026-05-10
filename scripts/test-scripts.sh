@@ -244,4 +244,19 @@ if node "$script_dir/validate-alignment.js" > "$tmp_output" 2>&1; then
   exit 1
 fi
 
+# extract-md-actuals: sample weekly review → extracts MD values
+node "$script_dir/extract-md-actuals.js" "$plugin_root/examples/sample-weekly-review-with-actuals.md" > "$tmp_output"
+grep -F '"MD1-1"' "$tmp_output" >/dev/null
+grep -F '"25%"' "$tmp_output" >/dev/null
+grep -F '"MD1-2"' "$tmp_output" >/dev/null
+grep -F '"未變"' "$tmp_output" >/dev/null
+grep -F '"MD2-1"' "$tmp_output" >/dev/null
+grep -F '"12"' "$tmp_output" >/dev/null
+
+# extract-md-actuals: no args → exit 2
+if node "$script_dir/extract-md-actuals.js" > "$tmp_output" 2>&1; then
+  echo "Expected no-args to exit 2" >&2
+  exit 1
+fi
+
 "$script_dir/validate-architecture.sh"
