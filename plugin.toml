@@ -39,3 +39,7 @@ path = "skills/ogsm-start/SKILL.md"
 [[skills]]
 name = "ogsm-import"
 path = "skills/ogsm-import/SKILL.md"
+
+[[skills]]
+name = "ogsm-plan-annual"
+path = "skills/ogsm-plan-annual/SKILL.md"
