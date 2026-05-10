@@ -27,7 +27,9 @@ Use this skill to close the OGSM operating loop.
 1a. Run `node ../../scripts/validate-profile-logic.js <profile-file> --section M` to get MD/MP gap status.
     Include the M-layer score and any gaps in the weekly report under "M 檢核狀態".
 2. Read `../../references/adaptive-operating-context.md` and `../../references/storage-policy.md` when reading or updating persistent context.
-3. Compare actual work against Strategies, MD, and MP.
+3. Compare actual work against Strategies, MD, and MP. When writing the MD movement summary, include a structured marker on the first line of that section so monthly actuals can be extracted later:
+   `<!-- md-actual: MD1-1=<value>, MD1-2=<value> -->`
+   Use the exact MD IDs from the profile. If a metric did not change, write `MD1-2=未變`. Omit MDs with no data this week.
 4. Identify recurring patterns.
 5. Propose operating context updates.
 6. Identify profile scope and target context path from profile metadata. If department context references company patterns, update only department context unless the user explicitly confirms a company context update.
