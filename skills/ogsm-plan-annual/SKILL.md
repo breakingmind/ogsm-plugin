@@ -30,6 +30,10 @@ Use this skill to generate a full-year MD/MP milestone and tracking table from a
 
 ## Workflow
 
+### Mode Selection
+
+If `.ogsm/plans/<scope>/<slug>/<year>-annual.md` already exists for the current year, proceed to **Update Mode**. If no annual plan exists yet, proceed to **Generate Mode**. If ambiguous (e.g., user invoked with no context), ask: "要產生新的年度計畫表，還是更新本月的實際值？"
+
 ### Generate Mode
 
 1. Read the OGSM profile. Derive scope and slug from profile metadata.
@@ -53,7 +57,8 @@ Use this skill to generate a full-year MD/MP milestone and tracking table from a
 
 ## Progressive Disclosure
 
-- Read storage policy only when writing the plan file.
+- Read storage policy at the start of Generate Mode (Step 2) to confirm the target path before engaging the user, and again before writing if needed.
+- In Update Mode, read storage policy only when writing the updated plan file.
 - Read profile format only when validating profile metadata.
 
 ## Tools
