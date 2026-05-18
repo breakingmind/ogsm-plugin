@@ -4,12 +4,13 @@ const fs = require('fs');
 const path = require('path');
 
 const target = process.argv[2];
-if (!target) {
+
+const MD_ACTUAL_RE = /<!--\s*md-actual:\s*(.+?)\s*-->/g;
+
+if (require.main === module && !target) {
   console.error('Usage: extract-md-actuals.js <review-file-or-dir>');
   process.exit(2);
 }
-
-const MD_ACTUAL_RE = /<!--\s*md-actual:\s*(.+?)\s*-->/g;
 
 function extractFromText(text) {
   const results = {};
@@ -26,24 +27,28 @@ function extractFromText(text) {
   return results;
 }
 
-let stat;
-try {
-  stat = fs.statSync(target);
-} catch (e) {
-  console.error(`Cannot read: ${target}`);
-  process.exit(2);
+if (require.main === module) {
+  let stat;
+  try {
+    stat = fs.statSync(target);
+  } catch (e) {
+    console.error(`Cannot read: ${target}`);
+    process.exit(2);
+  }
+
+  const texts = stat.isDirectory()
+    ? fs.readdirSync(target)
+        .filter(f => f.endsWith('.md'))
+        .sort()
+        .map(f => fs.readFileSync(path.join(target, f), 'utf8'))
+    : [fs.readFileSync(target, 'utf8')];
+
+  const merged = {};
+  for (const text of texts) {
+    Object.assign(merged, extractFromText(text));
+  }
+
+  console.log(JSON.stringify(merged, null, 2));
 }
 
-const texts = stat.isDirectory()
-  ? fs.readdirSync(target)
-      .filter(f => f.endsWith('.md'))
-      .sort()
-      .map(f => fs.readFileSync(path.join(target, f), 'utf8'))
-  : [fs.readFileSync(target, 'utf8')];
-
-const merged = {};
-for (const text of texts) {
-  Object.assign(merged, extractFromText(text));
-}
-
-console.log(JSON.stringify(merged, null, 2));
+module.exports = { extractFromText };
