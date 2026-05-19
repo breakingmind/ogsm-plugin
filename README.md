@@ -193,6 +193,55 @@ Expands a confirmed OGSM into a full-year tracking table at `.ogsm/plans/<scope>
 
 ---
 
+### OGSM Status Report
+
+The plugin ships a standalone HTML execution report generated from `.ogsm/` data — no server required. It is built from six Node.js modules in `scripts/ogsm-status/`:
+
+| Module | Role |
+|--------|------|
+| `parse-profile.js` | Parses an OGSM profile markdown file into a structured object |
+| `loader.js` | Loads profile, weekly-review actuals, and MP status from `.ogsm/` |
+| `compute.js` | Computes MD progress percentages and health scores (on\_track / at\_risk / off\_track / no\_data) |
+| `diagnose.js` | Alignment diagnostics engine — detects structural gaps and annotation issues |
+| `view-model.js` | Assembles all data into a render-ready view model |
+| `renderer.js` | Renders a self-contained HTML file from the view model |
+
+#### Report sections
+
+| Section | Content |
+|---------|---------|
+| **1 — Execution view** | Goals with progress %, Strategies, MD progress bars, expandable MP plan cards |
+| **2 — Health summary** | Counts of on\_track / at\_risk / off\_track / no\_data across all MDs |
+| **3 — Alignment diagnostics** | Errors and warnings from the diagnostics engine (see below) |
+
+#### Alignment diagnostics (`diagnose.js`)
+
+The diagnostics engine runs automatically when building the view model. It inspects the loaded data and returns a flat array of findings — errors affect health scoring; warnings surface in Section 3 without blocking report generation.
+
+| Type | Severity | Meaning |
+|------|----------|---------|
+| `strategy_no_md` | error | A Strategy has no MD indicator |
+| `strategy_no_plans` | warning | A Strategy has no MP action plans |
+| `dept_missing_annotation` | warning | A department Goal is missing a `goal_type` annotation |
+| `dept_broken_ref` | error | A `parent_ref` points to a non-existent company layer |
+
+If no issues are found, Section 3 shows "No issues detected."
+
+#### Running the report pipeline (smoke tests)
+
+Each module runs its own inline smoke test when called directly:
+
+```bash
+node scripts/ogsm-status/parse-profile.js
+node scripts/ogsm-status/compute.js
+node scripts/ogsm-status/diagnose.js
+node scripts/ogsm-status/view-model.js
+node scripts/ogsm-status/loader.js
+node scripts/ogsm-status/renderer.js
+```
+
+---
+
 ### Storage Layout
 
 ```
@@ -326,6 +375,17 @@ Validate department profile alignment against its parent company profile:
 
 ```bash
 node scripts/validate-alignment.js .ogsm/profiles/departments/<slug>.md .ogsm/profiles/company/<slug>.md
+```
+
+Run `ogsm-status` module smoke tests individually:
+
+```bash
+node scripts/ogsm-status/parse-profile.js
+node scripts/ogsm-status/compute.js
+node scripts/ogsm-status/diagnose.js
+node scripts/ogsm-status/view-model.js
+node scripts/ogsm-status/loader.js
+node scripts/ogsm-status/renderer.js
 ```
 
 ---
@@ -528,6 +588,55 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 
 ---
 
+### OGSM 執行狀態報告
+
+Plugin 內建一套從 `.ogsm/` 資料生成的 HTML 執行報告，不需要伺服器，由 `scripts/ogsm-status/` 下的六個 Node.js 模組組成：
+
+| 模組 | 功能 |
+|------|------|
+| `parse-profile.js` | 解析 OGSM profile markdown 檔案為結構化物件 |
+| `loader.js` | 從 `.ogsm/` 載入 profile、weekly review actuals 與 MP 狀態 |
+| `compute.js` | 計算 MD 進度百分比與健康狀態（on\_track / at\_risk / off\_track / no\_data）|
+| `diagnose.js` | 對齊診斷引擎 — 偵測結構缺口與標註問題 |
+| `view-model.js` | 將所有資料組合為渲染用 view model |
+| `renderer.js` | 從 view model 輸出獨立的 HTML 報告 |
+
+#### 報告三個區段
+
+| 區段 | 內容 |
+|------|------|
+| **1 — 執行視圖** | Goals 進度百分比、Strategies、MD 進度條、可展開的 MP 計畫卡片 |
+| **2 — 健康摘要** | 所有 MD 的 on\_track / at\_risk / off\_track / no\_data 統計 |
+| **3 — 對齊診斷** | 來自診斷引擎的 error / warning（見下方說明）|
+
+#### 對齊診斷引擎（`diagnose.js`）
+
+診斷引擎在建立 view model 時自動執行，檢查載入的資料並回傳一組診斷項目。error 會影響健康計分；warning 顯示於 Section 3 但不阻擋報告生成。
+
+| 類型 | 嚴重度 | 意義 |
+|------|--------|------|
+| `strategy_no_md` | error | 某個 Strategy 沒有 MD 指標 |
+| `strategy_no_plans` | warning | 某個 Strategy 沒有 MP 行動計畫 |
+| `dept_missing_annotation` | warning | 部門 Goal 缺少 `goal_type` 標註 |
+| `dept_broken_ref` | error | `parent_ref` 指向不存在的公司層次 |
+
+無任何問題時，Section 3 顯示「No issues detected」。
+
+#### 執行報告管線（smoke test）
+
+直接執行每個模組時，模組會自動執行內嵌的 smoke test：
+
+```bash
+node scripts/ogsm-status/parse-profile.js
+node scripts/ogsm-status/compute.js
+node scripts/ogsm-status/diagnose.js
+node scripts/ogsm-status/view-model.js
+node scripts/ogsm-status/loader.js
+node scripts/ogsm-status/renderer.js
+```
+
+---
+
 ### 儲存結構
 
 ```
@@ -665,6 +774,17 @@ scripts/validate-architecture.sh
 
 ```bash
 node scripts/validate-alignment.js .ogsm/profiles/departments/<部門代號>.md .ogsm/profiles/company/<公司代號>.md
+```
+
+個別執行 `ogsm-status` 模組 smoke test：
+
+```bash
+node scripts/ogsm-status/parse-profile.js
+node scripts/ogsm-status/compute.js
+node scripts/ogsm-status/diagnose.js
+node scripts/ogsm-status/view-model.js
+node scripts/ogsm-status/loader.js
+node scripts/ogsm-status/renderer.js
 ```
 
 ---
