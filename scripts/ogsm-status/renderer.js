@@ -33,9 +33,18 @@ details>summary:hover{text-decoration:underline}
 .dept{margin:4px 0 4px 12px;padding:8px 12px;border-left:2px solid #e5e7eb}
 .mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin:8px 0}
 .mp-card{padding:8px 12px;border:1px solid #e5e7eb;border-radius:4px;font-size:.88em}
+.mp-card[open]{background:#f9fafb;border-color:#c7d2fe}
+.mp-card>summary{cursor:pointer;list-style:none;color:inherit;font-size:1em;padding:0;outline:none}
+.mp-card>summary::-webkit-details-marker{display:none}
+.mp-card>summary::marker{display:none}
+.mp-card>summary:hover{text-decoration:none}
+.mp-toggle{display:inline-block;color:#9ca3af;font-size:.75em;margin-left:4px;transition:transform .15s}
+.mp-card[open] .mp-toggle{transform:rotate(90deg)}
+.mp-card[open] .mp-preview{display:none}
+.mp-card:not([open]) .mp-full{display:none}
 .mp-id{font-weight:600;color:#6366f1;margin-right:4px}
 .owner{color:#6b7280;font-size:.85em}
-.mp-text{color:#374151;margin-top:2px}
+.mp-text{color:#374151;margin-top:2px;white-space:pre-wrap}
 .actuals-list{margin:8px 0;padding-left:20px;font-size:.9em}
 .actuals-list li{padding:2px 0}
 .no-data-note{color:#9ca3af;font-size:.9em;font-style:italic}
@@ -130,11 +139,20 @@ function renderSection2(vm) {
   const noEvidenceMds = allMeasures.filter(m => m.status === 'no_data');
 
   const mpCards = allPlans.length
-    ? allPlans.map(p => `<div class="mp-card">
-        <span class="mp-id">${esc(p.id)}</span>${PLAN_ICON[p.status] || '⬜'}
-        ${p.owner ? `<span class="owner">${esc(p.owner)}</span>` : ''}
-        <div class="mp-text">${esc(p.text.length > 80 ? p.text.slice(0, 80) + '…' : p.text)}</div>
-      </div>`).join('')
+    ? allPlans.map(p => {
+        const text = p.text || '';
+        const needsTruncate = text.length > 80;
+        const preview = needsTruncate ? text.slice(0, 80) + '…' : text;
+        return `<details class="mp-card">
+        <summary>
+          <span class="mp-id">${esc(p.id)}</span>${PLAN_ICON[p.status] || '⬜'}
+          ${p.owner ? `<span class="owner">${esc(p.owner)}</span>` : ''}
+          ${needsTruncate ? '<span class="mp-toggle">▸</span>' : ''}
+          <div class="mp-text mp-preview">${esc(preview)}</div>
+        </summary>
+        ${needsTruncate ? `<div class="mp-text mp-full">${esc(text)}</div>` : ''}
+      </details>`;
+      }).join('')
     : '<p class="no-data-note">No plans defined.</p>';
 
   const actualItems = withActuals.length
