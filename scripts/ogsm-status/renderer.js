@@ -39,6 +39,13 @@ details>summary:hover{text-decoration:underline}
 .actuals-list{margin:8px 0;padding-left:20px;font-size:.9em}
 .actuals-list li{padding:2px 0}
 .no-data-note{color:#9ca3af;font-size:.9em;font-style:italic}
+.progress-bar-wrap{background:#f3f4f6;border-radius:4px;height:8px;overflow:hidden;display:inline-block;width:120px;vertical-align:middle;margin:0 8px}
+.progress-bar{height:100%;border-radius:4px;background:#6366f1}
+.progress-bar.on_track{background:#16a34a}
+.progress-bar.at_risk{background:#d97706}
+.progress-bar.off_track{background:#dc2626}
+.delayed-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#991b1b}
+.no-evidence-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#9ca3af}
 footer{margin-top:48px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:.8em;color:#9ca3af}
 @media print{details,details[open]{display:block}details>summary{list-style:none}details>summary::marker{display:none}}
 `;
@@ -52,21 +59,32 @@ function healthBadge(h) {
   return `<span class="health-${esc(h)}">${esc(HEALTH_LABEL[h] || h)}</span>`;
 }
 
+function renderProgressBar(pct, health) {
+  if (pct === null || pct === undefined)
+    return '<span class="health-no_data" style="font-size:.85em">—</span>';
+  const cls = esc(health || 'no_data');
+  return `<div class="progress-bar-wrap"><div class="progress-bar ${cls}" style="width:${esc(pct)}%"></div></div><span class="pct">${esc(pct)}%</span>`;
+}
+
 function renderMdTable(measures) {
   if (!measures.length) return '';
   const rows = measures.map(m => `<tr>
     <td>${esc(m.id)}</td>
     <td>${esc(m.text)}</td>
     <td>${m.actual !== null ? esc(m.actual) : '<span class="health-no_data">—</span>'}</td>
+    <td>${m.progress_pct !== null && m.progress_pct !== undefined ? esc(m.progress_pct) + '%' : '—'}</td>
     <td>${healthBadge(m.status)}</td>
   </tr>`).join('');
   return `<table class="md-table">
-    <thead><tr><th>ID</th><th>Measure</th><th>Actual</th><th>Status</th></tr></thead>
+    <thead><tr><th>ID</th><th>Measure</th><th>Actual</th><th>Progress</th><th>Status</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
 
 function renderStrategy(s) {
+  const planPct = s.plan_completion_pct !== null && s.plan_completion_pct !== undefined
+    ? `<div style="font-size:.85em;color:#6b7280;margin-top:4px">Plan Completion: ${esc(s.plan_completion_pct)}%</div>`
+    : '';
   const depts = s.departments.map(d => `<details>
     <summary>Dept: ${esc(d.name)}</summary>
     <div class="dept"><strong>${esc(d.name)}</strong>${renderMdTable(d.measures)}</div>
@@ -74,19 +92,17 @@ function renderStrategy(s) {
   return `<div class="strategy">
     <span class="strategy-id">${esc(s.id)}</span>${esc(s.text)}
     ${renderMdTable(s.measures)}
+    ${planPct}
     ${depts}
   </div>`;
 }
 
 function renderSection1(vm) {
   const goalRows = vm.goals.map(g => {
-    const pctHtml = g.progress_pct !== null
-      ? `<span class="pct">${g.progress_pct}%</span>`
-      : `<span class="health-no_data pct">—</span>`;
     return `<div class="goal-row">
       <span class="goal-id">${esc(g.id)}</span>
       <span class="goal-text">${esc(g.text)}</span>
-      ${pctHtml}
+      ${renderProgressBar(g.progress_pct, g.health)}
       ${healthBadge(g.health)}
     </div>
     ${g.strategies.map(renderStrategy).join('')}`;
@@ -101,6 +117,8 @@ function renderSection2(vm) {
   const allPlans = vm.goals.flatMap(g => g.strategies.flatMap(s => s.plans));
   const allMeasures = vm.goals.flatMap(g => g.strategies.flatMap(s => s.measures));
   const withActuals = allMeasures.filter(m => m.actual !== null);
+  const delayedPlans = allPlans.filter(p => p.status === 'delayed');
+  const noEvidenceMds = allMeasures.filter(m => m.status === 'no_data');
 
   const mpCards = allPlans.length
     ? allPlans.map(p => `<div class="mp-card">
@@ -111,14 +129,34 @@ function renderSection2(vm) {
     : '<p class="no-data-note">No plans defined.</p>';
 
   const actualItems = withActuals.length
-    ? withActuals.map(m => `<li><strong>${esc(m.id)}</strong>: ${esc(m.actual)}</li>`).join('')
+    ? withActuals.map(m => {
+        const pctStr = m.progress_pct !== null && m.progress_pct !== undefined
+          ? ` (${esc(m.progress_pct)}%)` : '';
+        return `<li><strong>${esc(m.id)}</strong>: ${esc(m.actual)}${pctStr}</li>`;
+      }).join('')
     : '<li class="no-data-note">No actuals recorded yet.</li>';
+
+  const delayedHtml = delayedPlans.length
+    ? `<p style="font-weight:500;margin:16px 0 8px;color:#991b1b">❌ Delayed</p>
+       <ul class="delayed-list">${delayedPlans.map(p =>
+         `<li>${esc(p.id)}: ${esc(p.text.length > 60 ? p.text.slice(0, 60) + '…' : p.text)}</li>`
+       ).join('')}</ul>`
+    : '';
+
+  const noEvidenceHtml = noEvidenceMds.length
+    ? `<p style="font-weight:500;margin:16px 0 8px">⚪ No Evidence</p>
+       <ul class="no-evidence-list">${noEvidenceMds.map(m =>
+         `<li>${esc(m.id)}: ${esc(m.text.length > 60 ? m.text.slice(0, 60) + '…' : m.text)}</li>`
+       ).join('')}</ul>`
+    : '';
 
   return `<div class="section-title">Section 2: What Did We Do?</div>
     <p style="font-weight:500;margin:0 0 8px">MP Status this period</p>
     <div class="mp-grid">${mpCards}</div>
     <p style="font-weight:500;margin:16px 0 8px">MD Updates</p>
-    <ul class="actuals-list">${actualItems}</ul>`;
+    <ul class="actuals-list">${actualItems}</ul>
+    ${delayedHtml}
+    ${noEvidenceHtml}`;
 }
 
 function render(vm) {
@@ -175,6 +213,20 @@ if (require.main === module) {
   const vmEmpty = buildViewModel({ profile, actuals: {}, mpStatus: {}, departments: [] });
   const htmlEmpty = render(vmEmpty);
   assert.ok(htmlEmpty.includes('No Data') || htmlEmpty.includes('no_data'), 'empty shows no data');
+
+  // DOU-50: progress_pct, delayed, plan completion
+  const { buildViewModel: bvm2 } = require('./view-model');
+  const vm3 = bvm2({
+    profile,
+    actuals: { MD1: '105', MD2: '4.5' },
+    mpStatus: { MP1: 'delayed', MP2: 'not_started' },
+    departments: [],
+  });
+  const html3 = render(vm3);
+  assert.ok(html3.includes('88%'), 'shows MD1 progress_pct 88%');
+  assert.ok(html3.includes('67%'), 'shows MD2 progress_pct 67%');
+  assert.ok(html3.includes('Delayed') || html3.includes('delayed'), 'shows delayed section');
+  assert.ok(html3.includes('Plan Completion'), 'shows plan completion label');
 
   console.log('renderer: all assertions passed');
 }
