@@ -285,6 +285,9 @@ if node "$script_dir/generate-annual-plan.js" "$tmp_invalid_json" > "$tmp_output
 fi
 grep -F 'Invalid JSON' "$tmp_output" >/dev/null
 
+# ogsm-status: compute engine smoke test
+node "$script_dir/ogsm-status/compute.js"
+
 # ogsm-status: parse-profile smoke test
 node "$script_dir/ogsm-status/parse-profile.js"
 
