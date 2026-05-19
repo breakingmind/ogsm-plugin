@@ -285,4 +285,38 @@ if node "$script_dir/generate-annual-plan.js" "$tmp_invalid_json" > "$tmp_output
 fi
 grep -F 'Invalid JSON' "$tmp_output" >/dev/null
 
+# ogsm-status: parse-profile smoke test
+node "$script_dir/ogsm-status/parse-profile.js"
+
+# ogsm-status: view-model smoke test
+node "$script_dir/ogsm-status/view-model.js"
+
+# ogsm-status: loader smoke test
+node "$script_dir/ogsm-status/loader.js"
+
+# ogsm-status: renderer smoke test
+node "$script_dir/ogsm-status/renderer.js"
+
+# ogsm-status: end-to-end — loader → view-model → renderer → valid HTML output
+tmp_ogsm_e2e="$(mktemp -d)"
+mkdir -p "$tmp_ogsm_e2e/profiles/company" "$tmp_ogsm_e2e/reviews/company/example-corp"
+cp "$plugin_root/examples/fixtures/ogsm-status/profile-minimal.md" \
+   "$tmp_ogsm_e2e/profiles/company/example-corp.md"
+cp "$plugin_root/examples/fixtures/ogsm-status/review-minimal.md" \
+   "$tmp_ogsm_e2e/reviews/company/example-corp/2026-01-15-weekly.md"
+node -e "
+  const {loadSources}=require('$plugin_root/scripts/ogsm-status/loader');
+  const {buildViewModel}=require('$plugin_root/scripts/ogsm-status/view-model');
+  const {render}=require('$plugin_root/scripts/ogsm-status/renderer');
+  const src=loadSources('$tmp_ogsm_e2e','company','example-corp');
+  const vm=buildViewModel(src);
+  const html=render(vm);
+  if(!html.startsWith('<!DOCTYPE html>')) throw new Error('bad output');
+  process.stdout.write(html);
+" > "$tmp_ogsm_e2e/out.html"
+grep -F 'example-corp' "$tmp_ogsm_e2e/out.html" >/dev/null
+grep -F 'Section 1' "$tmp_ogsm_e2e/out.html" >/dev/null
+grep -F 'Section 2' "$tmp_ogsm_e2e/out.html" >/dev/null
+rm -rf "$tmp_ogsm_e2e"
+
 "$script_dir/validate-architecture.sh"
