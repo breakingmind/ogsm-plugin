@@ -294,6 +294,9 @@ node "$script_dir/ogsm-status/parse-profile.js"
 # ogsm-status: view-model smoke test
 node "$script_dir/ogsm-status/view-model.js"
 
+# ogsm-status: diagnose smoke test
+node "$script_dir/ogsm-status/diagnose.js"
+
 # ogsm-status: loader smoke test
 node "$script_dir/ogsm-status/loader.js"
 
