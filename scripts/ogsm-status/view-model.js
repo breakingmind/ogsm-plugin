@@ -1,17 +1,5 @@
 'use strict';
-
-// MVP rule: if actual exists → at_risk (conservative default).
-// DOU-48/49 will replace this with the proper computation engine.
-function mdStatus(actual) {
-  return actual === null ? 'no_data' : 'at_risk';
-}
-
-function healthFromStatuses(statuses) {
-  if (!statuses.length || statuses.every(s => s === 'no_data')) return 'no_data';
-  if (statuses.some(s => s === 'off_track')) return 'off_track';
-  if (statuses.some(s => s === 'at_risk')) return 'at_risk';
-  return 'on_track';
-}
+const { parseArrow, computeMdStatus, aggregateHealth, avgPct, computePlanCompletionPct } = require('./compute');
 
 function parseOwner(mpText) {
   const m = mpText.match(/owner:\s*([^,，]+)/i);
@@ -20,8 +8,7 @@ function parseOwner(mpText) {
 
 function lookupActual(actuals, id) {
   if (!actuals) return null;
-  if (actuals[id] !== undefined) return actuals[id];
-  return null;
+  return actuals[id] !== undefined ? actuals[id] : null;
 }
 
 function buildViewModel(sources) {
@@ -35,9 +22,21 @@ function buildViewModel(sources) {
     const mdText = profile.measures[gi] || null;
     const mdId = `MD${gi + 1}`;
     const actual = lookupActual(actuals, mdId);
-    const mdItem = mdText
-      ? [{ id: mdId, text: mdText, baseline: null, target: null, actual, status: mdStatus(actual) }]
-      : [];
+
+    let mdItem = [];
+    if (mdText) {
+      const { baseline, target } = parseArrow(mdText);
+      const { status, progress_pct } = computeMdStatus(actual, baseline, target);
+      mdItem = [{
+        id: mdId,
+        text: mdText,
+        baseline: baseline !== null ? String(baseline) : null,
+        target: target !== null ? String(target) : null,
+        actual,
+        status,
+        progress_pct,
+      }];
+    }
 
     const plans = profile.plans.map((mpText, pi) => {
       const mpId = `MP${pi + 1}`;
@@ -59,16 +58,31 @@ function buildViewModel(sources) {
       plans: [],
     }));
 
-    const strat = { id: stratId, text: stratText, measures: mdItem, plans, departments: depts };
     const mdStatuses = mdItem.map(m => m.status);
-    const health = healthFromStatuses(mdStatuses);
-    const withActuals = mdStatuses.filter(s => s !== 'no_data');
-    const progress_pct = withActuals.length === 0 ? null : 100;
+    const mdPcts = mdItem.map(m => m.progress_pct);
+    const stratHealth = aggregateHealth(mdStatuses);
+    const stratProgressPct = avgPct(mdPcts);
+    const planCompletionPct = computePlanCompletionPct(plans);
 
-    return { id: goalId, text: goalText, health, progress_pct, strategies: [strat] };
+    const strat = {
+      id: stratId,
+      text: stratText,
+      measures: mdItem,
+      plans,
+      departments: depts,
+      plan_completion_pct: planCompletionPct,
+    };
+
+    return {
+      id: goalId,
+      text: goalText,
+      health: aggregateHealth([stratHealth]),
+      progress_pct: stratProgressPct,
+      strategies: [strat],
+    };
   });
 
-  const overallHealth = healthFromStatuses(goals.map(g => g.health));
+  const overallHealth = aggregateHealth(goals.map(g => g.health));
 
   return {
     meta: {
@@ -104,14 +118,21 @@ if (require.main === module) {
   assert.strictEqual(vm1.goals[0].progress_pct, null);
   assert.strictEqual(vm1.goals[0].strategies.length, 1);
 
-  // Test 2: with actuals → at_risk (MVP default)
+  // Test 2: with actuals — MD1:100→120 actual=105 → 88% at_risk; MD2:5→3 actual=4.5 → 67% off_track
   const vm2 = buildViewModel({ profile, actuals: { MD1: '105', MD2: '4.5' }, mpStatus: { MP1: 'done' }, departments: [] });
-  assert.notStrictEqual(vm2.meta.health, 'no_data', 'health changes when actuals present');
-  assert.notStrictEqual(vm2.goals[0].progress_pct, null, 'progress_pct non-null with actuals');
-  assert.strictEqual(vm2.goals[0].strategies[0].plans[0].status, 'done', 'MP1 status');
+  assert.notStrictEqual(vm2.meta.health, 'no_data', 'health changes with actuals');
+  assert.strictEqual(vm2.goals[0].strategies[0].measures[0].progress_pct, 88, 'MD1 progress_pct=88');
+  assert.strictEqual(vm2.goals[0].strategies[0].measures[0].status, 'at_risk', 'MD1 at_risk');
+  assert.strictEqual(vm2.goals[1].strategies[0].measures[0].progress_pct, 67, 'MD2 progress_pct=67');
+  assert.strictEqual(vm2.goals[1].strategies[0].measures[0].status, 'off_track', 'MD2 off_track');
+  assert.strictEqual(vm2.goals[0].strategies[0].plans[0].status, 'done', 'MP1 status done');
 
-  // Test 3: generated_at is today's date format YYYY-MM-DD
+  // Test 3: generated_at format
   assert.match(vm1.meta.generated_at, /^\d{4}-\d{2}-\d{2}$/, 'generated_at format');
+
+  // Test 4: plan_completion_pct — MP1=done(1), MP2=in_progress(0.5) → (1.5/2)*100 = 75%
+  const vm3 = buildViewModel({ profile, actuals: {}, mpStatus: { MP1: 'done', MP2: 'in_progress' }, departments: [] });
+  assert.strictEqual(vm3.goals[0].strategies[0].plan_completion_pct, 75, 'plan_completion_pct=75');
 
   console.log('view-model: all assertions passed');
 }
