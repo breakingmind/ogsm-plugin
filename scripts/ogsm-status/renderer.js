@@ -46,6 +46,10 @@ details>summary:hover{text-decoration:underline}
 .progress-bar.off_track{background:#dc2626}
 .delayed-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#991b1b}
 .no-evidence-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#9ca3af}
+.diag-error-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#991b1b}
+.diag-warn-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#92400e}
+.diag-type{font-weight:600;font-family:monospace;font-size:.85em}
+.diag-ok{color:#166534;font-size:.9em;font-style:italic}
 footer{margin-top:48px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:.8em;color:#9ca3af}
 @media print{details,details[open]{display:block}details>summary{list-style:none}details>summary::marker{display:none}}
 `;
@@ -164,6 +168,35 @@ function renderSection2(vm) {
     ${noEvidenceHtml}`;
 }
 
+function renderSection3(vm) {
+  const diags = (vm.meta.diagnostics || []);
+  const errors = diags.filter(d => d.severity === 'error');
+  const warnings = diags.filter(d => d.severity === 'warning');
+
+  if (!diags.length) {
+    return `<div class="section-title">Section 3: Alignment Diagnostics</div>
+      <p class="diag-ok">✅ No issues found.</p>`;
+  }
+
+  const errorHtml = errors.length
+    ? `<p style="font-weight:500;margin:12px 0 6px;color:#991b1b">🔴 Issues Requiring Action</p>
+       <ul class="diag-error-list">${errors.map(d =>
+         `<li><span class="diag-type">${esc(d.type)}</span> [${esc(d.item_id)}]: ${esc(d.message)}</li>`
+       ).join('')}</ul>`
+    : '';
+
+  const warnHtml = warnings.length
+    ? `<p style="font-weight:500;margin:12px 0 6px;color:#92400e">🟡 Warnings</p>
+       <ul class="diag-warn-list">${warnings.map(d =>
+         `<li><span class="diag-type">${esc(d.type)}</span> [${esc(d.item_id)}]: ${esc(d.message)}</li>`
+       ).join('')}</ul>`
+    : '';
+
+  return `<div class="section-title">Section 3: Alignment Diagnostics</div>
+    ${errorHtml}
+    ${warnHtml}`;
+}
+
 function render(vm) {
   const healthLabel = esc(HEALTH_LABEL[vm.meta.health] || vm.meta.health);
   return `<!DOCTYPE html>
@@ -179,6 +212,7 @@ function render(vm) {
 <div class="meta">${esc(vm.meta.period)} &nbsp;|&nbsp; ${healthLabel} &nbsp;|&nbsp; Generated ${esc(vm.meta.generated_at)}</div>
 ${renderSection1(vm)}
 ${renderSection2(vm)}
+${renderSection3(vm)}
 <footer>Scope: ${esc(vm.meta.scope)} / ${esc(vm.meta.slug)} &nbsp;|&nbsp; OGSM Plugin</footer>
 </body>
 </html>`;
@@ -232,6 +266,25 @@ if (require.main === module) {
   assert.ok(html3.includes('67%'), 'shows MD2 progress_pct 67%');
   assert.ok(html3.includes('Delayed') || html3.includes('delayed'), 'shows delayed section');
   assert.ok(html3.includes('Plan Completion'), 'shows plan completion label');
+
+  // DOU-53: Section 3 diagnostics
+  const { diagnose: diag53 } = require('./diagnose');
+  const { parseProfile: pp53 } = require('./parse-profile');
+  const fs53 = require('fs');
+  const gapProf = pp53(fs53.readFileSync(
+    path.join(__dirname, '../../examples/fixtures/ogsm-status/profile-gap.md'), 'utf8'
+  ));
+  const vm53 = buildViewModel({ profile: gapProf, actuals: {}, mpStatus: {}, departments: [] });
+  const html53 = render(vm53);
+  assert.ok(html53.includes('Section 3'), 'has Section 3');
+  assert.ok(html53.includes('strategy_no_md') || html53.includes('S2'), 'shows strategy_no_md');
+  assert.ok(html53.includes('no_plans') || html53.includes('No plans'), 'shows no_plans');
+
+  // clean profile: shows no-issues note
+  const vmClean = buildViewModel({ profile, actuals: { MD1: '105', MD2: '4.5' }, mpStatus: {}, departments: [] });
+  const htmlClean = render(vmClean);
+  assert.ok(htmlClean.includes('Section 3'), 'clean profile also has Section 3');
+  assert.ok(htmlClean.includes('No issues') || htmlClean.includes('no issues'), 'clean profile shows no issues');
 
   console.log('renderer: all assertions passed');
 }
