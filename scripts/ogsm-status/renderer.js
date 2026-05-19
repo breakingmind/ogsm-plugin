@@ -113,9 +113,14 @@ function renderSection1(vm) {
     ${goalRows}`;
 }
 
+function dedupeById(items) {
+  const seen = new Set();
+  return items.filter(x => { if (seen.has(x.id)) return false; seen.add(x.id); return true; });
+}
+
 function renderSection2(vm) {
-  const allPlans = vm.goals.flatMap(g => g.strategies.flatMap(s => s.plans));
-  const allMeasures = vm.goals.flatMap(g => g.strategies.flatMap(s => s.measures));
+  const allPlans = dedupeById(vm.goals.flatMap(g => g.strategies.flatMap(s => s.plans)));
+  const allMeasures = dedupeById(vm.goals.flatMap(g => g.strategies.flatMap(s => s.measures)));
   const withActuals = allMeasures.filter(m => m.actual !== null);
   const delayedPlans = allPlans.filter(p => p.status === 'delayed');
   const noEvidenceMds = allMeasures.filter(m => m.status === 'no_data');
