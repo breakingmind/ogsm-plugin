@@ -1,0 +1,182 @@
+'use strict';
+
+const HEALTH_LABEL = {
+  on_track: '🟢 On Track',
+  at_risk: '🟡 At Risk',
+  off_track: '🔴 Off Track',
+  no_data: '⚪ No Data',
+};
+
+const PLAN_ICON = { done: '✅', in_progress: '🔄', not_started: '⬜', delayed: '❌' };
+
+const CSS = `
+body{font-family:system-ui,sans-serif;max-width:960px;margin:0 auto;padding:24px 32px;font-size:16px;color:#1a1a1a;line-height:1.6}
+h1{font-size:1.4em;margin:0 0 4px}
+.meta{color:#6b7280;font-size:.9em;margin-bottom:28px}
+.section-title{font-size:1.1em;font-weight:600;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:32px 0 16px}
+.objective{background:#f9fafb;border-left:4px solid #6366f1;padding:12px 16px;border-radius:4px;margin-bottom:20px;font-style:italic}
+.goal-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid #f3f4f6;flex-wrap:wrap}
+.goal-id{font-weight:700;min-width:32px;color:#6366f1}
+.goal-text{flex:1;min-width:200px}
+.pct{font-size:.9em;color:#6b7280}
+.health-on_track{color:#166534}
+.health-at_risk{color:#92400e}
+.health-off_track{color:#991b1b}
+.health-no_data{color:#9ca3af}
+.strategy{margin:12px 0 4px;padding:8px 14px;background:#f9fafb;border-radius:4px;border-left:3px solid #e5e7eb}
+.strategy-id{font-weight:600;color:#6366f1;margin-right:6px}
+.md-table{width:100%;border-collapse:collapse;font-size:.88em;margin:8px 0}
+.md-table th{text-align:left;padding:4px 8px;background:#f3f4f6;font-weight:500}
+.md-table td{padding:4px 8px;border-bottom:1px solid #f3f4f6;vertical-align:top}
+details>summary{cursor:pointer;color:#6366f1;font-size:.9em;padding:4px 0;user-select:none}
+details>summary:hover{text-decoration:underline}
+.dept{margin:4px 0 4px 12px;padding:8px 12px;border-left:2px solid #e5e7eb}
+.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin:8px 0}
+.mp-card{padding:8px 12px;border:1px solid #e5e7eb;border-radius:4px;font-size:.88em}
+.mp-id{font-weight:600;color:#6366f1;margin-right:4px}
+.owner{color:#6b7280;font-size:.85em}
+.mp-text{color:#374151;margin-top:2px}
+.actuals-list{margin:8px 0;padding-left:20px;font-size:.9em}
+.actuals-list li{padding:2px 0}
+.no-data-note{color:#9ca3af;font-size:.9em;font-style:italic}
+footer{margin-top:48px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:.8em;color:#9ca3af}
+@media print{details,details[open]{display:block}details>summary{list-style:none}details>summary::marker{display:none}}
+`;
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function healthBadge(h) {
+  return `<span class="health-${esc(h)}">${esc(HEALTH_LABEL[h] || h)}</span>`;
+}
+
+function renderMdTable(measures) {
+  if (!measures.length) return '';
+  const rows = measures.map(m => `<tr>
+    <td>${esc(m.id)}</td>
+    <td>${esc(m.text)}</td>
+    <td>${m.actual !== null ? esc(m.actual) : '<span class="health-no_data">—</span>'}</td>
+    <td>${healthBadge(m.status)}</td>
+  </tr>`).join('');
+  return `<table class="md-table">
+    <thead><tr><th>ID</th><th>Measure</th><th>Actual</th><th>Status</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function renderStrategy(s) {
+  const depts = s.departments.map(d => `<details>
+    <summary>Dept: ${esc(d.name)}</summary>
+    <div class="dept"><strong>${esc(d.name)}</strong>${renderMdTable(d.measures)}</div>
+  </details>`).join('');
+  return `<div class="strategy">
+    <span class="strategy-id">${esc(s.id)}</span>${esc(s.text)}
+    ${renderMdTable(s.measures)}
+    ${depts}
+  </div>`;
+}
+
+function renderSection1(vm) {
+  const goalRows = vm.goals.map(g => {
+    const pctHtml = g.progress_pct !== null
+      ? `<span class="pct">${g.progress_pct}%</span>`
+      : `<span class="health-no_data pct">—</span>`;
+    return `<div class="goal-row">
+      <span class="goal-id">${esc(g.id)}</span>
+      <span class="goal-text">${esc(g.text)}</span>
+      ${pctHtml}
+      ${healthBadge(g.health)}
+    </div>
+    ${g.strategies.map(renderStrategy).join('')}`;
+  }).join('');
+
+  return `<div class="section-title">Section 1: Where Are We?</div>
+    <div class="objective">${esc(vm.objective.text)}</div>
+    ${goalRows}`;
+}
+
+function renderSection2(vm) {
+  const allPlans = vm.goals.flatMap(g => g.strategies.flatMap(s => s.plans));
+  const allMeasures = vm.goals.flatMap(g => g.strategies.flatMap(s => s.measures));
+  const withActuals = allMeasures.filter(m => m.actual !== null);
+
+  const mpCards = allPlans.length
+    ? allPlans.map(p => `<div class="mp-card">
+        <span class="mp-id">${esc(p.id)}</span>${PLAN_ICON[p.status] || '⬜'}
+        ${p.owner ? `<span class="owner">${esc(p.owner)}</span>` : ''}
+        <div class="mp-text">${esc(p.text.length > 80 ? p.text.slice(0, 80) + '…' : p.text)}</div>
+      </div>`).join('')
+    : '<p class="no-data-note">No plans defined.</p>';
+
+  const actualItems = withActuals.length
+    ? withActuals.map(m => `<li><strong>${esc(m.id)}</strong>: ${esc(m.actual)}</li>`).join('')
+    : '<li class="no-data-note">No actuals recorded yet.</li>';
+
+  return `<div class="section-title">Section 2: What Did We Do?</div>
+    <p style="font-weight:500;margin:0 0 8px">MP Status this period</p>
+    <div class="mp-grid">${mpCards}</div>
+    <p style="font-weight:500;margin:16px 0 8px">MD Updates</p>
+    <ul class="actuals-list">${actualItems}</ul>`;
+}
+
+function render(vm) {
+  const healthLabel = esc(HEALTH_LABEL[vm.meta.health] || vm.meta.health);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OGSM Report — ${esc(vm.meta.slug)} ${esc(vm.meta.period)}</title>
+<style>${CSS}</style>
+</head>
+<body>
+<h1>OGSM Report — ${esc(vm.meta.slug)}</h1>
+<div class="meta">${esc(vm.meta.period)} &nbsp;|&nbsp; ${healthLabel} &nbsp;|&nbsp; Generated ${esc(vm.meta.generated_at)}</div>
+${renderSection1(vm)}
+${renderSection2(vm)}
+<footer>Scope: ${esc(vm.meta.scope)} / ${esc(vm.meta.slug)} &nbsp;|&nbsp; OGSM Plugin</footer>
+</body>
+</html>`;
+}
+
+if (require.main === module) {
+  const assert = require('assert');
+  const { parseProfile } = require('./parse-profile');
+  const { buildViewModel } = require('./view-model');
+  const fs = require('fs');
+  const path = require('path');
+
+  const profileText = fs.readFileSync(
+    path.join(__dirname, '../../examples/fixtures/ogsm-status/profile-minimal.md'), 'utf8'
+  );
+  const profile = parseProfile(profileText);
+
+  // Test with department to trigger details element
+  const depts = [{ meta: { scope: 'department', slug: 'sales', name: 'Sales', parent_ref: 'S1' }, goals: [] }];
+  const vm = buildViewModel({ profile, actuals: { MD1: '105' }, mpStatus: { MP1: 'done' }, departments: depts });
+  const html = render(vm);
+
+  assert.ok(html.startsWith('<!DOCTYPE html>'), 'starts with DOCTYPE');
+  assert.ok(html.includes('<style>'), 'has inline CSS');
+  assert.ok(!html.includes('<link'), 'no external CSS link');
+  assert.ok(!html.includes('<script'), 'no script tags');
+  assert.ok(html.includes('example-corp'), 'contains slug');
+  assert.ok(html.includes('preferred supplier'), 'contains objective text');
+  assert.ok(html.includes('Section 1'), 'has Section 1');
+  assert.ok(html.includes('Section 2'), 'has Section 2');
+  assert.ok(html.includes('<details'), 'uses details element');
+  assert.ok(html.includes('105'), 'shows actual value');
+  assert.ok(html.includes('✅'), 'shows done MP');
+  assert.ok(html.includes('@media print'), 'has print styles');
+
+  // no-data case: no actuals → shows No Data markers
+  const vmEmpty = buildViewModel({ profile, actuals: {}, mpStatus: {}, departments: [] });
+  const htmlEmpty = render(vmEmpty);
+  assert.ok(htmlEmpty.includes('No Data') || htmlEmpty.includes('no_data'), 'empty shows no data');
+
+  console.log('renderer: all assertions passed');
+}
+
+module.exports = { render };
