@@ -1,5 +1,6 @@
 'use strict';
 const { parseArrow, computeMdStatus, aggregateHealth, avgPct, computePlanCompletionPct } = require('./compute');
+const { diagnose } = require('./diagnose');
 
 function parseOwner(mpText) {
   const m = mpText.match(/owner:\s*([^,，]+)/i);
@@ -83,6 +84,7 @@ function buildViewModel(sources) {
   });
 
   const overallHealth = aggregateHealth(goals.map(g => g.health));
+  const diagnostics = diagnose({ profile, actuals, mpStatus, departments });
 
   return {
     meta: {
@@ -91,6 +93,7 @@ function buildViewModel(sources) {
       period: sources.period || profile.meta.time_horizon || 'unknown',
       generated_at: new Date().toISOString().slice(0, 10),
       health: overallHealth,
+      diagnostics,
     },
     objective: { text: profile.objective || '' },
     goals,
@@ -133,6 +136,9 @@ if (require.main === module) {
   // Test 4: plan_completion_pct — MP1=done(1), MP2=in_progress(0.5) → (1.5/2)*100 = 75%
   const vm3 = buildViewModel({ profile, actuals: {}, mpStatus: { MP1: 'done', MP2: 'in_progress' }, departments: [] });
   assert.strictEqual(vm3.goals[0].strategies[0].plan_completion_pct, 75, 'plan_completion_pct=75');
+
+  // diagnostics wired into meta
+  assert.ok(Array.isArray(vm1.meta.diagnostics), 'meta.diagnostics is array');
 
   console.log('view-model: all assertions passed');
 }
