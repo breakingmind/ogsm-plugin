@@ -1,65 +1,96 @@
 'use strict';
 
 const HEALTH_LABEL = {
-  on_track: '🟢 On Track',
-  at_risk: '🟡 At Risk',
-  off_track: '🔴 Off Track',
-  no_data: '⚪ No Data',
+  on_track: 'On Track',
+  at_risk: 'At Risk',
+  off_track: 'Off Track',
+  no_data: 'No Data',
 };
 
-const PLAN_ICON = { done: '✅', in_progress: '🔄', not_started: '⬜', delayed: '❌' };
+const HEALTH_ICON = {
+  on_track: '●',
+  at_risk: '●',
+  off_track: '●',
+  no_data: '○',
+};
+
+const PLAN_ICON = { done: '✓', in_progress: '◑', not_started: '○', delayed: '✕' };
 
 const CSS = `
-body{font-family:system-ui,sans-serif;max-width:960px;margin:0 auto;padding:24px 32px;font-size:16px;color:#1a1a1a;line-height:1.6}
-h1{font-size:1.4em;margin:0 0 4px}
-.meta{color:#6b7280;font-size:.9em;margin-bottom:28px}
-.section-title{font-size:1.1em;font-weight:600;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:32px 0 16px}
-.objective{background:#f9fafb;border-left:4px solid #6366f1;padding:12px 16px;border-radius:4px;margin-bottom:20px;font-style:italic}
-.goal-row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid #f3f4f6;flex-wrap:wrap}
-.goal-id{font-weight:700;min-width:32px;color:#6366f1}
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+:root{
+  --text:#37352f;
+  --text-muted:#9b9a97;
+  --text-light:#c8c7c4;
+  --border:#e9e9e7;
+  --surface:#f7f6f3;
+  --health-ok:#0f7b0f;
+  --health-risk:#9a5c00;
+  --health-bad:#eb5757;
+  --health-none:#9b9a97;
+  --progress-ok:#0f7b0f;
+  --progress-risk:#d9730d;
+  --progress-bad:#eb5757;
+  --progress-default:#d3d1cb;
+  --font:'DM Sans',ui-sans-serif,system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{font-family:var(--font);max-width:860px;margin:0 auto;padding:48px 40px;font-size:15px;color:var(--text);line-height:1.6;background:#fff}
+h1{font-size:1.25rem;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em}
+.meta{color:var(--text-muted);font-size:.875rem;margin-bottom:40px}
+h2.section-title{font-size:.6875rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:40px 0 14px;padding:0;border:none}
+.objective{font-style:italic;color:var(--text);margin-bottom:24px;font-size:1rem;line-height:1.75;padding:0}
+.goal-row{display:flex;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.goal-id{font-weight:600;min-width:36px;font-size:.8125rem;color:var(--text-muted);font-variant-numeric:tabular-nums}
 .goal-text{flex:1;min-width:200px}
-.pct{font-size:.9em;color:#6b7280}
-.health-on_track{color:#166534}
-.health-at_risk{color:#92400e}
-.health-off_track{color:#991b1b}
-.health-no_data{color:#9ca3af}
-.strategy{margin:12px 0 4px;padding:8px 14px;background:#f9fafb;border-radius:4px;border-left:3px solid #e5e7eb}
-.strategy-id{font-weight:600;color:#6366f1;margin-right:6px}
-.md-table{width:100%;border-collapse:collapse;font-size:.88em;margin:8px 0}
-.md-table th{text-align:left;padding:4px 8px;background:#f3f4f6;font-weight:500}
-.md-table td{padding:4px 8px;border-bottom:1px solid #f3f4f6;vertical-align:top}
-details>summary{cursor:pointer;color:#6366f1;font-size:.9em;padding:4px 0;user-select:none}
-details>summary:hover{text-decoration:underline}
-.dept{margin:4px 0 4px 12px;padding:8px 12px;border-left:2px solid #e5e7eb}
-.mp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;margin:8px 0}
-.mp-card{padding:8px 12px;border:1px solid #e5e7eb;border-radius:4px;font-size:.88em}
-.mp-card[open]{background:#f9fafb;border-color:#c7d2fe}
-.mp-card>summary{cursor:pointer;list-style:none;color:inherit;font-size:1em;padding:0;outline:none}
-.mp-card>summary::-webkit-details-marker{display:none}
-.mp-card>summary::marker{display:none}
-.mp-card>summary:hover{text-decoration:none}
-.mp-toggle{display:inline-block;color:#9ca3af;font-size:.75em;margin-left:4px;transition:transform .15s}
-.mp-card[open] .mp-toggle{transform:rotate(90deg)}
-.mp-card[open] .mp-preview{display:none}
-.mp-card:not([open]) .mp-full{display:none}
-.mp-id{font-weight:600;color:#6366f1;margin-right:4px}
-.owner{color:#6b7280;font-size:.85em}
-.mp-text{color:#374151;margin-top:2px;white-space:pre-wrap}
-.actuals-list{margin:8px 0;padding-left:20px;font-size:.9em}
-.actuals-list li{padding:2px 0}
-.no-data-note{color:#9ca3af;font-size:.9em;font-style:italic}
-.progress-bar-wrap{background:#f3f4f6;border-radius:4px;height:8px;overflow:hidden;display:inline-block;width:120px;vertical-align:middle;margin:0 8px}
-.progress-bar{height:100%;border-radius:4px;background:#6366f1}
-.progress-bar.on_track{background:#16a34a}
-.progress-bar.at_risk{background:#d97706}
-.progress-bar.off_track{background:#dc2626}
-.delayed-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#991b1b}
-.no-evidence-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#9ca3af}
-.diag-error-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#991b1b}
-.diag-warn-list{margin:8px 0;padding-left:20px;font-size:.9em;color:#92400e}
-.diag-type{font-weight:600;font-family:monospace;font-size:.85em}
-.diag-ok{color:#166534;font-size:.9em;font-style:italic}
-footer{margin-top:48px;padding-top:12px;border-top:1px solid #e5e7eb;font-size:.8em;color:#9ca3af}
+.pct{font-size:.8125rem;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.health-on_track{color:var(--health-ok)}
+.health-at_risk{color:var(--health-risk)}
+.health-off_track{color:var(--health-bad)}
+.health-no_data{color:var(--health-none)}
+.strategy{margin:8px 0 2px;padding:6px 0 6px 20px;background:none}
+.strategy-id{font-weight:500;color:var(--text-muted);margin-right:6px;font-size:.8125rem}
+.md-table{width:100%;border-collapse:collapse;font-size:.875rem;margin:8px 0}
+.md-table th{text-align:left;padding:6px 8px;font-size:.6875rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);border-bottom:1px solid var(--border);background:none}
+.md-table td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+details>summary{cursor:pointer;font-size:.875rem;padding:4px 0;user-select:none;color:var(--text-muted)}
+details>summary:focus-visible{outline:2px solid var(--border);outline-offset:2px;border-radius:2px}
+.dept{margin:4px 0 4px 16px;padding:8px 0}
+.mp-list{list-style:none;margin:8px 0;padding:0}
+.mp-item{padding:0;border-bottom:1px solid var(--border)}
+.mp-item>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:8px;padding:10px 0;outline:none;min-height:44px}
+.mp-item>summary::-webkit-details-marker{display:none}
+.mp-item>summary::marker{display:none}
+.mp-item>summary:focus-visible{outline:2px solid var(--border);outline-offset:2px;border-radius:2px}
+.mp-toggle{color:var(--text-light);font-size:.75rem;flex-shrink:0;transition:transform .12s ease-out}
+.mp-item[open] .mp-toggle{transform:rotate(90deg)}
+.mp-item[open] .mp-preview{display:none}
+.mp-item:not([open]) .mp-full{display:none}
+.mp-id{font-weight:500;font-size:.8125rem;color:var(--text-muted);min-width:44px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.mp-status-icon{flex-shrink:0;font-size:.875rem}
+.owner{color:var(--text-muted);font-size:.8125rem}
+.mp-text{color:var(--text);margin-top:6px;padding-bottom:10px;white-space:pre-wrap;font-size:.875rem;padding-left:0}
+.actuals-list{margin:8px 0;padding-left:20px;font-size:.875rem}
+.actuals-list li{padding:3px 0}
+.no-data-note{color:var(--text-muted);font-size:.875rem;font-style:italic}
+.progress-bar-wrap{background:var(--border);border-radius:2px;height:4px;overflow:hidden;display:inline-block;width:80px;vertical-align:middle;margin:0 6px}
+.progress-bar{height:100%;border-radius:2px;background:var(--progress-default)}
+.progress-bar.on_track{background:var(--progress-ok)}
+.progress-bar.at_risk{background:var(--progress-risk)}
+.progress-bar.off_track{background:var(--progress-bad)}
+.subsection-label{font-weight:500;margin:16px 0 8px;font-size:.875rem;color:var(--text)}
+.subsection-label-error{font-weight:500;margin:16px 0 8px;font-size:.875rem;color:var(--health-bad)}
+.subsection-label-warn{font-weight:500;margin:16px 0 8px;font-size:.875rem;color:var(--health-risk)}
+.plan-completion{font-size:.8125rem;color:var(--text-muted);margin-top:4px}
+.delayed-list{margin:8px 0;padding-left:20px;font-size:.875rem;color:var(--health-bad)}
+.no-evidence-list{margin:8px 0;padding-left:20px;font-size:.875rem;color:var(--text-muted)}
+.diag-error-list{margin:8px 0;padding-left:20px;font-size:.875rem;color:var(--health-bad)}
+.diag-warn-list{margin:8px 0;padding-left:20px;font-size:.875rem;color:var(--health-risk)}
+.diag-type{font-weight:600;font-family:ui-monospace,monospace;font-size:.8125rem}
+.diag-ok{color:var(--health-ok);font-size:.875rem;font-style:italic}
+footer{margin-top:56px;padding-top:12px;border-top:1px solid var(--border);font-size:.75rem;color:var(--text-muted)}
+@media(max-width:600px){body{padding:24px 20px}}
 @media print{details,details[open]{display:block}details>summary{list-style:none}details>summary::marker{display:none}}
 `;
 
@@ -69,14 +100,17 @@ function esc(s) {
 }
 
 function healthBadge(h) {
-  return `<span class="health-${esc(h)}">${esc(HEALTH_LABEL[h] || h)}</span>`;
+  const label = HEALTH_LABEL[h] || h;
+  const icon = HEALTH_ICON[h] || '○';
+  return `<span class="health-${esc(h)}" role="img" aria-label="${esc(label)}">${esc(icon)} ${esc(label)}</span>`;
 }
 
 function renderProgressBar(pct, health) {
   if (pct === null || pct === undefined)
-    return '<span class="health-no_data" style="font-size:.85em">—</span>';
+    return '<span class="health-no_data">—</span>';
   const cls = esc(health || 'no_data');
-  return `<div class="progress-bar-wrap"><div class="progress-bar ${cls}" style="width:${esc(pct)}%"></div></div><span class="pct">${esc(pct)}%</span>`;
+  const label = HEALTH_LABEL[health] || health || 'no_data';
+  return `<div class="progress-bar-wrap" role="progressbar" aria-valuenow="${esc(pct)}" aria-valuemin="0" aria-valuemax="100" aria-label="${esc(pct)}% ${esc(label)}"><div class="progress-bar ${cls}" style="width:${esc(pct)}%"></div></div><span class="pct">${esc(pct)}%</span>`;
 }
 
 function renderMdTable(measures) {
@@ -96,7 +130,7 @@ function renderMdTable(measures) {
 
 function renderStrategy(s) {
   const planPct = s.plan_completion_pct !== null && s.plan_completion_pct !== undefined
-    ? `<div style="font-size:.85em;color:#6b7280;margin-top:4px">Plan Completion: ${esc(s.plan_completion_pct)}%</div>`
+    ? `<div class="plan-completion">Plan Completion: ${esc(s.plan_completion_pct)}%</div>`
     : '';
   const depts = s.departments.map(d => `<details>
     <summary>Dept: ${esc(d.name)}</summary>
@@ -121,8 +155,8 @@ function renderSection1(vm) {
     ${g.strategies.map(renderStrategy).join('')}`;
   }).join('');
 
-  return `<div class="section-title">Section 1: Where Are We?</div>
-    <div class="objective">${esc(vm.objective.text)}</div>
+  return `<h2 class="section-title">Section 1: Where Are We?</h2>
+    <p class="objective">${esc(vm.objective.text)}</p>
     ${goalRows}`;
 }
 
@@ -139,20 +173,21 @@ function renderSection2(vm) {
   const noEvidenceMds = allMeasures.filter(m => m.status === 'no_data');
 
   const mpCards = allPlans.length
-    ? allPlans.map(p => {
+    ? `<ul class="mp-list" role="list">${allPlans.map(p => {
         const text = p.text || '';
         const needsTruncate = text.length > 80;
         const preview = needsTruncate ? text.slice(0, 80) + '…' : text;
-        return `<details class="mp-card">
+        return `<details class="mp-item">
         <summary>
-          <span class="mp-id">${esc(p.id)}</span>${PLAN_ICON[p.status] || '⬜'}
+          <span class="mp-id">${esc(p.id)}</span>
+          <span class="mp-status-icon" role="img" aria-label="${esc(p.status)}">${PLAN_ICON[p.status] || '○'}</span>
           ${p.owner ? `<span class="owner">${esc(p.owner)}</span>` : ''}
-          ${needsTruncate ? '<span class="mp-toggle">▸</span>' : ''}
-          <div class="mp-text mp-preview">${esc(preview)}</div>
+          <span class="mp-text mp-preview">${esc(preview)}</span>
+          ${needsTruncate ? '<span class="mp-toggle" aria-hidden="true">▸</span>' : ''}
         </summary>
         ${needsTruncate ? `<div class="mp-text mp-full">${esc(text)}</div>` : ''}
       </details>`;
-      }).join('')
+      }).join('')}</ul>`
     : '<p class="no-data-note">No plans defined.</p>';
 
   const actualItems = withActuals.length
@@ -164,23 +199,23 @@ function renderSection2(vm) {
     : '<li class="no-data-note">No actuals recorded yet.</li>';
 
   const delayedHtml = delayedPlans.length
-    ? `<p style="font-weight:500;margin:16px 0 8px;color:#991b1b">❌ Delayed</p>
+    ? `<p class="subsection-label-error">✕ Delayed</p>
        <ul class="delayed-list">${delayedPlans.map(p =>
          `<li>${esc(p.id)}: ${esc(p.text.length > 60 ? p.text.slice(0, 60) + '…' : p.text)}</li>`
        ).join('')}</ul>`
     : '';
 
   const noEvidenceHtml = noEvidenceMds.length
-    ? `<p style="font-weight:500;margin:16px 0 8px">⚪ No Evidence</p>
+    ? `<p class="subsection-label">○ No Evidence</p>
        <ul class="no-evidence-list">${noEvidenceMds.map(m =>
          `<li>${esc(m.id)}: ${esc(m.text.length > 60 ? m.text.slice(0, 60) + '…' : m.text)}</li>`
        ).join('')}</ul>`
     : '';
 
-  return `<div class="section-title">Section 2: What Did We Do?</div>
-    <p style="font-weight:500;margin:0 0 8px">MP Status this period</p>
-    <div class="mp-grid">${mpCards}</div>
-    <p style="font-weight:500;margin:16px 0 8px">MD Updates</p>
+  return `<h2 class="section-title">Section 2: What Did We Do?</h2>
+    <p class="subsection-label">MP Status this period</p>
+    ${mpCards}
+    <p class="subsection-label">MD Updates</p>
     <ul class="actuals-list">${actualItems}</ul>
     ${delayedHtml}
     ${noEvidenceHtml}`;
@@ -192,25 +227,25 @@ function renderSection3(vm) {
   const warnings = diags.filter(d => d.severity === 'warning');
 
   if (!diags.length) {
-    return `<div class="section-title">Section 3: Alignment Diagnostics</div>
-      <p class="diag-ok">✅ No issues found.</p>`;
+    return `<h2 class="section-title">Section 3: Alignment Diagnostics</h2>
+      <p class="diag-ok">✓ No issues found.</p>`;
   }
 
   const errorHtml = errors.length
-    ? `<p style="font-weight:500;margin:12px 0 6px;color:#991b1b">🔴 Issues Requiring Action</p>
+    ? `<p class="subsection-label-error">● Issues Requiring Action</p>
        <ul class="diag-error-list">${errors.map(d =>
          `<li><span class="diag-type">${esc(d.type)}</span> [${esc(d.item_id)}]: ${esc(d.message)}</li>`
        ).join('')}</ul>`
     : '';
 
   const warnHtml = warnings.length
-    ? `<p style="font-weight:500;margin:12px 0 6px;color:#92400e">🟡 Warnings</p>
+    ? `<p class="subsection-label-warn">● Warnings</p>
        <ul class="diag-warn-list">${warnings.map(d =>
          `<li><span class="diag-type">${esc(d.type)}</span> [${esc(d.item_id)}]: ${esc(d.message)}</li>`
        ).join('')}</ul>`
     : '';
 
-  return `<div class="section-title">Section 3: Alignment Diagnostics</div>
+  return `<h2 class="section-title">Section 3: Alignment Diagnostics</h2>
     ${errorHtml}
     ${warnHtml}`;
 }
@@ -263,7 +298,7 @@ if (require.main === module) {
   assert.ok(html.includes('Section 2'), 'has Section 2');
   assert.ok(html.includes('<details'), 'uses details element');
   assert.ok(html.includes('105'), 'shows actual value');
-  assert.ok(html.includes('✅'), 'shows done MP');
+  assert.ok(html.includes('✓'), 'shows done MP');
   assert.ok(html.includes('@media print'), 'has print styles');
 
   // no-data case: no actuals → shows No Data markers

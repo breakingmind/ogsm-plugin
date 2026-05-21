@@ -310,6 +310,8 @@ Expands a confirmed OGSM into a full-year tracking table at `.ogsm/plans/<scope>
 
 The plugin ships a standalone HTML execution report generated from `.ogsm/` data — no server required. It is built from six Node.js modules in `scripts/ogsm-status/`:
 
+![OGSM Status Report](assets/images/ogsm-status-report-preview.png)
+
 | Module | Role |
 |--------|------|
 | `parse-profile.js` | Parses an OGSM profile markdown file into a structured object |
