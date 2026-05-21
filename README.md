@@ -71,6 +71,104 @@ ogsm-weekly-review ── ogsm-plan-annual update (month-end)
 
 Persistent OGSM data is stored under `.ogsm/` in your project. Nothing is written without your explicit confirmation.
 
+### What Do I Want To Do?
+
+---
+
+#### Set up or import an OGSM
+
+Don't know where to start? Say:
+```
+help me get started with OGSM
+```
+The plugin detects whether you have a profile and routes you to the right skill.
+
+Already have an OGSM document? Say:
+```
+import my OGSM, the file is at ~/Downloads/strategy-2026.md
+```
+The plugin auto-maps non-standard headings (KPI → MD, OKR → Goals), confirms the mapping, then saves the profile.
+
+Supports a two-tier structure: a **company profile** sets the top-level O/G/S/MD/MP; **department profiles** reference it. Department Goals can align to a company Goal or Strategy, or be declared as enabling goals that support other departments.
+
+---
+
+#### Turn your OGSM into this week's actions
+
+At the start of each week say:
+```
+what should I focus on this week based on our OGSM?
+```
+Output: priority themes, time allocation guidance, MD check-in schedule, say-no list.
+
+---
+
+#### Review a plan or schedule
+
+Audit a quarterly plan:
+```
+review this Q3 roadmap against our OGSM
+```
+The plugin maps each item to a Strategy, MD, and MP — scoring alignment and surfacing gaps.
+
+Audit your week's schedule:
+```
+does my schedule this week support our OGSM?
+```
+Three-step flow: `ogsm-calendar-brief` (normalise calendar) → `ogsm-audit-schedule` (check time allocation) → `ogsm-realign` (output revised schedule).
+
+---
+
+#### Track execution progress
+
+**Weekly review (every Friday):**
+```
+let's do the weekly OGSM review
+```
+Compares actual work against MD and MP, surfaces patterns, proposes context updates.
+
+**HTML execution report (run any time):**
+
+Generated from `.ogsm/` data — no server required:
+
+```bash
+node -e "
+const { loadSources } = require('./scripts/ogsm-status/loader');
+const { buildViewModel } = require('./scripts/ogsm-status/view-model');
+const { render } = require('./scripts/ogsm-status/renderer');
+const fs = require('fs');
+const sources = loadSources('.ogsm', 'company', 'your-slug');
+fs.writeFileSync('ogsm-report.html', render(buildViewModel(sources)));
+"
+open ogsm-report.html
+```
+
+Replace `your-slug` with the `slug` value in your company profile frontmatter.
+
+Report sections:
+- **Section 1** — Goal progress %, Strategy rows, MD progress bars, expandable MP plan cards
+- **Section 2** — Health counts across all MDs (🟢 / 🟡 / 🔴 / ⚪)
+- **Section 3** — Alignment diagnostics (missing MD for a Strategy, broken department refs, etc.)
+
+**To get real numbers in the report:**
+1. Complete `ogsm-define` so a profile exists
+2. Run `ogsm-weekly-review` each week (this produces the actuals data)
+3. Run the report command above
+
+Until weekly reviews exist, all MDs show ⚪ No Data — this is correct behaviour.
+
+**Annual plan table (create at year-start, update monthly):**
+```
+generate the annual plan table
+```
+Expands your OGSM into a 12-column monthly tracking table. At month-end say:
+```
+update this month's MD actuals
+```
+The plugin extracts figures from your weekly reviews, asks you to confirm, and fills in the actuals.
+
+---
+
 #### Company vs Department profiles
 
 The plugin supports a two-tier profile structure. A **company profile** sets the top-level Objective, Goals, and Strategies for the whole organization. **Department profiles** inherit from it — each one must reference a parent company profile.
