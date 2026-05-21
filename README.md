@@ -545,7 +545,7 @@ node scripts/ogsm-status/renderer.js
 
 ### 什麼是 OGSM？
 
-OGSM 把組織的抱負連結到每日執行，分為四個層次：
+OGSM 把組織的願景連結到每日執行，分為四個層次：
 
 | 層次 | 意義 | 核心問題 |
 |------|------|---------|
@@ -847,6 +847,8 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 ### OGSM 執行狀態報告
 
 Plugin 內建一套從 `.ogsm/` 資料生成的 HTML 執行報告，不需要伺服器，由 `scripts/ogsm-status/` 下的六個 Node.js 模組組成：
+
+![OGSM 執行狀態報告](assets/images/ogsm-status-report-preview.png)
 
 | 模組 | 功能 |
 |------|------|
