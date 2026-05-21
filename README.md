@@ -355,6 +355,30 @@ node scripts/ogsm-status/renderer.js
 
 ---
 
+#### Getting real data into the report
+
+Running the report before any weekly reviews exist will show ⚪ No Data for all MDs. This is correct — there are no actuals yet. To get real numbers:
+
+1. **Complete `ogsm-define`** so a profile exists at `.ogsm/profiles/company/<slug>.md`
+2. **Run `ogsm-weekly-review` each week** — each review writes structured `<!-- md-actual: MD1=..., MD2=... -->` markers that the loader extracts as actuals
+3. **Generate the report:**
+
+```bash
+node -e "
+const { loadSources } = require('./scripts/ogsm-status/loader');
+const { buildViewModel } = require('./scripts/ogsm-status/view-model');
+const { render } = require('./scripts/ogsm-status/renderer');
+const fs = require('fs');
+const sources = loadSources('.ogsm', 'company', 'your-slug');
+fs.writeFileSync('ogsm-report.html', render(buildViewModel(sources)));
+"
+open ogsm-report.html
+```
+
+Replace `your-slug` with the `slug` field in your company profile frontmatter.
+
+---
+
 ### Storage Layout
 
 ```
@@ -390,6 +414,8 @@ node scripts/prepare-storage.js . company <company-slug> --confirm-write
 ---
 
 ### Installation
+
+> Recommended: complete the Quick Start first to confirm the plugin works before exploring advanced options.
 
 #### Claude Code — Local (from cloned repo)
 
