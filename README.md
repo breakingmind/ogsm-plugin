@@ -221,6 +221,8 @@ See `examples/sample-ogsm-profile.md` for a complete example.
 
 ### Skills
 
+> Not sure which skill to use? Say "help me get started with OGSM" and the plugin decides for you.
+
 #### `ogsm-start` — Find your starting point
 
 Entry point for the plugin. Detects whether you already have a profile and routes you to the right skill — no need to know skill names. New users are guided to create or import a profile; returning users see a menu to audit, review, or realign.
@@ -253,6 +255,14 @@ Converts the confirmed profile into weekly or monthly priorities, time allocatio
 
 ---
 
+#### `ogsm-calendar-brief` — Prepare a Google Calendar summary
+
+Reads Google Calendar events (if the connector is available) or accepts a pasted agenda dump and produces the normalized schedule table used by `ogsm-audit-schedule`. This is the only skill that may access Google Calendar.
+
+**Trigger:** "Prepare a calendar brief for this week before auditing my schedule"
+
+---
+
 #### `ogsm-audit-plan` — Review a plan against OGSM
 
 Maps each item in a plan, OKR, roadmap, or initiative list to a Strategy, MD, and MP. Scores alignment and identifies gaps. For department profiles, also checks that each `aligned` Goal's `parent_ref` still matches an existing layer in the current company profile, flags missing `goal_type` annotations, and surfaces any `depends_on` dependency chains.
@@ -266,14 +276,6 @@ Maps each item in a plan, OKR, roadmap, or initiative list to a Strategy, MD, an
 Normalizes agenda input into a structured table, then checks whether time allocation supports Strategies and includes MD check-ins and MP execution blocks.
 
 **Trigger:** "Does my schedule this week support our OGSM?"
-
----
-
-#### `ogsm-calendar-brief` — Prepare a Google Calendar summary
-
-Reads Google Calendar events (if the connector is available) or accepts a pasted agenda dump and produces the normalized schedule table used by `ogsm-audit-schedule`. This is the only skill that may access Google Calendar.
-
-**Trigger:** "Prepare a calendar brief for this week before auditing my schedule"
 
 ---
 
