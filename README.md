@@ -37,7 +37,20 @@ The core logic runs backward: **MP → MD → S → G → O**. Every action shou
 
 ---
 
-### Plugin Overview
+### What Can This Plugin Do?
+
+**Strategy that never gets executed?**
+A lot of strategy documents just sit there. This plugin turns your OGSM into what to do this week, what to say no to, and which metrics to watch — so strategy becomes weekly action instead of a document on the wall.
+
+**Calendar full, but unclear what actually matters?**
+Tell the plugin your schedule and it checks which time slots are advancing a Strategy and which are just consuming time — then gives you concrete suggestions for what to change.
+
+**Metrics only reviewed at month-end?**
+The plugin generates an HTML execution report from your weekly review data automatically. Progress and health status (🟢 On Track / 🟡 At Risk / 🔴 Off Track) for every indicator — no manual work, no server required.
+
+---
+
+### Plugin Loop
 
 This plugin makes OGSM operational through a repeatable loop:
 
