@@ -563,15 +563,28 @@ OGSM 把組織的抱負連結到每日執行，分為四個層次：
 
 ### 快速開始
 
-1. 安裝 plugin（見[安裝方式](#安裝方式)）
-2. 重啟 Claude Code 或 Codex
-3. 說 **「幫我建立 OGSM」** 建立新 profile，或 **「匯入我的 OGSM」** 匯入既有內容
-4. 依照技能提示逐步完成 — 每次只回答一個問題
-5. 執行 **`ogsm-translate`** 把 profile 轉化為本週執行優先事項
+1. 安裝 plugin（見[安裝方式](#安裝方式)）並重啟 Claude Code
+2. 說 **「幫我開始使用 OGSM」** — plugin 自動偵測你的狀態並引導（不需要記技能名稱）
+3. 回答問題建立 OGSM profile — 每次只問一題
+4. 說 **「根據我們的 OGSM，這週我應該專注在哪裡？」** — 取得本週執行優先事項
+5. 每週五說 **「我們來做週 OGSM 檢查」** — 關閉執行迴圈
 
 ---
 
-### Plugin 概覽
+### 這個 Plugin 能幫你做什麼？
+
+**策略寫完沒人執行？**
+很多策略文件寫完就躺在那裡。這個 plugin 把你的 OGSM 轉成每週要做什麼、什麼不用做、什麼指標要看——讓策略真的變成每週行動。
+
+**行事曆滿了，但不確定哪些事情真的重要？**
+告訴 plugin 這週的行程，它會幫你看哪些時段在推進策略、哪些只是在消耗時間，然後給你具體的調整建議。
+
+**月底才發現指標沒在動？**
+plugin 可以從你的週回顧資料自動生成一份 HTML 執行報告，每個指標的進度、健康狀態（🟢🟡🔴）一眼看清楚，不用手動整理也不需要伺服器。
+
+---
+
+### Plugin 執行迴圈
 
 這個 plugin 透過一個可重複的迴圈讓 OGSM 真正落地：
 
@@ -591,6 +604,106 @@ ogsm-weekly-review（週檢查 · 更新執行脈絡）── ogsm-plan-annual u
 ```
 
 OGSM 資料儲存於專案的 `.ogsm/` 目錄。任何寫入都需要您明確確認。
+
+---
+
+### 我想做什麼？
+
+---
+
+#### 建立或匯入 OGSM
+
+不知道從哪裡開始？直接說：
+```
+幫我開始使用 OGSM
+```
+plugin 會偵測你有沒有 profile，引導你建立或匯入。
+
+已有 OGSM 文件想帶進來？
+```
+匯入我的 OGSM，檔案在 ~/Downloads/strategy-2026.md
+```
+plugin 自動對映非標準欄位（KPI → MD、OKR → Goals），確認後存檔。
+
+支援公司與部門兩層結構——部門 profile 可對齊公司的 Goal 或 Strategy，也可宣告為跨部門支援型目標。
+
+---
+
+#### 把 OGSM 轉成本週行動
+
+每週一開始說：
+```
+根據我們的 OGSM，這週我應該專注在哪裡？
+```
+輸出：本週優先主題、時間分配建議、MD 檢核提醒、說不清單。
+
+---
+
+#### 審查計劃或行程
+
+審查季度計劃：
+```
+審查這份 Q3 路線圖是否對齊我們的 OGSM
+```
+plugin 把每個項目對應到 Strategy / MD / MP，標出缺口與未對齊的工作。
+
+審查這週行程：
+```
+這週的行程支持我們的 OGSM 嗎？
+```
+三步流程：`ogsm-calendar-brief`（整理行事曆）→ `ogsm-audit-schedule`（檢查時間分配）→ `ogsm-realign`（輸出修訂版行程）。
+
+---
+
+#### 追蹤執行進度
+
+**週回顧（每週五）：**
+```
+我們來做週 OGSM 檢查
+```
+比對實際工作與 MD / MP，找出落差，更新執行脈絡。
+
+**HTML 執行報告（隨時可跑）：**
+
+從 `.ogsm/` 資料生成，不需要伺服器：
+
+```bash
+node -e "
+const { loadSources } = require('./scripts/ogsm-status/loader');
+const { buildViewModel } = require('./scripts/ogsm-status/view-model');
+const { render } = require('./scripts/ogsm-status/renderer');
+const fs = require('fs');
+const sources = loadSources('.ogsm', 'company', 'your-slug');
+fs.writeFileSync('ogsm-report.html', render(buildViewModel(sources)));
+"
+open ogsm-report.html
+```
+
+將 `your-slug` 替換為你的公司 profile frontmatter 中的 `slug` 值。
+
+報告內容：
+- **Section 1** — 每個 Goal 進度 %、MD 進度條、可展開的 MP 計畫卡片
+- **Section 2** — 全部 MD 健康狀態統計（🟢 / 🟡 / 🔴 / ⚪）
+- **Section 3** — 結構缺口診斷（Strategy 無 MD、部門標註錯誤等）
+
+**讓報告顯示真實數字：**
+1. 完成 `ogsm-define`（有 profile 才能解析）
+2. 每週執行 `ogsm-weekly-review`（產生 actuals 資料）
+3. 執行上方的報告指令
+
+尚無週回顧資料時，所有 MD 顯示 ⚪ No Data — 這是正確行為。
+
+**年度計畫表（年初建立、月底更新）：**
+```
+產生年度計畫表
+```
+展開成 12 欄月份追蹤表。月底說：
+```
+更新本月實際值
+```
+plugin 自動從週回顧抽取數字，確認後填入。
+
+---
 
 #### 公司 vs 部門 profile 兩層架構
 
@@ -644,6 +757,8 @@ last_confirmed: 2026-05-09
 
 ### 各項技能說明
 
+> 不確定用哪個技能？說「幫我開始使用 OGSM」，plugin 幫你判斷。
+
 #### `ogsm-start` — 找到起點
 
 Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正確的技能 — 不需要記住技能名稱。新用戶會被引導建立或匯入 profile；回頭的用戶會看到選單，選擇審查、複盤或重新對標。
@@ -676,6 +791,14 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 
 ---
 
+#### `ogsm-calendar-brief` — 準備 Google Calendar 摘要
+
+在 connector 可用時讀取 Google Calendar 活動（或接受手動貼上的議程），產出 `ogsm-audit-schedule` 所需的正規化行程表。這是唯一可存取 Google Calendar 的技能。
+
+**觸發時機：** 「在審查行程前，先幫我準備這週的 calendar 摘要」
+
+---
+
 #### `ogsm-audit-plan` — 審查計劃是否對齊 OGSM
 
 把計劃、OKR、路線圖或行動清單中的每一項，對應到策略、MD 與 MP，評分並找出缺口。對於部門 profile，還會核查每個 `aligned` Goal 的 `parent_ref` 是否仍對應公司 profile 的現有層次（公司 profile 可能已更新）、標記缺少 `goal_type` 標註的 Goal，並顯示 `depends_on` 跨部門依賴鏈。
@@ -689,14 +812,6 @@ Plugin 的入口技能。自動偵測你是否已有 profile，並導引到正�
 將議程輸入正規化為結構化表格，再檢查時間分配是否支持策略，以及是否包含 MD 檢核與 MP 執行的時段。
 
 **觸發時機：** 「這週的行程是否支持我們的 OGSM？」
-
----
-
-#### `ogsm-calendar-brief` — 準備 Google Calendar 摘要
-
-在 connector 可用時讀取 Google Calendar 活動（或接受手動貼上的議程），產出 `ogsm-audit-schedule` 所需的正規化行程表。這是唯一可存取 Google Calendar 的技能。
-
-**觸發時機：** 「在審查行程前，先幫我準備這週的 calendar 摘要」
 
 ---
 
@@ -774,6 +889,28 @@ node scripts/ogsm-status/loader.js
 node scripts/ogsm-status/renderer.js
 ```
 
+#### 讓報告顯示真實數字
+
+執行報告前若尚無任何週回顧，所有 MD 會顯示 ⚪ No Data——這是正確行為，還沒有實際數據。要取得真實數字：
+
+1. **完成 `ogsm-define`**，確保 profile 存在於 `.ogsm/profiles/company/<slug>.md`
+2. **每週執行 `ogsm-weekly-review`**——每次回顧都會寫入結構化標記 `<!-- md-actual: MD1=..., MD2=... -->`，loader 會從這些標記取值
+3. **生成報告：**
+
+```bash
+node -e "
+const { loadSources } = require('./scripts/ogsm-status/loader');
+const { buildViewModel } = require('./scripts/ogsm-status/view-model');
+const { render } = require('./scripts/ogsm-status/renderer');
+const fs = require('fs');
+const sources = loadSources('.ogsm', 'company', 'your-slug');
+fs.writeFileSync('ogsm-report.html', render(buildViewModel(sources)));
+"
+open ogsm-report.html
+```
+
+將 `your-slug` 替換為你的公司 profile frontmatter 中的 `slug` 值。
+
 ---
 
 ### 儲存結構
@@ -811,6 +948,8 @@ node scripts/prepare-storage.js . company <公司代號> --confirm-write
 ---
 
 ### 安裝方式
+
+> 建議先跑快速開始，確認 plugin 運作後再看進階設定。
 
 #### Claude Code — 本機安裝（從 clone 的 repo）
 
