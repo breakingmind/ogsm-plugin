@@ -29,11 +29,11 @@ The core logic runs backward: **MP → MD → S → G → O**. Every action shou
 
 ### Quick Start
 
-1. Install the plugin (see [Installation](#installation))
-2. Restart Claude Code or Codex
-3. Say **"help me develop an OGSM"** to create a new profile, or **"import an OGSM"** to import an existing one
-4. Follow the skill prompts — one question at a time
-5. Run **`ogsm-translate`** to turn your profile into this week's priorities
+1. Install the plugin (see [Installation](#installation)) and restart Claude Code
+2. Say **"help me get started with OGSM"** — the plugin detects your state and routes you correctly (no skill names to remember)
+3. Answer the questions to build your profile — one question at a time
+4. Say **"what should I focus on this week based on our OGSM?"** — get this week's execution priorities
+5. Every Friday say **"let's do the weekly OGSM review"** — close the execution loop
 
 ---
 
